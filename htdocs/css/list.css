@@ -1,0 +1,39 @@
+body {
+  background-color: #b5d0d0;
+  color: white;
+}
+h1 {
+  background-color: #809bc0;
+}
+a {
+        color: #0000ff;
+}
+table{
+        border-width: 2px;
+        border-spacing: 0px;
+        border-style: outset;
+        border-color: blue;
+        border-collapse: separate;
+        background-color: #f8f8f8;
+}
+th,td{
+        border-width: 2px;
+        border-style: outset;
+        border-color: blue;
+        border-collapse: separate;
+        padding:5px;
+}
+th{
+        background-color: #7fc97f;
+}
+tr.even td{
+        background-color: #ffff90;
+        color:black;
+}
+td {
+        background-color: #fdbf6f;
+        color:black;
+}
+td.number {
+        text-align:right;
+}

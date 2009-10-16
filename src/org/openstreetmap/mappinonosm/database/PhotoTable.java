@@ -1,0 +1,147 @@
+/*
+ * Copyright (c) 2009, Shun "Nazotoko" Watanabe <nazotoko@gmail.com>
+ * All rights reserved.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 3. Neither the name of the OpenStreetMap <www.openstreetmap.org> nor the
+ *    names of its contributors may be used to endorse or promote products
+ *    derived from this software
+ *    without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+package org.openstreetmap.mappinonosm.database;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
+import java.util.HashSet;
+
+/**
+ *
+ * @author nazo
+ */
+public class PhotoTable extends HashSet<Photo> {
+    private int max=0 ;
+            
+    /**
+     * constractor 
+     */
+    public PhotoTable(){
+    }
+    /**
+     * 
+     * @param p
+     * @return boolean
+     */
+    @Override
+    public boolean add(Photo p) {
+        if(super.add(p)==false){
+            return false;
+        }
+        if(p.getId()==0){
+            max++;
+            p.setId(max);
+        }
+        return true;
+    }
+    /** disused?
+     *
+     * @param os OutputStream
+     */
+    public void toJavaScript(OutputStream os) {
+        PrintStream ps = new PrintStream(os);
+        ps.println("AJAXI({");
+        for(Photo p: this){
+            if(p.getLat() != 0 || p.getLon() != 0){
+                p.toJavaScript(ps);
+                ps.println(",");
+            }
+        }
+        ps.println("});");
+    }
+    /** save Photo datatable to OutPutStream
+     *@param os the OutputStrem
+     */
+    public void save(OutputStream os){
+        PrintStream ps = new PrintStream(os);
+        for(Photo p: this){
+            p.save(ps);
+            ps.println(",");
+        }
+    }
+    /**
+     * @param is ImputStream oject. The input has photo database text.
+     * @param rb XMLTable object. 
+     */
+    public void load(InputStream is,XMLTable rb){
+        Photo p;
+        String line;
+        int line_number = 0;
+        int id=0;
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            int a;
+            while(true){
+                if((line = br.readLine())==null){
+                    break;
+                }
+                line_number++;
+                a = line.indexOf(':');
+                if(a<0){
+                    continue;
+                }
+                id=Integer.parseInt(line.substring(0, a));
+//                System.err.println("Load Photo ID: "+id);
+                line = line.substring(line.indexOf('{', a + 1)+1,line.lastIndexOf('}'));
+                p=new Photo();
+                p.load(line,rb);
+                add(p);
+            }
+        } catch(UnsupportedEncodingException ex) {
+            System.out.println("Syntax error in the input stream. Check it is written in UTF-8 code.");
+        } catch(StringIndexOutOfBoundsException ex) {
+            System.out.println("Format illigal at line "+line_number+" ID:"+id+".");
+        } catch(NumberFormatException ex){
+            System.out.println("ID number is strange at line "+line_number+".");
+        } catch (IOException ex){
+            System.out.println("The input stream cannot be read.");
+        }
+    }
+
+    /**
+     * 
+     * @param photo
+     * @return
+     */
+    public Photo get(Photo photo) {
+        int hash=photo.hashCode();
+        for(Photo entry:this){
+            if(entry.hashCode()==hash){
+                return entry;
+            }
+        }
+        return null;
+    }
+}

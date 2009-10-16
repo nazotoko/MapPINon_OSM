@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<!--
+ Copyright 2008, 2009  Xavier Le Bourdon, Christoph Böhme, Mitja Kleider, Shun N. Watanabe
+
+ This file is derived from a part of 
+ Openstreetbugs (http://openstreetbugs.schokokeks.org/ ).
+
+ Openstreetbugs is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ any later version.
+
+ You should have received a copy of the GNU General Public License
+ along with Openstreetbugs.  If not, see <http://www.gnu.org/licenses/>.
+
+ This file implements the client of MapPIN'on OSM (http://mappin.hp2.jp/ ).
+-->
+<head>
+  <title>MapPIN'on OSM - Mapping Photo Introducing Network on OpenStreetMap</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  <meta http-equiv="Content-Language" content="ja"/>
+  <meta name="copyright" content="GPLv3"/>
+  <link rel="shortcut icon" type="image/png" href="icons/logo48.png" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="stylesheet" href="css/map.css" type="text/css"/>
+  <link rel="stylesheet" href="css/popups.css" type="text/css"/>
+  <!--[if IE]><link rel="StyleSheet" type="text/css" href="css/stylesheet-ie.css" media="screen" /><![endif]-->
+  <script src="http://openlayers.org/api/OpenLayers.js" type="text/javascript"></script>
+  <script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js" type="text/javascript"></script>
+  <script src="jang/ja.js" type="text/javascript"></script>
+  <script src="mappin.js" type="text/javascript"></script>
+</head>
+<body onload="init()">
+<!--[if lte IE 6]>
+ <style type="text/css">
+#left, #map{display:none;}
+ </style>
+ <div id="ie6msg">
+  <h4>あなたのブラウザーは、時代遅れだって知ってました?</h4>
+  <p>私たちのウェブサイトを最良の状態での使用を体験してもらうために、あなたのブラウザーをもっと新しいバージョンにアップグレードすることをおすすめします。最新のバージョンは、<a class="getie8" href="http://upgradeie.s3.amazonaws.com/eng/index.html">Internet Explorer 8</a>です。アップグレードは無料です。もし、あなたのPCが仕事場のものなら、IT 管理者に連絡を取った方がいいでしょう。</p>
+  <p>もし好みなら、<a class="ie6expl" href="http://getfirefox.com">Firefox</a>, <a class="ie6expl" href="http://www.opera.com">Opera</a> や <a class="ie6expl" href="http://www.apple.com/safari/download/">Safari</a>のような他の人気のあるインターネットブラウザーも試してみてもいいと思います。</p>
+ </div>
+<![endif]-->
+<div id="left">
+  <h1><img src="icons/logo.png" width="160" height="160" alt="MapPIN'on OSM - Mapping Photo Introducing Netwrok on OSM" style="border:none"/></h1>
+  <div id="introduction" style="font-size: small;">
+    <p><a href="http://www.openstreetmap.org">OpenStreetMap</a> の地図上にRSSから得た写真のリンクを載せます。</p>
+    <p><span class="warn">著作権で保護されている地図より得たGeoタグデータを付けた写真を置かないでください。</span> 例えば、Google Mapsのような地図を見て付けたものは駄目です。GPSを使って付けたタグか、<a href="http://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA</a>ライセンスと互換性のある地図によって付けたものにしてください。</p>
+    <p>写真を見るには、マーカーをクリックしてください。</p>
+    <p><ui>
+<li><a href="blog/">RSSを集めているブログ</a></li>
+<li><a href="rsslist.html">登録されているRSS リスト</a></li>
+</ul></p>
+  </div>
+  <div>
+    <h3>現在のビューに対する</h3>
+    <ul id="linkbox">
+      <li id="permalink">パーマリンク</li>
+      <li id="osmlink">OpenStreetMap</li>
+      <li id="osblink">OpenStreetBugs</li>
+      <li id="geofabrik">Geofabrik Map</li>
+      <li id="rsslink">RSSes</li>
+    </ul>
+  </div>
+  <div class="NavFrame">
+      <div class="NavHead">Other Languages</div><div class="NavContent">
+        <ul>
+          <li>Deutsch</li>
+          <li><a href="index.html.en">English</a></li>
+          <li>Español</li>
+          <li>Français</li>
+          <li>한국어</li>
+          <li>Nederlands</li>
+          <li>简体</li>
+          <li>繁體</li>
+        </ul>
+      </div>
+    </div>
+    <div class="NavFrame">
+      <div class="NavHead">Debug</div><div class="NavContent">
+          <dl id="debug">
+              <dt>loaded tile:</dt><dd id="readingData">data/</dd>
+              <dt># of Photo loaded: </dt><dd id="numberOfPhoto">0</dd>
+              <dt># of Popuping: </dt><dd id="numberOfPopuping">0</dd>
+          </dl>
+      </div>
+    </div>
+</div>
+<div id="map">
+  <noscript>
+    <h2>Javascript が見つかりません。</h2>
+    <p>残念ながら、この地図には Javascript が必要です。<br/>
+      あなたのブラウザーは、 Javascript をサポートしていないか、あなたが無効にしています。<br/>
+      この地図を見るときには、有効にしてください。</p>
+  </noscript>
+</div>
+</body>
+</html>
