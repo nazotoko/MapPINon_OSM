@@ -1,9 +1,10 @@
 body {
   background-color: #b5d0d0;
-  color: white;
+  color: black;
 }
 h1 {
   background-color: #809bc0;
+  color: white;
 }
 a {
         color: #0000ff;
@@ -25,15 +26,17 @@ th,td{
 }
 th{
         background-color: #7fc97f;
+        color: white;
 }
 tr.even td{
         background-color: #ffff90;
-        color:black;
 }
 td {
         background-color: #fdbf6f;
-        color:black;
 }
 td.number {
         text-align:right;
+}
+strong{
+    color: red;
 }

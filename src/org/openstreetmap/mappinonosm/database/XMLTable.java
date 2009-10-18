@@ -171,7 +171,7 @@ public class XMLTable extends HashSet<XML>{
         ps.println("<table><tr><th>id</th><th>number of photos registered</th><th>title</th><th>read date</th><th>registed date</th></tr>");
 
         boolean odd = true;
-        XML [] xmls=(XML [])this.toArray();
+        XML [] xmls=toArray(new XML[size()]);
         Arrays.sort(xmls);
         for(XML r: xmls){
             ps.print("<tr");

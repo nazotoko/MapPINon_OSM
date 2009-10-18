@@ -16,7 +16,7 @@ Copy the all directory under htdocs to it.
 === the background server ===
 The background server depends on 
 * Sun Java 1.5
-* Metadata Extractor 2.3.1 (http://www.drewnoakes.com/code/exif/)
+* Metadata Extractor 2.3.1 (http://www.drewnoakes.com/code/exif/ )
 ** place Metadata Extractor on lib/metadata-extractor-2.3.1.jar
 
 It can run just type
@@ -38,27 +38,27 @@ Material/MapPINonOSM.svg
    license 2: Mozilla Public License Version 1.1, GPL ver. 2, LGPL, tri-license.
 
 htdocs/index.html.*
-   original:
+   original: http://openstreetbugs.schokokeks.org/index.html
    description of original: OpenStreetBugs home page.
    licence: Gnu Public License version 3.
 
 htdocs/mappinonosm.js
-   original:
+   original: http://openstreetbugs.schokokeks.org/
    description of original: OpenStreetBugs home page.
    licence: Gnu Public License version 3.
 
 htdocs/popups.css
-   original:
+   original: http://openstreetbugs.schokokeks.org/
    description of original: OpenStreetBugs home page.
    licence: Gnu Public License version 3.
 
 htdocs/stylesheet-ie.css
-   original:
+   original: http://openstreetbugs.schokokeks.org/
    description of original: OpenStreetBugs home page.
    licence: Gnu Public License version 3.
 
 htdocs/map.css
-   original:
+   original: http://openstreetbugs.schokokeks.org/
    description of original: OpenStreetBugs home page.
    licence: Gnu Public License version 3.
 

@@ -49,9 +49,10 @@
       <p><span class="warn">Don't tag geographic information gotten from copyrighted maps to your photos.</span> For example, google maps and Yahoo maps are copyrighted. Photo album sites provide to us functions to tag location information to photo by using those copyrighted maps, but don't use them. Use GPS logs or  waypoints, otherwise use <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA</a> compativle maps like as OpenStreetMap.</p>
     <p>To see details on each photos, click the markers.</p>
     <p><ul>
-<li><a href="blog/">MapPIN'on OSM Blog, gathering your RSSes of your photos.</a></li>
+<li><a href="blog/">MapPIN'on OSM Blog</a></li>
+<li><a href="registration.php">Registration form of RSS of your photo blogs.</a></li>
 <li><a href="rsslist.html">RSS list (registered)</a></li>
-</ul></p>
+    </ul></p>
   </div>
   <p>
     <h3>links to current view:</h3>
