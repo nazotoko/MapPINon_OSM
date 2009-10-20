@@ -30,6 +30,7 @@
 package org.openstreetmap.mappinonosm.database;
 
 import java.io.PrintStream;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
@@ -73,14 +74,20 @@ abstract public class XML extends DefaultHandler2 implements Comparable<XML>{
     XML(int id) {
         this.id = id;
     }
-    public static XML getInstance(URI u){
-        if(u.getScheme().equals("flickr")){
-            return new FlickrProtocal(u);
-        } else if(u.getScheme().equals("http")){
-            return new RSS(u);
+    /**
+     * making instance from URI
+     * @param uri the uri
+     * @return Instance of subclasses. It returns null when the sutable scheam not found.
+     */
+    static public XML getInstance(URI uri){
+        if(uri.getScheme().equals("flickr")){
+            return new FlickrProtocal(uri);
+        } else if(uri.getScheme().equals("http")){
+            return new RSS(uri);
         }
         return null;
     }
+
     /**
      * 
      * @return
@@ -91,8 +98,6 @@ abstract public class XML extends DefaultHandler2 implements Comparable<XML>{
     public void setPhotoBase(PhotoTable pb) {
         this.pb=pb;
     }
-
-    abstract void read();
 
     void addCount() {
         counter++;
@@ -126,6 +131,7 @@ abstract public class XML extends DefaultHandler2 implements Comparable<XML>{
     void setId(int id) {
         this.id = id;
     }
+    abstract void read();
     /**
      * Called from XMLBase
      * @param line 1 line string

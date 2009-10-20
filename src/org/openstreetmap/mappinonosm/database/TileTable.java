@@ -31,6 +31,7 @@ package org.openstreetmap.mappinonosm.database;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.File;
 import java.util.HashMap;
 
 /**
@@ -38,12 +39,31 @@ import java.util.HashMap;
  * @author nazo
  */
 public class TileTable extends HashMap<Integer,Tile>{
-    public TileTable(){
-    };
+    private File baseDirectory;
+
     static public int getID(double lon,double lat){
         return (int)Math.round(lon*20)+7200*(int)Math.round(lat*20);
     }
+
+    /**
+     * Constractor of Tile Table
+     * @param dataDir Directory to be stored backup of tables.
+     * @throws java.io.IOException When the dataDir is not directory.
+     */
+    public TileTable(File dataDir) throws IOException{
+        if(!dataDir.exists()){
+            if(dataDir.mkdir()==false){
+                throw new IOException("Dicectory cannot be make.");
+            }
+        } else if(!dataDir.isDirectory()){
+                throw new IOException("It must be a dicectory.");            
+        }
+        baseDirectory=dataDir;
+    }
+
     public void save() {
+        File tileF=null;
+        FileOutputStream os;
         for(Integer i: keySet()){
             int lat=i/7200;
             int lon=i%7200;
@@ -56,13 +76,12 @@ public class TileTable extends HashMap<Integer,Tile>{
                 lon -= 7200;
             }
             try{
-            FileOutputStream os = new FileOutputStream("htdocs/data/photo"
- + ((lon > 0) ? "+" : "") + lon
- + ((lat > 0) ? "+" : "") + lat+".js");
-            get(i).toJavaScript(os);
-            os.close();
-            } catch(IOException ex){
-                System.err.println("A tile cannot be write.");
+                tileF=new File(baseDirectory,"photo" + ((lon > 0) ? "+" : "") + lon + ((lat > 0) ? "+" : "") + lat+".js");
+                os = new FileOutputStream(tileF);
+                get(i).toJavaScript(os);
+                os.close();
+            } catch(IOException ex) {
+                System.err.println("A tile cannot be write. The file name is "+tileF);
             }
         }
     }

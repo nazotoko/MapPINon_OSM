@@ -29,7 +29,6 @@
 
 package org.openstreetmap.mappinonosm.database;
 
-import org.openstreetmap.mappinonosm.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,11 +39,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  *
@@ -145,8 +139,8 @@ public class XMLTable extends HashSet<XML>{
      * read RSSes in the database
      */
     public void read() {
-        for(XML r: this){
-            r.read();
+        for(XML x: this){
+            x.read();
         }
     }
     public void toHTML(OutputStream os){

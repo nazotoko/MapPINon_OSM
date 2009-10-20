@@ -39,8 +39,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Stack;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -66,22 +64,81 @@ public class RSS extends XML {
     static private String[] endHock = {"link","category"};
 
     /**
-     * @param uri URL indicates the file exing there.
+     * This function is called from only XML.getInstance()
+     * @param uri URI indicates the file exing there. 
      */
     RSS(URI uri) {
         super(uri);
     }
 
+    /**
+     * This function is called from only XML.read()
+     * @param id ID number to be set. 
+     */
     RSS(int id) {
         super(id);
     }
 
-    void read (){
+    private String entity(String input) {
+        String ret=input.replaceAll("\n", "<br/>");
+        ret=ret.replaceAll("\"", "&quot;");
+        ret=ret.replaceAll("'", "&apos;");
+        return ret;
+    }
+
+    private URL [] getImages(String context, boolean cdata){
+        ArrayList<URL> urls=new ArrayList<URL>();
+        if(!cdata){
+            context=context.replaceAll("&lt;","<").replaceAll("&gt;", ">");
+        }
+        int start=0,end=0;
+        while((start=context.indexOf("<img ",end))>0){
+            if((end = context.indexOf("src=", start + 5))>0){
+                if(context.charAt(end + 4) == '"'){
+                    start = end + 5;
+                    end = context.indexOf('"',start);
+                    String s=context.substring(start,end);
+                    try {
+                        urls.add(new URL(s));
+                    } catch(MalformedURLException ex) {
+                        System.out.println("Illigal URL: "+s);
+                    }
+                }
+            }
+        }
+        return urls.toArray(new URL[urls.size()]);
+    }
+
+    private void machineTags(String...  st){
+        int in = 0;
+        for(String s:st){
+            if(s.startsWith("osm:")){
+                in = 4;
+                if(s.startsWith("node=", in)){
+                    in += 5;
+                    int node = Integer.parseInt(s.substring(in));
+                    photo.addNode(node);
+                } else if(s.startsWith("way=", in)){
+                    in += 4;
+                    int way = Integer.parseInt(s.substring(in));
+                    photo.addWay(way);
+                }
+            }
+            if(s.startsWith("mappin:")){
+                in = 7;
+                if(s.startsWith("at=", in)){
+                    in += 3;
+                    photo.getMappinAt(s.substring(in));
+                }
+            }
+        }
+    }
+    void read(){
         XMLReader parser;
         try {
             parser = XMLReaderFactory.createXMLReader();
             parser.setContentHandler(this);
-            parser.parse(uri.toString());
+            parser.parse(uri.toASCIIString());
         } catch(SAXException ex) {
             System.out.println("cannot read");
         } catch(IOException ex) {
@@ -204,58 +261,6 @@ public class RSS extends XML {
             }
         }
         textBuffer="";
-    }
-    private String entity(String input) {
-        String ret=input.replaceAll("\n", "<br/>");
-        ret=ret.replaceAll("\"", "&quot;");
-        ret=ret.replaceAll("'", "&apos;");
-        return ret;
-    }
-    private URL [] getImages(String context, boolean cdata){
-        ArrayList<URL> urls=new ArrayList<URL>();
-        if(!cdata){
-            context=context.replaceAll("&lt;","<").replaceAll("&gt;", ">");
-        }
-        int start=0,end=0;
-        while((start=context.indexOf("<img ",end))>0){
-            if((end = context.indexOf("src=", start + 5))>0){
-                if(context.charAt(end + 4) == '"'){
-                    start = end + 5;
-                    end = context.indexOf('"',start);
-                    String s=context.substring(start,end);
-                    try {
-                        urls.add(new URL(s));
-                    } catch(MalformedURLException ex) {
-                        System.out.println("Illigal URL: "+s);
-                    }
-                }
-            }
-        }
-        return urls.toArray(new URL[urls.size()]);
-    }
-    private void machineTags(String...  st){
-        int in = 0;
-        for(String s:st){
-            if(s.startsWith("osm:")){
-                in = 4;
-                if(s.startsWith("node=", in)){
-                    in += 5;
-                    int node = Integer.parseInt(s.substring(in));
-                    photo.addNode(node);
-                } else if(s.startsWith("way=", in)){
-                    in += 4;
-                    int way = Integer.parseInt(s.substring(in));
-                    photo.addWay(way);
-                }
-            }
-            if(s.startsWith("mappin:")){
-                in = 7;
-                if(s.startsWith("at=", in)){
-                    in += 3;
-                    photo.getMappinAt(s.substring(in));
-                }
-            }
-        }
     }
 
     @Override

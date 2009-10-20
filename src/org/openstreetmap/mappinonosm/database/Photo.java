@@ -82,8 +82,8 @@ public class Photo {
     protected String title=null;
     /** GPS alatitude (meter) */
     protected float alatitude=0;
-    /** GPS orientation (meter) */
-    protected float orientation=0;
+    /** GPS direction (degree) */
+    protected float direction=-1000;
     /** GPS speed (meter) */
     protected float speed=0;
 
@@ -446,6 +446,9 @@ public class Photo {
         }
         if(thumnale != null){
             ps.print(",th:'" + thumnale + "'");
+        }
+        if(direction == -1000){
+            ps.print(",dir:'" + direction + "'");
         }
         if(node != null){
             ps.print(",n:" + node.toString());

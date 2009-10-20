@@ -16,14 +16,19 @@ Copy the all directory under htdocs to it.
 === the background server ===
 The background server depends on 
 * Sun Java 1.5
-* Metadata Extractor 2.3.1 (http://www.drewnoakes.com/code/exif/ )
-** place Metadata Extractor on lib/metadata-extractor-2.3.1.jar
+* Metadata Extractor 2.3.1 ( http://www.drewnoakes.com/code/exif/ )
+** put metadata-extractor-2.3.1.jar into lib/
+* Flickrj ( http://flickrj.sourceforge.net/ )
+** put flickrapi-1.2.jar into lib/
 
-It can run just type
+Move dist/MapPIN.jar to ./
+Then, it can be run just type:
+
 java -jar MapPIN.jar [command] [args]
 
 commands are 
 * add: adding RSSes.
+* get: getting RSS registration file form forground server.
 * read: read RSSes and photo files listed on the RSSes from internet and update local databases
 * tile: make photo markers tiles from local databases
 * loop: just do "read" and "tile".
