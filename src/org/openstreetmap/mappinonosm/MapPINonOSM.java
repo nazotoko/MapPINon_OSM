@@ -43,11 +43,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import org.openstreetmap.mappinonosm.database.XML;
 
 /**
  *
@@ -91,13 +94,13 @@ public class MapPINonOSM {
      */
     public void addRSS(String... urls){
         /** First stage: adding new RSS */
-        RSS r;
+        XML x;
         for(String u: urls){
             try {
-                r = new RSS(new URL(u));
-                rb.add(r);
-            } catch(MalformedURLException ex) {
-                System.out.println("Ilreguler URL: " + u);
+                x = XML.getInstance(new URI(u));
+                rb.add(x);
+            } catch(URISyntaxException ex) {
+                System.out.println("Ilreguler URI: " + u);
             }
         }
     }

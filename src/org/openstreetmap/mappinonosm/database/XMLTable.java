@@ -145,17 +145,8 @@ public class XMLTable extends HashSet<XML>{
      * read RSSes in the database
      */
     public void read() {
-        XMLReader parser;
         for(XML r: this){
-            try {
-                parser = XMLReaderFactory.createXMLReader();
-                parser.setContentHandler(r);
-                parser.parse(r.getURL().toString());
-            } catch(SAXException ex) {
-                Logger.getLogger(MapPINonOSM.class.getName()).log(Level.SEVERE, null, ex);
-            } catch(IOException ex) {
-                Logger.getLogger(MapPINonOSM.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            r.read();
         }
     }
     public void toHTML(OutputStream os){

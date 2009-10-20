@@ -30,8 +30,8 @@
 package org.openstreetmap.mappinonosm.database;
 
 import java.io.PrintStream;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
@@ -55,7 +55,7 @@ abstract public class XML extends DefaultHandler2 implements Comparable<XML>{
     /** for title */
     protected String title=null;
     /** URL of the RSS*/
-    protected URL url;
+    protected URI uri;
     /** id given by RSSBase */
     protected int id=0;
     protected int counter=0;
@@ -63,8 +63,8 @@ abstract public class XML extends DefaultHandler2 implements Comparable<XML>{
     /** public constractor
      * @param u 
      */
-    public XML(URL u) {
-        url=u;
+    XML(URI u) {
+        uri=u;
         recodeDate=new Date();
     }
     /** Called form XMLBase only.
@@ -73,13 +73,26 @@ abstract public class XML extends DefaultHandler2 implements Comparable<XML>{
     XML(int id) {
         this.id = id;
     }
-    
-    public URL getURL() {
-        return url;
+    public static XML getInstance(URI u){
+        if(u.getScheme().equals("flickr")){
+            return new FlickrProtocal(u);
+        } else if(u.getScheme().equals("http")){
+            return new RSS(u);
+        }
+        return null;
+    }
+    /**
+     * 
+     * @return
+     */
+    public URI getURL() {
+        return uri;
     }
     public void setPhotoBase(PhotoTable pb) {
         this.pb=pb;
     }
+
+    abstract void read();
 
     void addCount() {
         counter++;
@@ -127,7 +140,7 @@ abstract public class XML extends DefaultHandler2 implements Comparable<XML>{
         a = line.indexOf('"');
         c = line.indexOf('"', a + 1);
         try{
-            url = new URL(line.substring(a + 1, c));
+            uri = new URI(line.substring(a + 1, c));
             /** This don't add registering Date */
             c++;
             do {
@@ -158,8 +171,8 @@ abstract public class XML extends DefaultHandler2 implements Comparable<XML>{
                     readDate = new Date(Long.parseLong(value) * 1000);
                 }
             } while(end);
-        } catch(MalformedURLException ex) {
-            System.out.println("Illigal URL: " +line.substring(a + 1, c));
+        } catch(URISyntaxException ex) {
+            System.out.println("Illigal URI: " +line.substring(a + 1, c));
         }
     }
     /**
@@ -167,7 +180,7 @@ abstract public class XML extends DefaultHandler2 implements Comparable<XML>{
      * @param ps PrintStream given form XMLBase
      */
     public void save(PrintStream ps) {
-        ps.print(id + ":{url:\"" + url +
+        ps.print(id + ":{url:\"" + uri +
                 "\",recoded:" + recodeDate.getTime() / 1000);
         if(title != null){
             ps.print(",title:\"" + title + "\"");
@@ -183,14 +196,14 @@ abstract public class XML extends DefaultHandler2 implements Comparable<XML>{
     public void toHTML(PrintStream ps){
         ps.println("<td class=\"number\">"+id+"</td>");
         ps.println("<td class=\"number\">"+counter+"</td>");
-        ps.println("<td><a href=\""+url.toString()+"\">"+title+"</a></td>");
+        ps.println("<td><a href=\""+uri.toString()+"\">"+title+"</a></td>");
         ps.println("<td>"+htmlDateFormat.format(readDate)+"</td>");
         ps.println("<td>"+htmlDateFormat.format(recodeDate)+"</td>");
     }
 
     @Override
     public int hashCode() {
-        return url.hashCode();
+        return uri.hashCode();
     }
 
     @Override
@@ -199,8 +212,8 @@ abstract public class XML extends DefaultHandler2 implements Comparable<XML>{
             return false;
         }
         final XML other = (XML)obj;
-        if(this.url != null){
-            return this.url.equals(other.url);
+        if(this.uri != null){
+            return this.uri.equals(other.uri);
         }
         return false;
     }

@@ -29,7 +29,9 @@
 
 package org.openstreetmap.mappinonosm.database;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,6 +43,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  *
@@ -62,27 +66,39 @@ public class RSS extends XML {
     static private String[] endHock = {"link","category"};
 
     /**
-     * @param url URL indicates the file exing there.
+     * @param uri URL indicates the file exing there.
      */
-    public RSS(URL url) {
-        super(url);
+    RSS(URI uri) {
+        super(uri);
     }
 
     RSS(int id) {
         super(id);
     }
-    
+
+    void read (){
+        XMLReader parser;
+        try {
+            parser = XMLReaderFactory.createXMLReader();
+            parser.setContentHandler(this);
+            parser.parse(uri.toString());
+        } catch(SAXException ex) {
+            System.out.println("cannot read");
+        } catch(IOException ex) {
+            System.out.println("IOException");
+        }
+    }
     @Override
     public void startDocument() throws SAXException {
         if(pb == null){
             System.err.println("Program's Error: PhotoBase is not set.");
             System.exit(1);
         }
-        if(url == null){
+        if(uri == null){
             System.err.println("Program's Error: URL of RSS is not set.");
             System.exit(1);
         }
-        System.out.println("RSS: "+url);
+        System.out.println("RSS: "+uri);
         stack = new Stack<String>();
     }
 
