@@ -85,8 +85,8 @@ public class MapPINonOSM {
         "registration",
         "flickrKey",
         "flickrSecret",
-        "backupdir",
-        "datadir"
+        "backupDir",
+        "dataDir"
     };
     private String flickrKey;
     private String flickrSecret;
