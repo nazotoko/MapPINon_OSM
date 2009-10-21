@@ -51,7 +51,6 @@ import org.xml.sax.helpers.XMLReaderFactory;
 public class RSS extends XML {
 
     /** for SAX reader */
-    private Photo photo = null;
     private Stack <String> stack;
     private String textBuffer;
     private boolean inCDATA = false;
@@ -109,30 +108,6 @@ public class RSS extends XML {
         return urls.toArray(new URL[urls.size()]);
     }
 
-    private void machineTags(String...  st){
-        int in = 0;
-        for(String s:st){
-            if(s.startsWith("osm:")){
-                in = 4;
-                if(s.startsWith("node=", in)){
-                    in += 5;
-                    int node = Integer.parseInt(s.substring(in));
-                    photo.addNode(node);
-                } else if(s.startsWith("way=", in)){
-                    in += 4;
-                    int way = Integer.parseInt(s.substring(in));
-                    photo.addWay(way);
-                }
-            }
-            if(s.startsWith("mappin:")){
-                in = 7;
-                if(s.startsWith("at=", in)){
-                    in += 3;
-                    photo.getMappinAt(s.substring(in));
-                }
-            }
-        }
-    }
     void read(){
         XMLReader parser;
         try {
@@ -164,7 +139,7 @@ public class RSS extends XML {
         if(photo==null){
             if (qualifiedName.equals("item")) {
                 photo = new Photo();
-                photo.setRSS(this);
+                photo.setXML(this);
                 System.out.println("<item> start:");
                 contextCDATA=false;
                 descriptionCDATA=false;
@@ -196,7 +171,7 @@ public class RSS extends XML {
         } else {
             if(qualifiedName.equals("item")){
                 photo.setReadDate(new Date());
-                if(photo.original ==null){
+                if(photo.original ==null){// if media tag doesn't exist.
                     URL[] urls = getImages(contextEncoded, contextCDATA);
 /*                    for(URL urlPhoto: urls){
                         System.out.println("\timage: " + urlPhoto);
@@ -249,12 +224,12 @@ public class RSS extends XML {
                 System.out.println("\tlink: " + photo.getLink());
             } else if(qualifiedName.equals("media:keywords")){
                 System.out.println("\tmedia:keywords: "+textBuffer);
-                String [] demilited=textBuffer.split(", ");
-                machineTags(demilited);
+                String [] delimited=textBuffer.split(", ");
+                machineTags(delimited);
             } else if(qualifiedName.equals("media:category")){
                 System.out.println("\tmedia:category: "+textBuffer);
-                String [] demilited=textBuffer.split(" ");
-                machineTags(demilited);
+                String [] delimited=textBuffer.split(" ");
+                machineTags(delimited);
             } else if(qualifiedName.equals("category")){
                 System.out.println("\tcategory: "+textBuffer);
                 machineTags(textBuffer);

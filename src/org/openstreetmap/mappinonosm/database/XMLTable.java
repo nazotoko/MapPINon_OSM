@@ -39,7 +39,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
-
+import com.aetrion.flickr.Flickr;
 /**
  *
  * @author nazo
@@ -47,6 +47,8 @@ import java.util.Iterator;
 public class XMLTable extends HashSet<XML>{
     private int maxId=0;
     private PhotoTable pb=null;
+    private Flickr flickr=null;
+    private String flickrSecret=null;
     /** must set pb before load
      * @param pb Photobase object you are using.
      */
@@ -56,21 +58,31 @@ public class XMLTable extends HashSet<XML>{
     }
     /** prohibited */
     private XMLTable(){}
-
+    /**
+     * @param key Flickr's API key
+     * @param secret Flickr's API secret key
+     */
+    public void setFlickrKeys(String key, String secret) {
+        flickr=new Flickr(key);
+        flickrSecret=secret;
+    }
     /** the RSS shuld have url
-     * @param rss 
+     * @param xml
      */
     @Override
-    public boolean add(XML rss) {
-        if (super.add(rss) == false) {
+    public boolean add(XML xml) {
+        if (super.add(xml) == false) {
             return false;
         }
-        rss.setPhotoBase(pb);
-        if(rss.getId()==0){
+        if(xml instanceof FlickrProtocal){
+            ((FlickrProtocal)xml).setFlickr(flickr,flickrSecret);
+        }
+        xml.setPhotoBase(pb);
+        if(xml.getId()==0){
             maxId++;
-            rss.setId(maxId);
-        } else if(maxId < rss.getId()){
-            maxId=rss.getId();
+            xml.setId(maxId);
+        } else if(maxId < xml.getId()){
+            maxId=xml.getId();
         }
         return true;
     }

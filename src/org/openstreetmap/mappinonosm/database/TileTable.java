@@ -53,10 +53,10 @@ public class TileTable extends HashMap<Integer,Tile>{
     public TileTable(File dataDir) throws IOException{
         if(!dataDir.exists()){
             if(dataDir.mkdir()==false){
-                throw new IOException("dataDir directory cannot be make.");
+                throw new IOException("Dicectory cannot be make.");
             }
         } else if(!dataDir.isDirectory()){
-                throw new IOException("dataDir must be a dicectory.");            
+                throw new IOException("It must be a dicectory.");            
         }
         baseDirectory=dataDir;
     }

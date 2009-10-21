@@ -59,7 +59,7 @@ public class Photo {
     /** 0 means not set yet */
     protected int id=0;
     /** none null */
-    protected XML rss=null;
+    protected XML xml=null;
     /** none 0 */
     protected double latitude=0;
     /** none 0 */
@@ -153,17 +153,17 @@ public class Photo {
     }
 
     /**
-     * @return the rss
+     * @return the xml
      */
-    public XML getRSS() {
-        return rss;
+    public XML getXML() {
+        return xml;
     }
 
     /**
-     * @param rss the rss to set
+     * @param xml the xml to set
      */
-    public void setRSS(RSS rss) {
-        this.rss = rss;
+    public void setXML(XML xml) {
+        this.xml = xml;
     }
 
     /**
@@ -433,7 +433,7 @@ public class Photo {
     void toJavaScript(PrintStream ps) {
         ps.print(id+":{la:" + df.format(latitude) +
                 ",lo:" + df.format(longitude) +
-                ",r:'" + rss.getURL() + "'" +
+                ",r:'" + xml.getURL() + "'" +
                 ",s:" + state);
         if(title != null){
             ps.print(",ti:'" + title + "'");
@@ -457,14 +457,14 @@ public class Photo {
             ps.print(",w:" + way.toString());
         }
         ps.print("}");
-        rss.addCount();
+        xml.addCount();
     }
     
     /** only called from Photobase */
     void save(PrintStream ps){
         ps.print(id+":{la:" + latitude +
                 ",lo:" + longitude +
-                ",r:" + rss.getId() +
+                ",r:" + xml.getId() +
                 ",s:" + state);
         if (title != null) {
             ps.print(",ti:'" + title + "'");
@@ -558,7 +558,7 @@ public class Photo {
             } else if(key.equals("lo")){
                 longitude=Double.parseDouble(value);
             } else if(key.equals("r")){
-                rss=rb.get(Integer.parseInt(value));
+                xml=rb.get(Integer.parseInt(value));
             } else if(key.equals("li")){
                 try {
                     link = new URL(value);

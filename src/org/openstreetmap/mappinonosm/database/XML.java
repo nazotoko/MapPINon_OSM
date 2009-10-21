@@ -61,6 +61,9 @@ abstract public class XML extends DefaultHandler2 implements Comparable<XML>{
     protected int id=0;
     protected int counter=0;
 
+    /** for work*/
+    protected Photo photo = null;
+
     /** public constractor
      * @param u 
      */
@@ -79,7 +82,7 @@ abstract public class XML extends DefaultHandler2 implements Comparable<XML>{
      * @param uri the uri
      * @return Instance of subclasses. It returns null when the sutable scheam not found.
      */
-    static public XML getInstance(URI uri){
+    static public XML getInstance(URI uri) {
         if(uri.getScheme().equals("flickr")){
             return new FlickrProtocal(uri);
         } else if(uri.getScheme().equals("http")){
@@ -95,8 +98,12 @@ abstract public class XML extends DefaultHandler2 implements Comparable<XML>{
     public URI getURL() {
         return uri;
     }
+    /**
+     * XML mast have PhotoTable
+     * @param pb PhotoTable
+     */
     public void setPhotoBase(PhotoTable pb) {
-        this.pb=pb;
+        this.pb = pb;
     }
 
     void addCount() {
@@ -131,6 +138,32 @@ abstract public class XML extends DefaultHandler2 implements Comparable<XML>{
     void setId(int id) {
         this.id = id;
     }
+
+    protected void machineTags(String...  st){
+        int in = 0;
+        for(String s:st){
+            if(s.startsWith("osm:")){
+                in = 4;
+                if(s.startsWith("node=", in)){
+                    in += 5;
+                    int node = Integer.parseInt(s.substring(in));
+                    photo.addNode(node);
+                } else if(s.startsWith("way=", in)){
+                    in += 4;
+                    int way = Integer.parseInt(s.substring(in));
+                    photo.addWay(way);
+                }
+            }
+            if(s.startsWith("mappin:")){
+                in = 7;
+                if(s.startsWith("at=", in)){
+                    in += 3;
+                    photo.getMappinAt(s.substring(in));
+                }
+            }
+        }
+    }
+
     abstract void read();
     /**
      * Called from XMLBase

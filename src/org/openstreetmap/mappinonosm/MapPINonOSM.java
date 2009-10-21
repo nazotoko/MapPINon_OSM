@@ -88,8 +88,6 @@ public class MapPINonOSM {
         "backupDir",
         "dataDir"
     };
-    private String flickrKey;
-    private String flickrSecret;
     private File backupdir=null;
     private File dataDir=null;
 
@@ -98,6 +96,8 @@ public class MapPINonOSM {
         InputStream is;
         String line;
         String value;
+        String flickrKey = null;
+        String flickrSecret = null;
         int i;
         try {
             BufferedReader br=new BufferedReader(new InputStreamReader(new FileInputStream("./config.txt"),"UTF-8"));
@@ -160,6 +160,9 @@ public class MapPINonOSM {
         
         photoTable = new PhotoTable();
         xmlTable = new XMLTable(photoTable);
+        if(flickrKey != null && flickrSecret != null){
+            xmlTable.setFlickrKeys(flickrKey, flickrSecret);
+        }
         if(rss_table==null){
             System.err.println("RSS table file is not specified.");
             return;
@@ -209,7 +212,7 @@ public class MapPINonOSM {
     }
 
     /**
-     * getRSS from foreground servers registration text file.
+     * getXML from foreground servers registration text file.
      */
     public void getRSS() {
         if(registration == null || domain == null){
@@ -246,21 +249,24 @@ public class MapPINonOSM {
         /** third stage: making tiles from photo database*/
         TileTable tb;
         Tile t;
-        try {
-            tb = new TileTable(dataDir);
-            for(Photo p: photoTable){
-                int id = TileTable.getID(p.getLon(), p.getLat());
-                if((t = tb.get(id)) == null){
-                    t = new Tile();
-                    tb.put(id, t);
+        if(dataDir!=null){
+            try {
+                tb = new TileTable(dataDir);
+                for(Photo p: photoTable){
+                    int id = TileTable.getID(p.getLon(), p.getLat());
+                    if((t = tb.get(id)) == null){
+                        t = new Tile();
+                        tb.put(id, t);
+                    }
+                    t.add(p);
                 }
-                t.add(p);
+                tb.save();
+            } catch(IOException ex) {
+                System.out.println("Fail to open tile directory: " + ex.getMessage());
             }
-            tb.save();
-        } catch(IOException ex) {
-            System.out.println("Fail to open tile directory: "+ex.getMessage());
+        } else {
+            System.out.println("Becase dataDir is not specified, Tiles are not made.");
         }
-
         if(rssList!=null){
             try {
                 xmlTable.toHTML(new FileOutputStream(rssList));
