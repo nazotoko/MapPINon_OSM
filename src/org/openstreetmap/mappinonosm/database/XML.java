@@ -31,8 +31,10 @@ package org.openstreetmap.mappinonosm.database;
 
 import java.io.PrintStream;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
@@ -42,21 +44,28 @@ import org.xml.sax.ext.DefaultHandler2;
  *
  * @author nazo
  */
-abstract public class XML extends DefaultHandler2 implements Comparable<XML>{
+abstract public class XML  implements Comparable<XML>{
     static private SimpleDateFormat htmlDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     static{
         htmlDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
-    /** for event */
-    protected  PhotoTable pb;
-    /** for recode date */
-    protected Date recodeDate=null;
-    /** for read date */
+    /**
+     * prep. for event.
+     * not recoded.
+     * <a href="#setPhotoBase">setPhotoBase(PhotoTable pt)</a>
+     */
+    protected  PhotoTable photoTable;
+    /** Registed date */
+    protected Date registeredDate=null;
+    /** Read date */
     protected Date readDate=null;
-    /** for title */
+    /** Title of RSS */
     protected String title=null;
-    /** URL of the RSS*/
-    protected URI uri;
+    /** URI of the RSS*/
+    protected URI uri=null;
+    /** URL of main link */
+    protected URL link=null;
+    
     /** id given by RSSBase */
     protected int id=0;
     protected int counter=0;
@@ -67,14 +76,14 @@ abstract public class XML extends DefaultHandler2 implements Comparable<XML>{
     /** public constractor
      * @param u 
      */
-    XML(URI u) {
+    protected XML(URI u) {
         uri=u;
-        recodeDate=new Date();
+        registeredDate=new Date();
     }
     /** Called form XMLBase only.
      * @param id integer id number 
      */
-    XML(int id) {
+    protected XML(int id) {
         this.id = id;
     }
     /**
@@ -100,10 +109,10 @@ abstract public class XML extends DefaultHandler2 implements Comparable<XML>{
     }
     /**
      * XML mast have PhotoTable
-     * @param pb PhotoTable
+     * @param photoTable PhotoTable
      */
-    public void setPhotoBase(PhotoTable pb) {
-        this.pb = pb;
+    public void setPhotoBase(PhotoTable photoTable) {
+        this.photoTable = photoTable;
     }
 
     void addCount() {
@@ -111,7 +120,7 @@ abstract public class XML extends DefaultHandler2 implements Comparable<XML>{
     }
     /**  only called from RSSBase */
     void setRecodedDate(Date date) {
-        recodeDate=date;
+        registeredDate=date;
     }
     /**  only called from RSSBase */
     void setReadDate(Date date) {
@@ -122,7 +131,7 @@ abstract public class XML extends DefaultHandler2 implements Comparable<XML>{
         this.title=title;
     }
     public Date getRecodedDate() {
-        return recodeDate;
+        return registeredDate;
     }
     public Date getReadDate() {
         return readDate;
@@ -130,7 +139,9 @@ abstract public class XML extends DefaultHandler2 implements Comparable<XML>{
     public String getTitle() {
         return title;
     }
-
+    public URL getLink() {
+        return link;
+    }
     public int getId() {
         return id;
     }
@@ -170,16 +181,26 @@ abstract public class XML extends DefaultHandler2 implements Comparable<XML>{
      * @param line 1 line string
      * @param rb parent datatable
      */
-    void load(String line, PhotoTable pb){
+    static XML load(String line, PhotoTable pb){
         boolean end = true;
-        int a, b, c;
-        String key, value;
+        int a, b, c, id;
+        String key, value=null;
+        XML ret = null;
+        URI uri;
+        a = line.indexOf(':');
+        if (a < 0) {
+            return null;
+        }
+        id = Integer.parseInt(line.substring(0, a));
+        // System.err.println("Load-RSS ID: "+id);
+        line = line.substring(line.indexOf('{', a + 1) + 1, line.lastIndexOf('}'));
 
-        this.pb=pb;
         a = line.indexOf('"');
         c = line.indexOf('"', a + 1);
         try{
             uri = new URI(line.substring(a + 1, c));
+            ret=getInstance(uri);
+            ret.id=id;
             /** This don't add registering Date */
             c++;
             do {
@@ -203,29 +224,38 @@ abstract public class XML extends DefaultHandler2 implements Comparable<XML>{
                     }
                 }
                 if(key.equals("recoded")){
-                    recodeDate = new Date(Long.parseLong(value) * 1000);
+                    ret.registeredDate = new Date(Long.parseLong(value) * 1000);
                 } else if(key.equals("title")){
-                    title = value;
+                    ret.title = value;
                 } else if(key.equals("read")){
-                    readDate = new Date(Long.parseLong(value) * 1000);
+                    ret.readDate = new Date(Long.parseLong(value) * 1000);
+                } else if(key.equals("li")){
+                    ret.link = new URL(value);
                 }
-            } while(end);
-        } catch(URISyntaxException ex) {
-            System.out.println("Illigal URI: " +line.substring(a + 1, c));
+            } while (end);
+        } catch (URISyntaxException ex) {
+            System.out.println("Illigal URI: " + line.substring(a + 1, c));
+        } catch (MalformedURLException ex){
+            System.out.println("Illigal URL: " + value);
         }
+        return ret;
     }
+
     /**
      * Called from XMLBase
      * @param ps PrintStream given form XMLBase
      */
     public void save(PrintStream ps) {
         ps.print(id + ":{url:\"" + uri +
-                "\",recoded:" + recodeDate.getTime() / 1000);
+                "\",recoded:" + registeredDate.getTime() / 1000);
         if(title != null){
             ps.print(",title:\"" + title + "\"");
         }
         if(readDate != null){
             ps.print(",read:" + readDate.getTime() / 1000);
+        }
+        if(link != null){
+            ps.print(",li:" + link);
         }
         ps.print("}");
     }
@@ -235,9 +265,18 @@ abstract public class XML extends DefaultHandler2 implements Comparable<XML>{
     public void toHTML(PrintStream ps){
         ps.println("<td class=\"number\">"+id+"</td>");
         ps.println("<td class=\"number\">"+counter+"</td>");
-        ps.println("<td><a href=\""+uri.toString()+"\">"+title+"</a></td>");
+        ps.println("<td>");
+        if(link!=null){
+            ps.println("<a href=\""+link.toString()+"\">");
+        }
+        ps.println(title);
+        if(link!=null){
+            ps.println("</a>");
+        }
+        ps.println("</td>");
+        ps.println("<td>"+uri.toString()+"</td>");
         ps.println("<td>"+htmlDateFormat.format(readDate)+"</td>");
-        ps.println("<td>"+htmlDateFormat.format(recodeDate)+"</td>");
+        ps.println("<td>"+htmlDateFormat.format(registeredDate)+"</td>");
     }
 
     @Override

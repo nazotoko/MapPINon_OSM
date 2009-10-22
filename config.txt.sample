@@ -2,8 +2,8 @@ photoTable=photo.json.gz
 RSSTable=rss.json.gz
 historyTable=history.josn.gz
 
-backupdir=backup/
-datadir=htdocs/data/
+backupDir=backup/
+dataDir=htdocs/data/
 RSSList=htdocs/rsslist.html
 
 domain=mappin.hp2.jp

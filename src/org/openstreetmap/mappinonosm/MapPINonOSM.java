@@ -216,14 +216,14 @@ public class MapPINonOSM {
      */
     public void getRSS() {
         if(registration == null || domain == null){
-            System.err.println("== get command: not set to use ==");
+            System.err.println("== Get command: not set to use ==");
             return;
         }
         BufferedReader br = null;
         URL url = null;
         String s;
         try {
-            url = new URL("http", domain, "/"+registration);
+            url = new URL("http", domain, registration);
             br = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
             while((s = br.readLine()) != null){
                 xmlTable.add(XML.getInstance(new URI(s)));
@@ -233,7 +233,7 @@ public class MapPINonOSM {
         } catch(MalformedURLException ex){
             System.err.println("Strange URL: "+url); 
         } catch(URISyntaxException ex) {
-            System.err.println("URL is strange. Check the config.txt file on the line domain.");
+            System.err.println("URL is strange. Check the config.txt file on the line domain. domain: "+domain+", registration: "+registration);
         } catch(IOException ex) {
             System.err.println("The file cannot to be accessed. URL: "+url);
         }

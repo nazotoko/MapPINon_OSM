@@ -17,7 +17,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>'; ?>
         <?php
 if($url=$_REQUEST['rss']){
     $url=trim($url);
-    if(strpos($url,"http://")===0){
+    if(strpos($url,"http://")===0 ||strpos($url,"flickr:")===0){
         $f=fopen("data/new_rss.txt","a");
         fwrite($f,$url."\n");
         fclose($f);

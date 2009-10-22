@@ -16,9 +16,13 @@ import com.aetrion.flickr.photos.PhotosInterface;
 import com.aetrion.flickr.photos.SearchParameters;
 import com.aetrion.flickr.tags.Tag;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.xml.sax.SAXException;
 
 /**
@@ -57,29 +61,40 @@ public class FlickrProtocal extends XML {
     void read() {
         PeopleInterface peoplei= f.getPeopleInterface();
         PhotosInterface photosi = f.getPhotosInterface();
+        PhotoList plist = null;
+        SearchParameters sp = new SearchParameters();
+        String s = uri.getSchemeSpecificPart();
+        System.out.println("Flickr's API: "+s);
         try {
-            PhotoList plist = null;
-            SearchParameters sp = new SearchParameters();
-
-            String[] args = uri.getSchemeSpecificPart().split("/");
+            link = new URL("http://flic.kr/" + s);
+        } catch(MalformedURLException ex) {
+            System.out.println("This is invaild. ");
+            return;
+        }
+        String[] args = s.split("/");
+        title="Flickr photos";
+        try {
             for(int i = 0; i < args.length; i++){
                 if(args[i].startsWith("tags")){
                     System.out.println("tags: " + args[i + 1]);
                     sp.setTags(new String[]{args[i + 1]});
+                    title+=" tagged &quot;"+args[i+1]+"&quot;.";
                     break;
                 } else if(args[i].startsWith("sets")){
                     System.out.println("sets: " + args[i + 1]);
                     //sp.????(args[i+1]);
+                    title+=" from set &quot;"+args[i+1]+"&quot;.";
                     break;
                 } else {
                     System.out.println("uesrid: " + args[i]);
                     User u = peoplei.getInfo(args[i]);
                     System.out.println("username: " + u.getUsername());
-                    sp.setUserId(u.getId());
+                    title+=" of user, "+u.getUsername()+", ";
+                    sp.setUserId(args[i]);
                 }
             }
-
-            plist = photosi.search(sp, 5, 1);
+            plist = photosi.search(sp, 60, 1);
+            /** analysing Photos */
             for(Object o: plist){
                 Photo p = photosi.getPhoto(((Photo)o).getId());
                 photo = new org.openstreetmap.mappinonosm.database.Photo();
@@ -87,8 +102,8 @@ public class FlickrProtocal extends XML {
 //                System.out.println("id: " + p.getId());
                 photo.setTitle(p.getTitle());
                 System.out.println("\ttitle: " + p.getTitle());
-                photo.setLink(p.getUrl());
-                System.out.println("\tlink: " + p.getUrl());
+                photo.setLink("http://flic.kr/"+p.getOwner().getId()+"/"+p.getId());
+                System.out.println("\tlink: " + photo.getLink());
                 photo.setThumnale(p.getThumbnailUrl());
                 System.out.println("\tthumbnail: " + p.getThumbnailUrl());
                 photo.setOriginal(p.getOriginalUrl());
@@ -100,19 +115,38 @@ public class FlickrProtocal extends XML {
                 for(Object o2: p.getTags()){
                     Tag t = (Tag)o2;
                     machineTags(t.getValue());
-                    System.out.println("tag: " + t.getValue());
+                    System.out.println("\ttag: " + t.getValue());
                 }
-                ArrayList<Exif> exifal = (ArrayList<Exif>)photosi.getExif(p.getId(), secret);
+                ArrayList<Exif> exifal = (ArrayList<Exif>)photosi.getExif(p.getId(), "");
                 for(Exif e: exifal){
-                    System.out.println(e.getTag() + ": " + e.getClean());
+                    String tag=e.getTag();
+                    if(tag.equals("GPSLatitudeRef")){
+                        System.out.println(e.getTag() + ": " + e.getRaw());
+                    } else if(tag.equals("GPSLatitude")){
+                        System.out.println(e.getTag() + ": " + e.getRaw());
+                    } else if(tag.equals("GPSLongitudeRef")){
+                        System.out.println(e.getTag() + ": " + e.getRaw());
+                    } else if(tag.equals("GPSLongitude")){
+                        System.out.println(e.getTag() + ": " + e.getRaw());
+                    } else if(tag.equals("GPSAltitudeRef")){
+                        System.out.println(e.getTag() + ": " + e.getRaw());
+                    } else if(tag.equals("GPSAltitude")){
+                        System.out.println(e.getTag() + ": " + e.getRaw());
+                    } else if(tag.equals("GPSImgDirectionRef")){
+                        System.out.println(e.getTag() + ": " + e.getRaw());
+                    } else if(tag.equals("GPSImgDirection")){
+                        System.out.println(e.getTag() + ": " + e.getRaw());
+                    }
                 }
+
+                /*** End of a photo ***/
                 photo.setReadDate(new Date());
-                if(pb.add(photo) == false){
-                    org.openstreetmap.mappinonosm.database.Photo oldPhoto = pb.get(photo);
+                if(photoTable.add(photo) == false){
+                    org.openstreetmap.mappinonosm.database.Photo oldPhoto = photoTable.get(photo);
                     if(oldPhoto.getReadDate().compareTo(photo.getUpdateDate()) < 0){
                         photo.setId(oldPhoto.getId());
-                        pb.remove(oldPhoto);
-                        pb.add(photo);
+                        photoTable.remove(oldPhoto);
+                        photoTable.add(photo);
                         photo.getEXIF();
                         System.out.println("\tThe JPEG is replaced! photo ID: " + photo.getId());
                     } else {
@@ -132,5 +166,7 @@ public class FlickrProtocal extends XML {
         } catch(FlickrException ex) {
             System.out.println("Flickr has some trable: " + ex.getMessage());
         }
+        System.out.println("Done: Flickr API.");
+        readDate = new Date();
     }
 }

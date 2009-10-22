@@ -109,23 +109,15 @@ public class XMLTable extends HashSet<XML>{
         }
         try {
             br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-            XML rss;
+            XML xml;
             int id;
             int a;
             while(true){
                 if((line = br.readLine())==null){
                     break;
                 }
-                a = line.indexOf(':');
-                if(a<0){
-                    continue;
-                }
-                id=Integer.parseInt(line.substring(0, a));
- //               System.err.println("Load-RSS ID: "+id);
-                line = line.substring(line.indexOf('{', a + 1)+1,line.lastIndexOf('}'));
-                rss = new RSS(id);
-                rss.load(line,pb);
-                add(rss);
+                xml=XML.load(line,pb);
+                add(xml);
             }
         } catch(UnsupportedEncodingException ex) {
             System.err.println("Syntax");
@@ -165,12 +157,12 @@ public class XMLTable extends HashSet<XML>{
         ps.println("<h1>List of resistered RSSes</h1>");
         ps.println("<p><a href=\"index.html\">back to the map</a>, <a href=\"blog/\">go to the blog</a></p>");
         ps.println("<p>Timezone of timestamps are of UTC.</p>");
-        ps.println("<table><tr><th>id</th><th>number of photos registered</th><th>title</th><th>read date</th><th>registed date</th></tr>");
+        ps.println("<table><tr><th>ID</th><th>Number of photos registered</th><th>Title</th><th>URI</th><th>Read date</th><th>Registed date</th></tr>");
 
         boolean odd = true;
         XML [] xmls=toArray(new XML[size()]);
         Arrays.sort(xmls);
-        for(XML r: xmls){
+        for(XML x: xmls){
             ps.print("<tr");
             
             if(odd){
@@ -180,7 +172,7 @@ public class XMLTable extends HashSet<XML>{
                 ps.print(" class=\"even\">");
                 odd = true;
             }
-            r.toHTML(ps);
+            x.toHTML(ps);
             ps.println("</tr>");
         }
         ps.println("</table>");

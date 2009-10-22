@@ -51,25 +51,51 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import javax.print.attribute.standard.MediaSize.Other;
 /**
- *
- * @author nazo
+ * Information of a Photo
+ * @author Shun "Nazotoko" Watanabe
  */
 public class Photo {
-    static DecimalFormat df = new DecimalFormat("###.######");
+    static private DecimalFormat df = new DecimalFormat("###.######");
     /** 0 means not set yet */
     protected int id=0;
-    /** none null */
+
+    /** It shuld be belong to a XML.
+     * <dl>
+     * <dt>tile</dt><dd>r:URL</dd>
+     * <dt>save</dt><dd>r:XML id</dd>
+     * </dl>
+     */
     protected XML xml=null;
-    /** none 0 */
+
+    /** latitude.
+     * 0 means the photo doesn't has any geotag.
+     * <dl>
+     * <dt>tile</dt><dd>la:###.######</dd>
+     * <dt>save</dt><dd>la:double</dd>
+     * </dl>
+     * <a href="#setLat(double)">void setLat(double)</a>
+     * <a href="#getLat(double)">double getLat()</a>
+     */
     protected double latitude=0;
-    /** none 0 */
+
+    /** longitude.
+     * 0 means the photo doesn't has any geotag.
+     * <dl>
+     * <dt>tile</dt><dd>lo:###.######</dd>
+     * <dt>save</dt><dd>lo:double</dd>
+     * </dl>
+     * <a href="#setLon(double)">void setLon(double)</a>
+     * <a href="#getLon(double)">double getLon()</a>
+     */
     protected double longitude=0;
 
-        /** 2:red, 1:yellow, 0:green */
 //    public static final int STATE_??? = 3;
     public static final int STATE_RED = 2;
     public static final int STATE_YELLOW = 1;
     public static final int STATE_BLUE = 0;
+    /** 
+     * 
+     */
     protected int state = STATE_YELLOW;
 
     /** URL of link */
@@ -433,8 +459,10 @@ public class Photo {
     void toJavaScript(PrintStream ps) {
         ps.print(id+":{la:" + df.format(latitude) +
                 ",lo:" + df.format(longitude) +
-                ",r:'" + xml.getURL() + "'" +
                 ",s:" + state);
+        if(xml.getLink() != null){
+            ps.print(",r:'" + xml.getLink() + "'");
+        }
         if(title != null){
             ps.print(",ti:'" + title + "'");
         }

@@ -39,16 +39,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
+import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  *
  * @author nazo
  */
-public class RSS extends XML {
+public class RSS extends XML implements LexicalHandler, ContentHandler {
 
     /** for SAX reader */
     private Stack <String> stack;
@@ -66,7 +71,7 @@ public class RSS extends XML {
      * This function is called from only XML.getInstance()
      * @param uri URI indicates the file exing there. 
      */
-    RSS(URI uri) {
+    protected RSS(URI uri) {
         super(uri);
     }
 
@@ -74,7 +79,7 @@ public class RSS extends XML {
      * This function is called from only XML.read()
      * @param id ID number to be set. 
      */
-    RSS(int id) {
+    protected RSS(int id) {
         super(id);
     }
 
@@ -122,7 +127,7 @@ public class RSS extends XML {
     }
     @Override
     public void startDocument() throws SAXException {
-        if(pb == null){
+        if(photoTable == null){
             System.err.println("Program's Error: PhotoBase is not set.");
             System.exit(1);
         }
@@ -168,6 +173,13 @@ public class RSS extends XML {
                 title=entity(textBuffer);
                 System.out.println("RSS title: " + title);
             }
+            if(qualifiedName.equals("link")){
+                try {
+                    link = new URL(textBuffer);
+                } catch(MalformedURLException ex) {
+                    link = null;
+                }
+            }
         } else {
             if(qualifiedName.equals("item")){
                 photo.setReadDate(new Date());
@@ -180,12 +192,12 @@ public class RSS extends XML {
                         photo.setOriginal(urls[0]);
                     }
                 }
-                if(pb.add(photo) == false){
-                    Photo oldPhoto = pb.get(photo);
+                if(photoTable.add(photo) == false){
+                    Photo oldPhoto = photoTable.get(photo);
                     if(oldPhoto.getReadDate().compareTo(photo.getUpdateDate()) < 0){
                         photo.setId(oldPhoto.getId());
-                        pb.remove(oldPhoto);
-                        pb.add(photo);
+                        photoTable.remove(oldPhoto);
+                        photoTable.add(photo);
                         photo.getEXIF();
                         System.out.println("\tThe JPEG is replaced! photo ID: " + photo.getId());
                     } else {
@@ -258,6 +270,50 @@ public class RSS extends XML {
     @Override
     public void endCDATA(){
         this.inCDATA = false;
+    }
+
+    public void startDTD(String name, String publicId, String systemId) throws SAXException {
+ 
+    }
+
+    public void endDTD() throws SAXException {
+ 
+    }
+
+    public void startEntity(String name) throws SAXException {
+    
+    }
+
+    public void endEntity(String name) throws SAXException {
+ 
+    }
+
+    public void comment(char[] ch, int start, int length) throws SAXException {
+   
+    }
+
+    public void setDocumentLocator(Locator locator) {
+  
+    }
+
+    public void startPrefixMapping(String prefix, String uri) throws SAXException {
+ 
+    }
+
+    public void endPrefixMapping(String prefix) throws SAXException {
+      
+    }
+
+    public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
+    
+    }
+
+    public void processingInstruction(String target, String data) throws SAXException {
+      
+    }
+
+    public void skippedEntity(String name) throws SAXException {
+   
     }
 
 }
