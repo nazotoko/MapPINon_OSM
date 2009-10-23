@@ -31,6 +31,7 @@ package org.openstreetmap.mappinonosm.database;
 
 import java.io.PrintStream;
 
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -243,21 +244,21 @@ abstract public class XML  implements Comparable<XML>{
 
     /**
      * Called from XMLBase
-     * @param ps PrintStream given form XMLBase
+     * @param pw PrintWriter given form XMLBase
      */
-    public void save(PrintStream ps) {
-        ps.print(id + ":{url:\"" + uri +
+    public void save(PrintWriter pw) {
+        pw.print(id + ":{url:\"" + uri +
                 "\",recoded:" + registeredDate.getTime() / 1000);
         if(title != null){
-            ps.print(",title:\"" + title + "\"");
+            pw.print(",title:\"" + title + "\"");
         }
         if(readDate != null){
-            ps.print(",read:" + readDate.getTime() / 1000);
+            pw.print(",read:" + readDate.getTime() / 1000);
         }
         if(link != null){
-            ps.print(",li:\"" + link+"\"");
+            pw.print(",li:\"" + link+"\"");
         }
-        ps.print("}");
+        pw.print("}");
     }
     /** Out put to MapPIN'on OSM
      * @param ps This PrintStrem is usually made by RSSBase.

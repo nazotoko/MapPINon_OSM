@@ -34,7 +34,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 
@@ -71,24 +73,32 @@ public class PhotoTable extends HashSet<Photo> {
      * @param os OutputStream
      */
     public void toJavaScript(OutputStream os) {
-        PrintStream ps = new PrintStream(os);
-        ps.println("AJAXI({");
-        for(Photo p: this){
-            if(p.getLat() != 0 || p.getLon() != 0){
-                p.toJavaScript(ps);
-                ps.println(",");
+        try{
+            PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
+            pw.println("AJAXI({");
+            for(Photo p: this){
+                if(p.getLat() != 0 || p.getLon() != 0){
+                    p.toJavaScript(pw);
+                    pw.println(",");
+                }
             }
+            pw.println("});");
+        } catch(UnsupportedEncodingException ex) {
+            System.out.println("Program error in PhotoTable.save()." + ex.getMessage());
         }
-        ps.println("});");
     }
     /** save Photo datatable to OutPutStream
      *@param os the OutputStrem
      */
     public void save(OutputStream os){
-        PrintStream ps = new PrintStream(os);
-        for(Photo p: this){
-            p.save(ps);
-            ps.println(",");
+        try {
+            PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
+            for(Photo p: this){
+                p.save(pw);
+                pw.println(",");
+            }
+        } catch(UnsupportedEncodingException ex){
+            System.out.println("Program error in PhotoTable.save()." + ex.getMessage());
         }
     }
     /**

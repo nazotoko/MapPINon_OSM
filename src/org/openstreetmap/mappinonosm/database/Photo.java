@@ -46,6 +46,7 @@ import java.util.logging.Logger;
 import com.drew.metadata.exif.ExifReader;
 import com.drew.metadata.iptc.IptcReader;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.net.URLConnection;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -618,7 +619,7 @@ public class Photo {
                     direction = directory.getFloat(GpsDirectory.TAG_GPS_IMG_DIRECTION);
                     System.out.println("\tdirection: " + direction);
                 } catch(MetadataException ex) {
-//                    System.out.println("EXIF error! at Direction");
+                    System.out.println("EXIF error! at Direction");
                 }
             }
 
@@ -626,7 +627,7 @@ public class Photo {
                 try {
                     speed = directory.getFloat(GpsDirectory.TAG_GPS_SPEED);
                 } catch(MetadataException ex) {
-//                    System.out.println("EXIF error! at Speed");
+                    System.out.println("EXIF error! at Speed");
                 }
             }
 
@@ -635,7 +636,7 @@ public class Photo {
                     track = directory.getFloat(GpsDirectory.TAG_GPS_TRACK);
                     System.out.println("\ttrack: " + s);
                 } catch(MetadataException ex) {
-//                    System.out.println("EXIF error! at Speed");
+                    System.out.println("EXIF error! at Speed");
                 }
             }
 
@@ -687,126 +688,126 @@ public class Photo {
     }
 
     /** Output JavaScript code. It will be called from Tile.
-     * @param ps PrintStream given by tile. It is used for the output.
+     * @param pw PrintWriter given by tile. It is used for the output.
      */
-    void toJavaScript(PrintStream ps) {
-        ps.print(id+":{la:" + df.format(latitude) +
+    void toJavaScript(PrintWriter pw) {
+        pw.print(id+":{la:" + df.format(latitude) +
                 ",lo:" + df.format(longitude) +
                 ",s:" + state +
                 ",li:'" + link + "'");
         if(xml.getLink() != null){
-            ps.print(",r:'" + xml.getLink() + "'");
+            pw.print(",r:'" + xml.getLink() + "'");
         }
         if(title != null){
-            ps.print(",ti:'" + title + "'");
+            pw.print(",ti:'" + title + "'");
         }
         if(original != null){
-            ps.print(",o:'" + original + "'");
+            pw.print(",o:'" + original + "'");
         }
         if(thumnale != null){
-            ps.print(",th:'" + thumnale + "'");
+            pw.print(",th:'" + thumnale + "'");
         }
         if(altitude != -1000){
-            ps.print(",al:" + altitude );
+            pw.print(",al:" + altitude );
         }
         if(direction != -1000){
-            ps.print(",di:" + direction );
+            pw.print(",di:" + direction );
         }
         if(speed != -1000){
-            ps.print(",sp:" + speed );
+            pw.print(",sp:" + speed );
         }
         if(track!= -1000){
-            ps.print(",tr:" + track );
+            pw.print(",tr:" + track );
         }
         if(focalLength!=0){
-            ps.println(",fl:" + focalLength);
+            pw.print(",fl:" + focalLength);
         }
         if(node != null){
-            ps.print(",n:" + node.toString());
+            pw.print(",n:" + node.toString());
         }
         if(way != null){
-            ps.print(",w:" + way.toString());
+            pw.print(",w:" + way.toString());
         }
-        ps.print("}");
+        pw.print("}");
         xml.addCount();
     }
     
     /** only called from PhotoTable
-     * @param ps PringStream given from PhotoTable
+     * @param pw PrintWriter given from PhotoTable
      */
-    void save(PrintStream ps){
-        ps.print(id+":{la:" + latitude +
+    void save(PrintWriter pw){
+        pw.print(id+":{la:" + latitude +
                 ",lo:" + longitude +
                 ",li:'" + link + "'" +
                 ",r:" + xml.getId() +
                 ",s:" + state);
         if (title != null) {
-            ps.print(",ti:'" + title + "'");
+            pw.print(",ti:'" + title + "'");
         }
         if (original != null) {
-            ps.print(",o:'" + original + "'");
+            pw.print(",o:'" + original + "'");
         }
         if (thumnale != null) {
-            ps.print(",th:'" + thumnale + "'");
+            pw.print(",th:'" + thumnale + "'");
         }
         if(node != null){
-            ps.print(",n:[");
+            pw.print(",n:[");
             Integer i;
             Iterator<Integer> ii=node.iterator();
             while(true){
                 i = ii.next();
-                ps.print(i);
+                pw.print(i);
                 if(ii.hasNext()){
-                    ps.print(",");
+                    pw.print(",");
                 } else{
                     break;
                 }
             }
-            ps.print("]");
+            pw.print("]");
         }
         if(way != null){
-            ps.print(",w:[");
+            pw.print(",w:[");
             Integer i;
             Iterator<Integer> ii=way.iterator();
             while(true){
                 i = ii.next();
-                ps.print(i);
+                pw.print(i);
                 if(ii.hasNext()){
-                    ps.print(",");
+                    pw.print(",");
                 } else{
                     break;
                 }
             }
-            ps.print("]");
+            pw.print("]");
         }
         if (altitude != -1000) {
-            ps.print(",al:" + altitude);
+            pw.print(",al:" + altitude);
         }
         if (direction != -1000) {
-            ps.print(",di:" + direction);
+            pw.print(",di:" + direction);
         }
         if (speed != -1000) {
-            ps.print(",sp:" + speed);
+            pw.print(",sp:" + speed);
         }
         if (track != -1000) {
-            ps.print(",tr:" + track);
+            pw.print(",tr:" + track);
         }
         if(focalLength!=0){
-            ps.println(",fl:" + focalLength);
+            pw.print(",fl:" + focalLength);
         }
         if (readDate != null) {
-            ps.print(",readDate:" + readDate.getTime()/1000 );
+            pw.print(",readDate:" + readDate.getTime()/1000 );
         }
         if (updateDate != null) {
-            ps.print(",updateDate:" + updateDate.getTime()/1000 );
+            pw.print(",updateDate:" + updateDate.getTime()/1000 );
         }
         if (downloadedDate != null) {
-            ps.print(",downloaded:" + downloadedDate.getTime()/1000 );
+            pw.print(",downloaded:" + downloadedDate.getTime()/1000 );
         }
         if (publishedDate != null) {
-            ps.print(",published:" + publishedDate.getTime()/1000 );
+            pw.print(",published:" + publishedDate.getTime()/1000 );
         }
-        ps.print("}");
+        pw.print("}");
     }
 
     /** only called from PhotoTable

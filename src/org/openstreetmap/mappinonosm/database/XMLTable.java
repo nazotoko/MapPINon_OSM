@@ -40,6 +40,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import com.aetrion.flickr.Flickr;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 /**
  *
  * @author nazo
@@ -120,7 +123,7 @@ public class XMLTable extends HashSet<XML>{
                 add(xml);
             }
         } catch(UnsupportedEncodingException ex) {
-            System.err.println("Syntax");
+            System.err.println("Program error in XMLTable.load()." + ex.getMessage());
         } catch (IOException ex){
             System.err.println("End?");
         }
@@ -130,13 +133,17 @@ public class XMLTable extends HashSet<XML>{
      * @param os OutputStream to be output. this method don't close the stream.
      */
     public void save(OutputStream os) {
-        PrintStream ps = new PrintStream(os);
-        XML r;
-        Iterator <XML> i= this.iterator();
-        while(i.hasNext()){
-            r = i.next();
-            r.save(ps);
-            ps.println(",");
+        try{
+            PrintWriter ps = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
+            XML x;
+            Iterator<XML> i = this.iterator();
+            while(i.hasNext()){
+                x = i.next();
+                x.save(ps);
+                ps.println(",");
+            }
+        } catch(UnsupportedEncodingException ex) {
+            System.err.println("Program error in XMLTable.save()." + ex.getMessage());
         }
     }
     /**

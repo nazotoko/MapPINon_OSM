@@ -30,7 +30,9 @@
 package org.openstreetmap.mappinonosm.database;
 
 import java.io.OutputStream;
-import java.io.PrintStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 /**
@@ -39,14 +41,18 @@ import java.util.ArrayList;
  */
 public class Tile extends ArrayList <Photo> {
     public void toJavaScript(OutputStream os) {
-        PrintStream ps = new PrintStream(os);
-        ps.println("AJAXI({");
-        for(Photo p:this){
-            if(p.getLat() != 0 || p.getLon() != 0){
-                p.toJavaScript(ps);
-                ps.println(",");
+        try {
+            PrintWriter ps = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
+            ps.println("AJAXI({");
+            for(Photo p: this){
+                if(p.getLat() != 0 || p.getLon() != 0){
+                    p.toJavaScript(ps);
+                    ps.println(",");
+                }
             }
+            ps.println("});");
+        } catch (UnsupportedEncodingException ex){
+            System.err.println("Program error in Tile.toJavaScript(os)." + ex.getMessage());
         }
-        ps.println("});");
     }
 }
