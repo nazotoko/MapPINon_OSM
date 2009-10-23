@@ -93,9 +93,9 @@ public class PhotoTable extends HashSet<Photo> {
     }
     /**
      * @param is ImputStream oject. The input has photo database text.
-     * @param rb XMLTable object. 
+     * @param xt XMLTable object.
      */
-    public void load(InputStream is,XMLTable rb){
+    public void load(InputStream is, XMLTable xt) {
         Photo p;
         String line;
         int line_number = 0;
@@ -113,10 +113,10 @@ public class PhotoTable extends HashSet<Photo> {
                     continue;
                 }
                 id=Integer.parseInt(line.substring(0, a));
-//                System.err.println("Load Photo ID: "+id);
                 line = line.substring(line.indexOf('{', a + 1)+1,line.lastIndexOf('}'));
                 p=new Photo();
-                p.load(line,rb);
+                p.setId(id);
+                p.load(line,xt);
                 add(p);
             }
         } catch(UnsupportedEncodingException ex) {
@@ -131,9 +131,9 @@ public class PhotoTable extends HashSet<Photo> {
     }
 
     /**
-     * 
+     * Getting the conflict Photo object (which has the same link) with photo.
      * @param photo
-     * @return
+     * @return return the conflicted old Photo with photo.
      */
     public Photo get(Photo photo) {
         int hash=photo.hashCode();

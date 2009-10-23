@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
@@ -77,8 +79,12 @@ public class FlickrProtocal extends XML {
             for(int i = 0; i < args.length; i++){
                 if(args[i].startsWith("tags")){
                     System.out.println("tags: " + args[i + 1]);
-                    sp.setTags(new String[]{args[i + 1]});
                     title+=" tagged &quot;"+args[i+1]+"&quot;.";
+                    if(args[i+1].contains(":")){
+                        sp.setMachineTags(new String[]{args[i + 1]});
+                    }else {
+                        sp.setTags(new String[]{args[i + 1]});
+                    }
                     break;
                 } else if(args[i].startsWith("sets")){
                     System.out.println("sets: " + args[i + 1]);
@@ -109,6 +115,7 @@ public class FlickrProtocal extends XML {
                 photo.setOriginal(p.getOriginalUrl());
                 System.out.println("\toriginal: " + p.getOriginalUrl());
                 System.out.println("\ttaken:" + p.getDateTaken());
+                photo.setPublishedDate(p.getDatePosted());
                 System.out.println("\tposted:" + p.getDatePosted());
                 photo.setUpdateDate(p.getLastUpdate());
                 System.out.println("\tupdated:" + p.getLastUpdate());
@@ -117,7 +124,7 @@ public class FlickrProtocal extends XML {
                     machineTags(t.getValue());
                     System.out.println("\ttag: " + t.getValue());
                 }
-                ArrayList<Exif> exifal = (ArrayList<Exif>)photosi.getExif(p.getId(), "");
+                ArrayList<Exif> exifal = (ArrayList<Exif>)photosi.getExif(p.getId(), secret);
                 for(Exif e: exifal){
                     String tag=e.getTag();
                     if(tag.equals("GPSLatitudeRef")){

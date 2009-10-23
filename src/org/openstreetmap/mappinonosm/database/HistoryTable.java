@@ -41,7 +41,7 @@ import java.util.TreeSet;
 public class HistoryTable extends TreeSet <History>{
     private int maxId = 0;
     /** the History shuld have date
-     * @param rss 
+     * @param his
      */
     @Override
     public boolean add(History his) {

@@ -102,9 +102,9 @@ abstract public class XML  implements Comparable<XML>{
 
     /**
      * 
-     * @return
+     * @return URI
      */
-    public URI getURL() {
+    public URI getURI() {
         return uri;
     }
     /**
@@ -255,7 +255,7 @@ abstract public class XML  implements Comparable<XML>{
             ps.print(",read:" + readDate.getTime() / 1000);
         }
         if(link != null){
-            ps.print(",li:" + link);
+            ps.print(",li:\"" + link+"\"");
         }
         ps.print("}");
     }

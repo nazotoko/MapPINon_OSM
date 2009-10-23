@@ -147,7 +147,9 @@ public class RSS extends XML implements LexicalHandler, ContentHandler {
                 photo.setXML(this);
                 System.out.println("<item> start:");
                 contextCDATA=false;
+                contextEncoded=null;
                 descriptionCDATA=false;
+                description=null;
             }
         } else {
             if (qualifiedName.equals("media:thumbnail") && photo.getThumnale() == null) {
@@ -183,8 +185,13 @@ public class RSS extends XML implements LexicalHandler, ContentHandler {
         } else {
             if(qualifiedName.equals("item")){
                 photo.setReadDate(new Date());
-                if(photo.original ==null){// if media tag doesn't exist.
-                    URL[] urls = getImages(contextEncoded, contextCDATA);
+                if(photo.getOriginal() ==null){// if media tag doesn't exist.
+                    URL[] urls;
+                    if(contextEncoded != null){
+                        urls = getImages(contextEncoded, contextCDATA);
+                    } else {
+                        urls = getImages(description, descriptionCDATA);
+                    }
 /*                    for(URL urlPhoto: urls){
                         System.out.println("\timage: " + urlPhoto);
                     }*/
@@ -194,7 +201,7 @@ public class RSS extends XML implements LexicalHandler, ContentHandler {
                 }
                 if(photoTable.add(photo) == false){
                     Photo oldPhoto = photoTable.get(photo);
-                    if(oldPhoto.getReadDate().compareTo(photo.getUpdateDate()) < 0){
+                    if(oldPhoto.getReadDate().compareTo(photo.getPublishedDate()) < 0){
                         photo.setId(oldPhoto.getId());
                         photoTable.remove(oldPhoto);
                         photoTable.add(photo);
@@ -211,11 +218,11 @@ public class RSS extends XML implements LexicalHandler, ContentHandler {
                 photo = null;
             } else if(qualifiedName.equals("pubDate")){
                 try {
-                    photo.setUpdateDate(rssDateFormat.parse(textBuffer));
-                    System.out.println("\tdate:" + photo.getUpdateDate());
+                    photo.setPublishedDate(rssDateFormat.parse(textBuffer));
+                    System.out.println("\tdate:" + photo.getPublishedDate());
                 } catch (ParseException ex) {
                     System.out.println("\tfail to parse date! original is :"+textBuffer);
-                    photo.setUpdateDate(new Date());
+                    photo.setPublishedDate(new Date());
                 }
             }else if(qualifiedName.equals("gml:pos")&&stack.search("georss:where")==2){
                 String[] st = textBuffer.split("\\s");
@@ -225,9 +232,10 @@ public class RSS extends XML implements LexicalHandler, ContentHandler {
                 String[] st = textBuffer.split("\\s");
                 photo.setLat(Double.parseDouble(st[0]));
                 photo.setLon(Double.parseDouble(st[1]));
+            } else if(qualifiedName.equals("description")){
+                description=textBuffer;
             } else if(qualifiedName.equals("content:encoded")){
                 contextEncoded=textBuffer;
-//                System.out.println("\tcontext: " + contextEncoded);
             } else if(qualifiedName.equals("title")){
                 photo.setTitle(entity(textBuffer));
                 System.out.println("\ttitle: " + photo.getTitle());
