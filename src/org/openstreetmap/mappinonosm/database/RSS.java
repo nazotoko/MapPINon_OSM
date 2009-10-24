@@ -153,7 +153,7 @@ public class RSS extends XML implements LexicalHandler, ContentHandler {
             }
         } else {
             if (qualifiedName.equals("media:thumbnail") && photo.getThumnale() == null) {
-                photo.setThumnale(attributes.getValue("url"));
+                photo.setThumbnale(attributes.getValue("url"));
             } else if(qualifiedName.equals("media:content")){
                 photo.setOriginal(attributes.getValue("url"));
             }

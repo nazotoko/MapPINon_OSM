@@ -1,5 +1,7 @@
 AddDefaultCharset UTF-8
 Options MultiViews FollowSymLinks
+ErrorDocument 404 /404_not_found.xhtml
+
 LanguagePriority en de
 AddLanguage ca .ca
 AddLanguage cs .cz .cs

@@ -42,15 +42,16 @@ import java.util.ArrayList;
 public class Tile extends ArrayList <Photo> {
     public void toJavaScript(OutputStream os) {
         try {
-            PrintWriter ps = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
-            ps.println("AJAXI({");
+            PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
+            pw.println("AJAXI({");
             for(Photo p: this){
                 if(p.getLat() != 0 || p.getLon() != 0){
-                    p.toJavaScript(ps);
-                    ps.println(",");
+                    p.toJavaScript(pw);
+                    pw.println(",");
                 }
             }
-            ps.println("});");
+            pw.println("});");
+            pw.flush();
         } catch (UnsupportedEncodingException ex){
             System.err.println("Program error in Tile.toJavaScript(os)." + ex.getMessage());
         }

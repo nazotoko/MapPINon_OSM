@@ -39,7 +39,7 @@
 #left, #map{display:none;}
  </style>
  <div id="ie6msg">
-<h4>Your browser is out of date.</h4>This site cannot support your browser.
+<h4>Your browser is out of date.</h4>This web site cannot support your browser.
  </div>
 <![endif]-->
 <div id="left">
@@ -64,7 +64,8 @@
       <li id="rsslink">RSSes?</li>
     </ul>
     <div class="NavFrame">
-      <div class="NavHead">Other Languages</div><div class="NavContent">
+      <a id="NavToggle3" class="NavToggle" href="javascript:toggleBar(3)">show</a>
+      <div class="NavHead">Other Languages</div><div id="NavContext3" class="NavContent">
         <ul>
           <li>Deutsch</li>
           <li>Español</li>
@@ -78,9 +79,11 @@
       </div>
     </div>
     <div class="NavFrame">
-      <div class="NavHead">Debug</div><div class="NavContent">
+      <a id="NavToggle1" class="NavToggle" href="javascript:toggleBar(1)">show</a>
+      <div class="NavHead">Debug</div><div id="NavContext1" class="NavContent">
           <dl id="debug">
-              <dt>loaded:</dt><dd id="readingData">data/</dd>
+              <dt>last loaded tile:</dt><dd id="readingData">data/</dd>
+              <dt>last opened photo marker ID: </dt><dd id="photoID">0</dd>
               <dt># of Photo loaded:</dt><dd id="numberOfPhoto">0</dd>
               <dt># of Popuping: </dt><dd id="numberOfPopuping">0</dd>
           </dl>
@@ -94,5 +97,6 @@
     <p>This application requires Javascript. Please enable it to view the map.</p>
   </noscript>
 </div>
+<div id="message"></div>
 </body>
 </html>

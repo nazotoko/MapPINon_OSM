@@ -19,12 +19,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.xml.sax.SAXException;
 
 /**
@@ -110,7 +106,7 @@ public class FlickrProtocal extends XML {
                 System.out.println("\ttitle: " + p.getTitle());
                 photo.setLink("http://flic.kr/"+p.getOwner().getId()+"/"+p.getId());
                 System.out.println("\tlink: " + photo.getLink());
-                photo.setThumnale(p.getThumbnailUrl());
+                photo.setThumbnale(p.getThumbnailUrl());
                 System.out.println("\tthumbnail: " + p.getThumbnailUrl());
                 photo.setOriginal(p.getOriginalUrl());
                 System.out.println("\toriginal: " + p.getOriginalUrl());

@@ -50,7 +50,7 @@
     <p><a href="http://www.openstreetmap.org">OpenStreetMap</a> の地図上にRSSから得た写真のリンクを載せます。</p>
     <p><span class="warn">著作権で保護されている地図より得たGeoタグデータを付けた写真を置かないでください。</span> 例えば、Google Mapsのような地図を見て付けたものは駄目です。GPSを使って付けたタグか、<a href="http://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA</a>ライセンスと互換性のある地図によって付けたものにしてください。</p>
     <p>写真を見るには、マーカーをクリックしてください。</p>
-    <p><ui>
+    <p><ul>
 <li><a href="blog/">MapPIN'on OSM ブログ</a></li>
 <li><a href="registration.php">あなたの写真ブログなどのRSSの登録フォーム</a></li>
 <li><a href="rsslist.html">登録されているRSS リスト</a></li>
@@ -67,7 +67,8 @@
     </ul>
   </div>
   <div class="NavFrame">
-      <div class="NavHead">Other Languages</div><div class="NavContent">
+      <a id="NavToggle3" class="NavToggle" href="javascript:toggleBar(3)">show</a>
+      <div class="NavHead">Other Languages</div><div id="NavContext3" class="NavContent">
         <ul>
           <li>Deutsch</li>
           <li><a href="index.html.en">English</a></li>
@@ -81,9 +82,11 @@
       </div>
     </div>
     <div class="NavFrame">
-      <div class="NavHead">Debug</div><div class="NavContent">
+      <a id="NavToggle1" class="NavToggle" href="javascript:toggleBar(1)">show</a>
+      <div class="NavHead">Debug</div><div id="NavContext1" class="NavContent">
           <dl id="debug">
               <dt>loaded tile:</dt><dd id="readingData">data/</dd>
+              <dt>last opened photo marker ID: </dt><dd id="photoID">0</dd>
               <dt># of Photo loaded: </dt><dd id="numberOfPhoto">0</dd>
               <dt># of Popuping: </dt><dd id="numberOfPopuping">0</dd>
           </dl>
@@ -98,5 +101,6 @@
       この地図を見るときには、有効にしてください。</p>
   </noscript>
 </div>
+<div id="message"></div>
 </body>
 </html>

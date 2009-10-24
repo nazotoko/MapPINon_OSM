@@ -15,9 +15,9 @@
  * This file implements the client of MapPIN'on OSM (http://mappin.hp2.jp/ ).
  * 
  */
-/* configures (always end with '/' ) */
+/* configures (directory must end with '/' ) */
 /** base path */
-var server_path = "";
+var server_path = "";//"" means current directory.
 
 /** absolute path */
 var img_path = "icons/";
@@ -43,7 +43,8 @@ function init_map(div_id, lon, lat, zoom){
             new OpenLayers.Control.PanZoomBar(),
             new OpenLayers.Control.ScaleLine(),
             new OpenLayers.Control.MousePosition({numDigits:6}),
-            new OpenLayers.Control.LayerSwitcher()
+            new OpenLayers.Control.LayerSwitcher(),
+            click=new OpenLayers.Control.Click()
         ],
         maxResolution: 156543.0339,
         numZoomLevels: 20,
@@ -53,7 +54,6 @@ function init_map(div_id, lon, lat, zoom){
     });
     layer = new OpenLayers.Layer.Markers("Photos",{wrapDateLine: true});
     layer.setOpacity(0.7);
-
     map.addLayers([new OpenLayers.Layer.OSM.Mapnik("Mapnik",{wrapDateLine: true}),
         new OpenLayers.Layer.OSM.CycleMap("CycleMap",{wrapDateLine: true}),
         new OpenLayers.Layer.OSM.Osmarender("Osmarender",{wrapDateLine: true}),
@@ -65,7 +65,7 @@ function init_map(div_id, lon, lat, zoom){
         "http://www.heywhatsthat.com/bin/contour_tiles.cgi?x=${x}&y=${y}&zoom=${z}&interval=25&color=ff0000",{
             isBaseLayer:false,
             visibility: false,
-            wrapDateLine: true            
+            wrapDateLine: true
         })
     ]);
 
@@ -82,7 +82,7 @@ function init_map(div_id, lon, lat, zoom){
     icons[2]= new OpenLayers.Icon(img_path+'red.png', icon_size, icon_offset);
     icons[4]= new OpenLayers.Icon(img_path+'new.png', icon_size, icon_offset);
     map.events.register('moveend', map, refresh);
-    map.events.register('click', map, map_click);
+    click.activate();
     map.addControl(permalink=new OpenLayers.Control.Permalink());
 }
 
@@ -93,7 +93,6 @@ function init()
   var result = regex.exec(window.location.href);
 
   zoomlevel = (result == null)?2:result[1];
-  navBoxInit();// do it before make the map
   init_map('map', 0, 0, zoomlevel);
 
   refresh();
@@ -154,11 +153,12 @@ function popup_open_photo(photo){
     if(photo.link){
         text+='<a target="_blank" title="'+message.title_link+'" href="'+photo.link+'">';
     }
-    text+='<img src="'+photo.thumb+'" alt="thumbnail"/>';
+    text+='<img src="'+photo.thumb+'" alt="'+message.thumbnail+'"/>';
     if(photo.link){
         text+='</a>';
     }
-    text+='<ul class="description"><li>'+message.lat+': '+photo.lat+'</li>';
+    text+='<ul class="description"><li>'+message.id+': '+photo.id+'</li>';
+    text+='<li>'+message.lat+': '+photo.lat+'</li>';
     text+='<li>'+message.lon+': '+photo.lon+'</li>';
     if(photo.node){
         for(i=0;i<photo.node.length;i++){
@@ -174,23 +174,62 @@ function popup_open_photo(photo){
     if(photo.link) text+='<li><a target="_blank" title="'+message.title_link+'" href="'+photo.link+'">'+message.action_link+'</a></li>';
     if(photo.original) text+='<li><a target="_blank" title="'+message.title_original+'" href="'+photo.original+'">'+message.action_original+'</a></li>';
     if(photo.rss) text+= '<li><a target="_blank" title="'+message.title_rss+'" href="'+photo.rss+'">'+message.action_rss+'</a></li>';
-    if(photo.state!=2)text+= '<li><a target="_blank" title="'+message.title_edit+'" href="http://www.openstreetmap.org/edit?lat='+photo.lat+'&lon='+photo.lon+'&zoom=17">'+message.action_edit+'</a></li></ul>';
-    return text;
+    if(photo.state!=2)text+= '<li><a target="_blank" title="'+message.title_edit+'" href="http://www.openstreetmap.org/edit?lat='+photo.lat+'&lon='+photo.lon+'&zoom=17">'+message.action_edit+'</a></li>';
+    text+='<li><a href="javascript:messBox.embed('+photo.id+')" title="'+message.title_embed+'" >'+message.action_embed+'</a></li>';
+    return text+'</ul>';
 }
 
 
 function popup_new_point(lon,lat){
   var text='<h1>'+message['here_is']+'</h1>';
-  text+="<ul class=\"description\"><li>"+message.lat+": "+lat.toFixed(6)+"</li><li>"+message.lon+":"+lon.toFixed(6)+"</li></ul>"
-            +"<p>"+message['try_to_tag']+"<br/><input size=\"25\" value=\"mappin:at=";
+  text+='<ul class="description"><li>'+message.lat+': '+lat.toFixed(6)+'</li><li>'+message.lon+":"+lon.toFixed(6)+"</li></ul>"
+            +'<p>'+message['try_to_tag']+'<br/><input size="25" value="mappin:at=';
 lon=Math.round((lon+180)*1000000);
 text+=base36(lon,5);
 lon=Math.floor(lon/60466176);
 lat=Math.round((lat+90)*1000000)*6+lon;
 text+=base36(lat,6);
-return text+"\"/></p>";
+return text+'"/></p>';
 }
 
+var messBox={
+    embed: function(id){
+        var params = permalink.createParams();
+        this.lat = photos[id].lat;
+        this.lon = photos[id].lon;
+        this.zoom = params.zoom;
+        var layers = params.layers;
+        this.ref='http://mappin.hp2.jp/?lat='+this.lat+'&lon='+this.lon+'&z='+this.zoom+'&layer='+layers+"&id="+id;
+        var layer;
+        if(layers.charAt(0)=='B')layer='O';
+        if(layers.charAt(1)=='B')layer='O';
+        if(layers.charAt(2)=='B')layer='O';
+        if(layers.charAt(3)=='B')layer='O';
+        var text;
+        text ='<input type="text" id="messBox" name="htmlCode" length="30" value="'+this.ref+'"/><br/>';
+        text+='<input type="radio" name="kind" value="ascii" checked="true" onclick="messBox.embed2('+"'a'"+')"/>URL<br/>';
+        text+='<input type="radio" name="kind" value="html" onclick="messBox.embed2('+"'h'"+')"/>HTML link<br/>';
+        text+='<input type="radio" name="kind" value="html" onclick="messBox.embed2('+"'H'"+')"/>HTML link 2<br/>';
+        text+='<input type="radio" name="kind" value="map" onclick="messBox.embed2('+"'"+layer+"'"+')"/>Image<br/>';
+        text+='<input type="radio" name="kind" value="MnA" onclick="messBox.embed2('+"'"+layer+"A'"+')"/>Image and ASCII<br/>';
+        text+='<div id="messTest"></div>';
+        text+='<div class="olPopupCloseBox" style="width: 17px; height: 17px; position: absolute; right: 13px; top: 14px; z-index: 1;" onclick="'
+        +"document.getElementById('message').style.display='none'\"></div>";
+        this.div=document.getElementById('message');
+        this.div.innerHTML=text;
+        this.div.style.display='block';
+    },
+    embed2: function(s) {
+        var box=document.getElementById("messBox");
+        var test=document.getElementById("messTest");
+        if(s=="a") box.value=this.ref;
+        if(s=="h") box.value='<a href="'+this.ref+'">See it on OpenStreetMap.</a>';
+        if(s=="H") box.value='<a href="'+this.ref+'">lat='+this.lat+', lon='+this.lon+'</a>';
+        if(s=="O") box.value='<a href="'+this.ref+'"><img src="http://tah.openstreetmap.org/MapOf/?lat='+this.lat+'&long='+this.lon+'&z='+this.zoom+'&w=96&h=96&format=png" width="96" height="96"/></a>';
+        if(s=="OA") box.value='<a href="'+this.ref+'"><img src="http://tah.openstreetmap.org/MapOf/?lat='+this.lat+'&long='+this.lon+'&z='+this.zoom+'&w=96&h=96&format=png" width="96" height="96" align="middle" /> See it on OpenStreetMap.</a>';
+        test.innerHTML=box.value;
+    }
+}
 /*
  * AJAX functions
  */
@@ -200,13 +239,13 @@ return text+"\"/></p>";
 var last_request={x:null,y:null};
 function make_url(x,y){
   if(last_request.x!=x || last_request.y!=y) {
-  url = server_path+data_path+((x>0)?'+'+x:'-'+(-x))+((y>0)?'+'+y:'-'+(-y))+".js";
-  var script = document.createElement("script");
-  script.src = url;
-  script.type = "text/javascript";
-  document.body.appendChild(script);
-  document.getElementById("readingData").innerHTML = url;
-  last_request.x=x;last_request.y=y;
+    url = server_path+data_path+((x>0)?'+'+x:'-'+(-x))+((y>0)?'+'+y:'-'+(-y))+".js";
+    var script = document.createElement("script");
+    script.src = url;
+    script.type = "text/javascript";
+    document.body.appendChild(script);
+    document.getElementById("readingData").innerHTML = '<a href="'+url+'">'+url+'</a>';
+    last_request.x=x;last_request.y=y;
   }
 }
 
@@ -218,6 +257,7 @@ function AJAXI(photos_i){
     if (!photos[id]){
       var photo_i=photos_i[id];
       var photo={
+        id: id,
         lat: photo_i.la,
         lon: photo_i.lo,
         title: photo_i.ti,
@@ -252,42 +292,69 @@ function create_feature(photo){
   return feature;
 }
 
+/*
+ * Control to handle clicks on the map
+ */
+OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
+    CLASS_NAME: "OpenLayers.Control.Click",
+    initialize: function() {
+        OpenLayers.Control.prototype.initialize.apply(this, arguments);
+    },
+    destroy: function() {
+        if (this.handler)
+            this.handler.destroy();
+        this.handler = null;
+
+        OpenLayers.Control.prototype.destroy.apply(this, arguments);
+    },
+
+    draw: function() {
+        this.handler = new OpenLayers.Handler.Click(this, {
+            'click': this.click
+        }, {
+            'single': true,
+            'double': false,
+            'pixelTolerance': 0,
+            'stopSingle': false,
+            'stopDouble': false
+        });
+    },
 /****** events called from Openlayers ************/
 /** Map events */
-function map_click(ev){
-    var lonlat=map.getLonLatFromPixel(ev.xy);
-    if(!new_point_feature){
-        new_point_feature = new OpenLayers.Feature(layer, lonlat, {icon: icons[4]});
-        new_point_feature.popupClass = OpenLayers.Class(OpenLayers.Popup.FramedCloud);
-    } else {
-        new_point_feature.lonlat=map.getLonLatFromPixel(ev.xy);
-        if(new_point_feature.popup){
+    click: function(ev){
+        var lonlat=map.getLonLatFromPixel(ev.xy);
+        if(!new_point_feature){
+            new_point_feature = new OpenLayers.Feature(layer, lonlat, {icon: icons[4]});
+            new_point_feature.popupClass = OpenLayers.Class(OpenLayers.Popup.FramedCloud);
+            new_point_feature.photo={id:0};
+        } else {
+            new_point_feature.lonlat=map.getLonLatFromPixel(ev.xy);
             map.removePopup(new_point_feature.popup);
             new_point_feature.popup.destroy();
-        }
-        if(new_point_feature.popup){
             layer.removeMarker(new_point_feature.marker);
         }
+        marker=new_point_feature.createMarker();
+        new_point_feature.popup=new new_point_feature.popupClass(new_point_feature.id+'_popup',
+            lonlat,
+            new_point_feature.data.popupSize,
+            popup_new_point(x2lon(lonlat.lon),y2lat(lonlat.lat)),
+            marker.icon,
+            true,
+            popup_close);
+        new_point_feature.popup.feature=new_point_feature;
+        map.addPopup(new_point_feature.popup);
+        if(!new_point_feature.popuped){
+            numOfPopuping++;
+            new_point_feature.popuped=true;
+            document.getElementById("numberOfPopuping").innerHTML = numOfPopuping;
+        }
+        marker.events.register("click", new_point_feature, marker_click);
+        marker.events.register("mouseover", new_point_feature, marker_mouseover);
+        marker.events.register("mouseout", new_point_feature, marker_mouseout);
+        layer.addMarker(marker);
+        OpenLayers.Event.stop(ev);
     }
-    layer.addMarker(new_point_feature.createMarker());
-    new_point_feature.popup=new new_point_feature.popupClass(new_point_feature.id+'_popup',
-        lonlat,
-        new_point_feature.data.popupSize,
-        popup_new_point(x2lon(lonlat.lon),y2lat(lonlat.lat)),
-        new_point_feature.marker.icon,
-        true,
-        popup_close);
-    new_point_feature.popup.feature=new_point_feature;
-    map.addPopup(new_point_feature.popup);
-    if(!new_point_feature.popuped){
-        numOfPopuping++;
-        new_point_feature.popuped=true;
-    }
-    new_point_feature.marker.events.register("click", new_point_feature, marker_click);
-    new_point_feature.marker.events.register("mouseover", new_point_feature, marker_mouseover);
-    new_point_feature.marker.events.register("mouseout", new_point_feature, marker_mouseout);
-    OpenLayers.Event.stop(ev);
-}
+});
 
 /* map moveover events */
 function refresh(){
@@ -321,6 +388,7 @@ function marker_click(ev){// "this" means feature
         this.popuped=true;
         numOfPopuping++;
     }
+    document.getElementById("photoID").innerHTML = this.photo.id;
     document.getElementById("numberOfPopuping").innerHTML = numOfPopuping;
     OpenLayers.Event.stop(ev);
 }
@@ -361,65 +429,17 @@ function marker_mouseout(ev){
   OpenLayers.Event.stop(ev);
 }
 
-// adds show/hide-button to navigation bars
-function navBoxInit() {
-  // shows and hides content and picture (if available) of navigation bars
-  // Parameters:
-  //     indexNavigationBar: the index of navigation bar to be toggled
-  function toggleNavigationBar(index) {
+
+function toggleBar(index) {
     var NavToggle = document.getElementById("NavToggle" + index);
-    var NavFrame = document.getElementById("NavFrame" + index);
-    if (!NavFrame || !NavToggle) {return false;}
+    var NavContext = document.getElementById("NavContext" + index);
+    if (!NavContext || !NavToggle) {return;}
     // if shown now
     if (NavToggle.firstChild.data == 'hide') {
-      for (var NavChild = NavFrame.firstChild;NavChild != null;NavChild = NavChild.nextSibling) {
-          if (NavChild.className == 'NavContent') {
-              NavChild.style.display = 'none';
-          }
-          if (NavChild.className == 'NavToggle') {
-              NavChild.firstChild.data = 'show';
-          }
-      }
+        NavContext.style.display = 'none';
+        NavToggle.firstChild.data = 'show';
     } else if (NavToggle.firstChild.data == 'show') {
-      for (var NavChild = NavFrame.firstChild;NavChild != null;NavChild = NavChild.nextSibling){
-        if (NavChild.className == 'NavContent') {
-          NavChild.style.display = 'block';
-        }
-        if (NavChild.className == 'NavToggle') {
-          NavChild.firstChild.data = 'hide';
-        }
-      }
+        NavContext.style.display = 'block';
+        NavToggle.firstChild.data = 'hide';
     }
   }
- 
-  function toggleNavigationBarFunction(indexNavigationBar) {
-    return function() {
-      toggleNavigationBar(indexNavigationBar);
-      return false;
-    };
-  }
- 
-  var index = 0;
-  // iterate over all < div >-elements
-  var divs = document.getElementsByTagName("div");
-  for (var i=0;  i<divs.length; i++) {
-    var NavFrame = divs[i];
-    // if found a navigation bar
-    if (NavFrame.className == "NavFrame") {
-      var NavToggle = document.createElement("a");
-      NavToggle.className = 'NavToggle';
-      NavToggle.setAttribute('id', 'NavToggle' + index);
-      NavToggle.setAttribute('href', '#');
-      NavToggle.onclick = toggleNavigationBarFunction(index);
-      NavToggle.appendChild(document.createTextNode('hide'));
-
-      // add NavToggle-Button as first div-element
-      // in < div class="NavFrame" >
-      NavFrame.insertBefore(NavToggle,NavFrame.firstChild);
-      NavFrame.setAttribute('id', 'NavFrame' + index);
-      index++;
-    }
-  }
-  // hide all
-  for(var i=0;i<=index;i++){toggleNavigationBar(i);}
-}

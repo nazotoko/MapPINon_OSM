@@ -121,13 +121,13 @@ public class Photo {
      */
     private URL original=null;
 
-    /** direct URL to thumnale newPhoto
+    /** direct URL to thumbnale newPhoto
      * <dl>
      * <dt>tile</dt><dd>th:'URL'</dd>
      * <dt>save</dt><dd>th:'URL'</dd>
      * </dl>
      */
-    private URL thumnale=null;
+    private URL thumbnale=null;
 
     /**title text
      * <dl>
@@ -263,7 +263,7 @@ public class Photo {
         updateDate = newPhoto.updateDate;
         publishedDate = newPhoto.publishedDate;
 
-        thumnale=newPhoto.thumnale;
+        thumbnale=newPhoto.thumbnale;
         original=newPhoto.original;
         node=newPhoto.node;
         way=newPhoto.way;
@@ -322,10 +322,10 @@ public class Photo {
 
 
     /**
-     * @return thumnale
+     * @return thumbnale
      */
     public URL getThumnale() {
-        return thumnale;
+        return thumbnale;
     }
 
     /**
@@ -454,17 +454,17 @@ public class Photo {
 
 
     /**
-     * @param thumnale the thumnale to set
+     * @param thumbnale the thumbnale to set
      */
-    public void setThumnale(URL thumnale) {
-        this.thumnale = thumnale;
+    public void setThumbnale(URL thumbnale) {
+        this.thumbnale = thumbnale;
     }
 
-    public void setThumnale(String t) {
+    public void setThumbnale(String t) {
         try {
-            setThumnale(new URL(t));
+            setThumbnale(new URL(t));
         } catch(MalformedURLException ex) {
-            System.err.println("This is program bug. The inputed URL is strange: "+t);
+            System.err.println("This would be program bug. The inputed URL is strange: "+t);
         }
     }
     /**
@@ -659,6 +659,10 @@ public class Photo {
     public void getMappinAt(String code) {
         String base36str = "0123456789abcdefghijklmnopqrstuvwxyz";
         System.out.println("\tmappin:at=" + code);
+        if(code.length()<11){
+            System.out.println("Too Short.");
+            return;
+        }
         int mod;
         int total=0;
         int base=1;
@@ -704,8 +708,8 @@ public class Photo {
         if(original != null){
             pw.print(",o:'" + original + "'");
         }
-        if(thumnale != null){
-            pw.print(",th:'" + thumnale + "'");
+        if(thumbnale != null){
+            pw.print(",th:'" + thumbnale + "'");
         }
         if(altitude != -1000){
             pw.print(",al:" + altitude );
@@ -747,8 +751,8 @@ public class Photo {
         if (original != null) {
             pw.print(",o:'" + original + "'");
         }
-        if (thumnale != null) {
-            pw.print(",th:'" + thumnale + "'");
+        if (thumbnale != null) {
+            pw.print(",th:'" + thumbnale + "'");
         }
         if(node != null){
             pw.print(",n:[");
@@ -880,7 +884,7 @@ public class Photo {
                 }
             } else if(key.equals("th")){
                 try {
-                    thumnale = new URL(value);
+                    thumbnale = new URL(value);
                 } catch(MalformedURLException ex) {
                     System.err.println("Illigal URL?");
                 }

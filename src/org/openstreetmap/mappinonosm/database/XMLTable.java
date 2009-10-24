@@ -40,7 +40,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import com.aetrion.flickr.Flickr;
-import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 /**
@@ -134,14 +133,15 @@ public class XMLTable extends HashSet<XML>{
      */
     public void save(OutputStream os) {
         try{
-            PrintWriter ps = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
+            PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
             XML x;
             Iterator<XML> i = this.iterator();
             while(i.hasNext()){
                 x = i.next();
-                x.save(ps);
-                ps.println(",");
+                x.save(pw);
+                pw.println(",");
             }
+            pw.flush();
         } catch(UnsupportedEncodingException ex) {
             System.err.println("Program error in XMLTable.save()." + ex.getMessage());
         }

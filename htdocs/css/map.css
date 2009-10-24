@@ -32,7 +32,15 @@ li {
 	border: 1px solid black;
 	background-color: #cbced5;
 }
-
+#message{
+    right:0px;
+    bottom:20px;
+    background:white;
+    display:none;
+    position:absolute;
+    height:220px;
+    width:300px;
+}
 /* CSS placed here will be applied to all skins */ 
 div.NavFrame {
     margin: 0px;
@@ -54,6 +62,7 @@ div.NavFrame div.NavContent {
     margin: 0;
     padding: 0;
     background-color: #f0fff0;
+    display:none;
 }
 
 .NavToggle {

@@ -1,7 +1,8 @@
 var message={
 'photo':'Photo',
-'thumnale' : 'Thumbnale',
+'thumbnale' : 'Thumbnale',
 'nickname': 'Nickname',
+'id': 'ID',
 'lat':'latitude',
 'lon':'longitude',
 'here_is': 'Here is:',
@@ -15,7 +16,8 @@ var message={
 'action_edit':'Potlatch',
 'title_edit':'Open Potlatch around this location.',
 'try_to_tag': 'Try to tag it in your blog for your photo which was taken there.',
-
+'action_embed': 'embed',
+'title_embed': 'Do you want to embed a link to this marker?',
 
 'rsslink': 'RSS feed',
 'gpslink': 'GPX export',

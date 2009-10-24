@@ -177,12 +177,14 @@ abstract public class XML  implements Comparable<XML>{
     }
 
     abstract void read();
+
     /**
-     * Called from XMLBase
+     * Make a instance of XML. It is selected from subclass of XML by the scheame.
      * @param line 1 line string
-     * @param rb parent datatable
+     * @param pb PhotoTable object. It is needed to make instance of XML object.
+     * @return instance of XML. If it is invaled scheame, it returens null.
      */
-    static XML load(String line, PhotoTable pb){
+    static public XML load(String line, PhotoTable pb){
         boolean end = true;
         int a, b, c, id;
         String key, value=null;
