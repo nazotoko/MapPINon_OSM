@@ -31,6 +31,7 @@ package org.openstreetmap.mappinonosm.database;
 
 import com.drew.imaging.jpeg.JpegProcessingException;
 import com.drew.imaging.jpeg.JpegSegmentReader;
+import com.drew.lang.Rational;
 import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.MetadataException;
@@ -260,8 +261,13 @@ public class Photo {
     public void upDate(Photo newPhoto) {
         title=newPhoto.title;
         readDate = newPhoto.readDate;
-        updateDate = newPhoto.updateDate;
+        if(newPhoto.updateDate != null) {
+            updateDate = newPhoto.updateDate;
+        }
         publishedDate = newPhoto.publishedDate;
+        if(newPhoto.downloadedDate != null) {
+            updateDate = newPhoto.downloadedDate;
+        }
 
         thumbnale=newPhoto.thumbnale;
         original=newPhoto.original;
@@ -547,10 +553,7 @@ public class Photo {
             Directory directory = null;
             double lat = 0, lon = 0;
             float f;
-//            float alt = -1000, sp = -1000, dir = -1000, tra = -1000;
             String s;
-            String[] spaced;
-            String[] digit;
 
             JpegSegmentReader segmentReader = new JpegSegmentReader(buf);
             byte[] exifSegment = segmentReader.readSegment(JpegSegmentReader.SEGMENT_APP1);
@@ -574,31 +577,34 @@ public class Photo {
             
             directory = metadata.getDirectory(GpsDirectory.class);
 
-            if((s = directory.getString(GpsDirectory.TAG_GPS_LATITUDE)) != null){
-                System.out.println("\tlat: " + s);
-                spaced = s.split(" ");
-                digit = spaced[0].split("/");
-                lat = Double.parseDouble(digit[0]) / Double.parseDouble(digit[1]);
-                digit = spaced[1].split("/");
-                lat += Double.parseDouble(digit[0]) / Double.parseDouble(digit[1]) / 60;
-                digit = spaced[2].split("/");
-                lat += Double.parseDouble(digit[0]) / Double.parseDouble(digit[1]) / 3600;
-                if(directory.getString(GpsDirectory.TAG_GPS_LATITUDE_REF).equals("S")){
-                    lat = -lat;
+            if(directory.containsTag(GpsDirectory.TAG_GPS_LATITUDE)){
+                try {
+                    Rational[] rats = directory.getRationalArray(GpsDirectory.TAG_GPS_LATITUDE);
+                    lat = rats[0].doubleValue();
+                    lat += rats[1].doubleValue() / 60;
+                    lat += rats[2].doubleValue() / 3600;
+                    if(directory.getString(GpsDirectory.TAG_GPS_LATITUDE_REF).equals("S")){
+                        lat = -lat;
+                    }
+                    System.out.println("\tlat: " + lat);
+                } catch(MetadataException ex) {
+                    System.out.println("Program error in Photo.getEXIF. " + ex.getMessage());
                 }
+
             }
 
-            if((s = directory.getString(GpsDirectory.TAG_GPS_LONGITUDE)) != null){
-                System.out.println("\tlon: " + s);
-                spaced = s.split(" ");
-                digit = spaced[0].split("/");
-                lon = Double.parseDouble(digit[0]) / Double.parseDouble(digit[1]);
-                digit = spaced[1].split("/");
-                lon += Double.parseDouble(digit[0]) / Double.parseDouble(digit[1]) / 60;
-                digit = spaced[2].split("/");
-                lon += Double.parseDouble(digit[0]) / Double.parseDouble(digit[1]) / 3600;
-                if(directory.getString(GpsDirectory.TAG_GPS_LONGITUDE_REF).equals("W")){
-                    lon = -lon;
+            if(directory.containsTag(GpsDirectory.TAG_GPS_LONGITUDE)){
+                try {
+                    Rational[] rats = directory.getRationalArray(GpsDirectory.TAG_GPS_LONGITUDE);
+                    lon = rats[0].doubleValue();
+                    lon += rats[1].doubleValue() / 60;
+                    lon += rats[2].doubleValue() / 3600;
+                    if(directory.getString(GpsDirectory.TAG_GPS_LONGITUDE_REF).equals("W")){
+                        lon = -lon;
+                    }
+                    System.out.println("\tlon: " + lon);
+                } catch(MetadataException ex) {
+                    System.out.println("Program error in Photo.getEXIF. " + ex.getMessage());
                 }
             }
 
@@ -625,7 +631,14 @@ public class Photo {
 
             if(directory.containsTag(GpsDirectory.TAG_GPS_SPEED)){
                 try {
+                    s=directory.getString(GpsDirectory.TAG_GPS_SPEED_REF);
+                    if (s.startsWith("K")) {
                     speed = directory.getFloat(GpsDirectory.TAG_GPS_SPEED);
+                    } else if (s.startsWith("M")) {
+                        speed = directory.getFloat(GpsDirectory.TAG_GPS_SPEED) * 1.609344F;
+                    } else if (s.startsWith("N")) {
+                        speed = directory.getFloat(GpsDirectory.TAG_GPS_SPEED) * 1.852F;
+                    }
                 } catch(MetadataException ex) {
                     System.out.println("EXIF error! at Speed");
                 }
@@ -905,11 +918,60 @@ public class Photo {
                 }
                 way.add(Integer.parseInt(value.substring(s)));
             } else if(key.equals("ti")){
-                title=new String(value);
+                title=value;
             } else if(key.equals("s")){
                 state=Integer.parseInt(value);
             }
             a = c + 1;
         } while(end);
+    }
+
+    /** Specially called from FlickrProtocal.getExifParameters()
+     * @param state state
+     */
+    void setRed() {
+        this.state=STATE_RED;
+}
+
+    void setEXIFLat(double lat) {
+        if(state!=STATE_RED){
+            this.latitude = lat;
+            state=STATE_BLUE;
+        } else if(this.latitude==0){
+            this.latitude = lat;
+        }
+    }
+
+    void setEXIFLon(double lon) {
+        if(state!=STATE_RED){
+            this.longitude = lon;
+            state=STATE_BLUE;
+        } else if(this.longitude==0){
+            this.longitude = lon;
+        }
+    }
+
+    void setAltitude(float alt){
+        this.altitude=alt;
+    }
+
+    void setDirection(float dir){
+        this.direction=dir;
+    }
+
+    void setTrack(float track){
+        this.track=track;
+    }
+
+    void setFocalLength(float fl) {
+        focalLength=fl;
+    }
+
+    void setSpeed(float s) {
+        speed=s;
+    }
+
+    void setDownloadDate(Date date) {
+        downloadedDate = date;
     }
 }

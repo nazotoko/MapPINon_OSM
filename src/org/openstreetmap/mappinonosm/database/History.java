@@ -34,7 +34,7 @@ import java.util.Date;
  *
  * @author nazo
  */
-class History implements Comparable<History> {
+public class History implements Comparable<History> {
     /** the date of last updated */
     protected Date date=null;
     /** number of added photo*/

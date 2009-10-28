@@ -83,12 +83,6 @@ public class RSS extends XML implements LexicalHandler, ContentHandler {
         super(id);
     }
 
-    private String entity(String input) {
-        String ret=input.replaceAll("\n", "<br/>");
-        ret=ret.replaceAll("\"", "&quot;");
-        ret=ret.replaceAll("'", "&apos;");
-        return ret;
-    }
 
     private URL [] getImages(String context, boolean cdata){
         ArrayList<URL> urls=new ArrayList<URL>();

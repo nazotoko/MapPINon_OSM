@@ -50,25 +50,25 @@
     <p><a href="http://www.openstreetmap.org">OpenStreetMap</a> の地図上にRSSから得た写真のリンクを載せます。</p>
     <p><span class="warn">著作権で保護されている地図より得たGeoタグデータを付けた写真を置かないでください。</span> 例えば、Google Mapsのような地図を見て付けたものは駄目です。GPSを使って付けたタグか、<a href="http://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA</a>ライセンスと互換性のある地図によって付けたものにしてください。</p>
     <p>写真を見るには、マーカーをクリックしてください。</p>
-    <p><ul>
+    <ul>
 <li><a href="blog/">MapPIN'on OSM ブログ</a></li>
 <li><a href="registration.php">あなたの写真ブログなどのRSSの登録フォーム</a></li>
 <li><a href="rsslist.html">登録されているRSS リスト</a></li>
-    </ul></p>
+    </ul>
   </div>
   <div>
     <h3>現在のビューに対する</h3>
     <ul id="linkbox">
-      <li id="permalink">パーマリンク</li>
-      <li id="osmlink">OpenStreetMap</li>
-      <li id="osblink">OpenStreetBugs</li>
-      <li id="geofabrik">Geofabrik Map</li>
+      <li><a id="permalink" href="?lat=0&lon=0&zoom=2">パーマリンク</a></li>
+      <li><a id="osmlink" href="http://www.openstreetmap.org/?lat=0&lon=0&zoom=2">OpenStreetMap</a></li>
+      <li><a id="osblink" href="http://openstreetbugs.schokokeks.org/?lat=0&lon=0&zoom=2">OpenStreetBugs</a></li>
+      <li><a id="geofabrik" href="http://tools.geofabrik.de/map/?lat=0&lon=0&zoom=2">Geofabrik Map</a></li>
       <li id="rsslink">RSSes</li>
     </ul>
   </div>
   <div class="NavFrame">
-      <a id="NavToggle3" class="NavToggle" href="javascript:toggleBar(3)">show</a>
-      <div class="NavHead">Other Languages</div><div id="NavContext3" class="NavContent">
+    <div class="NavHead">Other Languages<a id="NavToggle3" class="NavToggle" href="javascript:toggleBar(3)">show</a></div>
+    <div id="NavContext3" class="NavContent">
         <ul>
           <li>Deutsch</li>
           <li><a href="index.html.en">English</a></li>
@@ -79,19 +79,19 @@
           <li>简体</li>
           <li>繁體</li>
         </ul>
-      </div>
     </div>
-    <div class="NavFrame">
-      <a id="NavToggle1" class="NavToggle" href="javascript:toggleBar(1)">show</a>
-      <div class="NavHead">Debug</div><div id="NavContext1" class="NavContent">
-          <dl id="debug">
-              <dt>loaded tile:</dt><dd id="readingData">data/</dd>
-              <dt>last opened photo marker ID: </dt><dd id="photoID">0</dd>
-              <dt># of Photo loaded: </dt><dd id="numberOfPhoto">0</dd>
-              <dt># of Popuping: </dt><dd id="numberOfPopuping">0</dd>
-          </dl>
-      </div>
+  </div>
+  <div class="NavFrame">
+    <div class="NavHead">Debug<a id="NavToggle1" class="NavToggle" href="javascript:toggleBar(1)">show</a></div>
+    <div id="NavContext1" class="NavContent">
+      <dl id="debug">
+        <dt>loaded tile:</dt><dd id="readingData">data/</dd>
+        <dt>last opened photo marker ID: </dt><dd id="photoID">0</dd>
+        <dt># of Photo loaded: </dt><dd id="numberOfPhoto">0</dd>
+        <dt># of Popuping: </dt><dd id="numberOfPopuping">0</dd>
+      </dl>
     </div>
+  </div>
 </div>
 <div id="map">
   <noscript>
@@ -101,6 +101,15 @@
       この地図を見るときには、有効にしてください。</p>
   </noscript>
 </div>
-<div id="message"></div>
+<div id="message">
+<input type="text" id="messBox" name="htmlCode" length="30" value=""/><br/>
+<input type="radio" name="kind" value="ascii" checked="true" onclick="messBox.embed2('a')"/>URL<br/>
+<input type="radio" name="kind" value="html" onclick="messBox.embed2('h')"/>HTML link<br/>
+<input type="radio" name="kind" value="html" onclick="messBox.embed2('H')"/>HTML link 2<br/>
+<input type="radio" name="kind" value="map" onclick="messBox.embed2('O')"/>Image<br/>
+<input type="radio" name="kind" value="MnA" onclick="messBox.embed2('OA')"/>Image and ASCII<br/>
+<div id="messTest"></div>
+<div class="olPopupCloseBox" style="width: 17px; height: 17px; position: absolute; right: 13px; top: 14px; z-index: 1;" onclick="document.getElementById('message').style.display='none'"></div>
+</div>
 </body>
 </html>

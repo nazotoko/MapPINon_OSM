@@ -151,6 +151,13 @@ abstract public class XML  implements Comparable<XML>{
         this.id = id;
     }
 
+    protected String entity(String input) {
+        String ret=input.replaceAll("\n", "<br/>");
+        ret=ret.replaceAll("\"", "&quot;");
+        ret=ret.replaceAll("'", "&apos;");
+        return ret;
+    }
+
     protected void machineTags(String...  st){
         int in = 0;
         for(String s:st){

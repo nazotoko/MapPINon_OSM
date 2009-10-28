@@ -1,6 +1,6 @@
 var message={
 'photo':'Photo',
-'thumbnale' : 'Thumbnale',
+'thumbnail' : 'Thumbnail',
 'nickname': 'Nickname',
 'id': 'ID',
 'lat':'latitude',
@@ -20,9 +20,5 @@ var message={
 'title_embed': 'Do you want to embed a link to this marker?',
 
 'rsslink': 'RSS feed',
-'gpslink': 'GPX export',
-'permalink': 'Permalink',
-'osmlink': 'OpenStreetMap',
-'osblink': 'OpenStreetBugs',
-'geofabric': 'Geofabrik Map'
+'gpslink': 'GPX export'
 };

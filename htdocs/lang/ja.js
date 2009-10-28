@@ -1,6 +1,6 @@
 var message={
 'photo':'写真',
-'thumbnale' : '縮小版',
+'thumbnail' : '縮小版',
 'nickname': 'ニックネーム',
 'id':'ID',
 'lat':'緯度',
@@ -21,8 +21,4 @@ var message={
 
 'rsslink': 'RSS フィード',
 'gpslink': 'GPX エクスポート',
-'permalink': 'パーマリンク',
-'osmlink': 'OpenStreetMap',
-'osblink': 'OpenStreetBugs',
-'geofabric': 'Geofabrik Map'
 };
