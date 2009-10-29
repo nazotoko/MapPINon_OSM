@@ -59,38 +59,34 @@
   <div>
     <h3>現在のビューに対する</h3>
     <ul id="linkbox">
-      <li><a id="permalink" href="?lat=0&lon=0&zoom=2">パーマリンク</a></li>
-      <li><a id="osmlink" href="http://www.openstreetmap.org/?lat=0&lon=0&zoom=2">OpenStreetMap</a></li>
-      <li><a id="osblink" href="http://openstreetbugs.schokokeks.org/?lat=0&lon=0&zoom=2">OpenStreetBugs</a></li>
-      <li><a id="geofabrik" href="http://tools.geofabrik.de/map/?lat=0&lon=0&zoom=2">Geofabrik Map</a></li>
+      <li><a id="permalink" href="?lat=0&amp;lon=0&amp;zoom=2">パーマリンク</a></li>
+      <li><a id="osmlink" href="http://www.openstreetmap.org/?lat=0&amp;lon=0&amp;zoom=2">OpenStreetMap</a></li>
+      <li><a id="osblink" href="http://openstreetbugs.schokokeks.org/?lat=0&amp;lon=0&amp;zoom=2">OpenStreetBugs</a></li>
+      <li><a id="geofabrik" href="http://tools.geofabrik.de/map/?lat=0&amp;lon=0&amp;zoom=2">Geofabrik Map</a></li>
       <li id="rsslink">RSSes</li>
     </ul>
   </div>
   <div class="NavFrame">
     <div class="NavHead">Other Languages<a id="NavToggle3" class="NavToggle" href="javascript:toggleBar(3)">show</a></div>
-    <div id="NavContext3" class="NavContent">
-        <ul>
-          <li>Deutsch</li>
-          <li><a href="index.html.en">English</a></li>
-          <li>Español</li>
-          <li>Français</li>
-          <li>한국어</li>
-          <li>Nederlands</li>
-          <li>简体</li>
-          <li>繁體</li>
-        </ul>
-    </div>
+    <ul id="NavContext3" class="NavContent">
+      <li>Deutsch</li>
+      <li><a href="index.html.en">English</a></li>
+      <li>Español</li>
+      <li>Français</li>
+      <li>한국어</li>
+      <li>Nederlands</li>
+      <li>简体</li>
+      <li>繁體</li>
+    </ul>
   </div>
   <div class="NavFrame">
     <div class="NavHead">Debug<a id="NavToggle1" class="NavToggle" href="javascript:toggleBar(1)">show</a></div>
-    <div id="NavContext1" class="NavContent">
-      <dl id="debug">
-        <dt>loaded tile:</dt><dd id="readingData">data/</dd>
-        <dt>last opened photo marker ID: </dt><dd id="photoID">0</dd>
-        <dt># of Photo loaded: </dt><dd id="numberOfPhoto">0</dd>
-        <dt># of Popuping: </dt><dd id="numberOfPopuping">0</dd>
-      </dl>
-    </div>
+    <dl id="NavContext1" class="NavContent">
+      <dt>loaded tile:</dt><dd id="readingData">data/</dd>
+      <dt>last opened photo marker ID: </dt><dd id="photoID">0</dd>
+      <dt># of Photo loaded: </dt><dd id="numberOfPhoto">0</dd>
+      <dt># of Popuping: </dt><dd id="numberOfPopuping">0</dd>
+    </dl>
   </div>
 </div>
 <div id="map">
@@ -104,10 +100,10 @@
 <div id="message">
 <input type="text" id="messBox" name="htmlCode" length="30" value=""/><br/>
 <input type="radio" name="kind" value="ascii" checked="true" onclick="messBox.embed2('a')"/>URL<br/>
-<input type="radio" name="kind" value="html" onclick="messBox.embed2('h')"/>HTML link<br/>
-<input type="radio" name="kind" value="html" onclick="messBox.embed2('H')"/>HTML link 2<br/>
-<input type="radio" name="kind" value="map" onclick="messBox.embed2('O')"/>Image<br/>
-<input type="radio" name="kind" value="MnA" onclick="messBox.embed2('OA')"/>Image and ASCII<br/>
+<input type="radio" name="kind" value="html" onclick="messBox.embed2('h')"/>HTML リンク<br/>
+<input type="radio" name="kind" value="html" onclick="messBox.embed2('H')"/>HTML リンク 2<br/>
+<input type="radio" name="kind" value="map" onclick="messBox.embed2('O')"/>地図イメージ<br/>
+<input type="radio" name="kind" value="MnA" onclick="messBox.embed2('OA')"/>地図イメージと文<br/>
 <div id="messTest"></div>
 <div class="olPopupCloseBox" style="width: 17px; height: 17px; position: absolute; right: 13px; top: 14px; z-index: 1;" onclick="document.getElementById('message').style.display='none'"></div>
 </div>

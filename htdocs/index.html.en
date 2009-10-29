@@ -64,29 +64,25 @@
   </ul>
   <div class="NavFrame">
     <div class="NavHead">Other Languages<a id="NavToggle3" class="NavToggle" href="javascript:toggleBar(3)">show</a></div>
-    <div id="NavContext3" class="NavContent">
-      <ul>
-        <li>Deutsch</li>
-        <li>Español</li>
-        <li>Français</li>
-        <li><a href="index.html.ja">日本語</a></li>
-        <li>한국어</li>
-        <li>Nederlands</li>
-        <li>简体</li>
-        <li>繁體</li>
-      </ul>
-    </div>
+    <ul id="NavContext3" class="NavContent">
+      <li>Deutsch</li>
+      <li>Español</li>
+      <li>Français</li>
+      <li><a href="index.html.ja">日本語</a></li>
+      <li>한국어</li>
+      <li>Nederlands</li>
+      <li>简体</li>
+      <li>繁體</li>
+    </ul>
   </div>
   <div class="NavFrame">
     <div class="NavHead">Debug<a id="NavToggle1" class="NavToggle" href="javascript:toggleBar(1)">show</a></div>
-    <div id="NavContext1" class="NavContent">
-      <dl id="debug">
-        <dt>last loaded tile:</dt><dd id="readingData">data/</dd>
-        <dt>last opened photo marker ID: </dt><dd id="photoID">0</dd>
-        <dt># of Photo loaded:</dt><dd id="numberOfPhoto">0</dd>
-        <dt># of Popuping: </dt><dd id="numberOfPopuping">0</dd>
-      </dl>
-    </div>
+    <dl id="NavContext1" class="NavContent">
+      <dt>last loaded tile:</dt><dd id="readingData">data/</dd>
+      <dt>last opened photo marker ID: </dt><dd id="photoID">0</dd>
+      <dt># of Photo loaded:</dt><dd id="numberOfPhoto">0</dd>
+      <dt># of Popuping: </dt><dd id="numberOfPopuping">0</dd>
+    </dl>
   </div>
 </div>
 <div id="map">
@@ -100,8 +96,8 @@
 <input type="radio" name="kind" value="ascii" checked="true" onclick="messBox.embed2('a')"/>URL<br/>
 <input type="radio" name="kind" value="html" onclick="messBox.embed2('h')"/>HTML link<br/>
 <input type="radio" name="kind" value="html" onclick="messBox.embed2('H')"/>HTML link 2<br/>
-<input type="radio" name="kind" value="map" onclick="messBox.embed2('O')"/>Image<br/>
-<input type="radio" name="kind" value="MnA" onclick="messBox.embed2('OA')"/>Image and ASCII<br/>
+<input type="radio" name="kind" value="map" onclick="messBox.embed2('O')"/>Map<br/>
+<input type="radio" name="kind" value="MnA" onclick="messBox.embed2('OA')"/>Map and text<br/>
 <div id="messTest"></div>
 <div class="olPopupCloseBox" style="width: 17px; height: 17px; position: absolute; right: 13px; top: 14px; z-index: 1;" onclick="document.getElementById('message').style.display='none'"></div>
 </div>

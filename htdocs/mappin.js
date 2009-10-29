@@ -34,7 +34,6 @@ var icons={};
 
 /* caches for MapPIN'on OSM */
 var photos = {length:0};/* hash object to recode the loaded photo markers */
-var numOfPopuping=0; /** icon markers displaying popups to be limited less than 20. */
 var new_point_feature=null;
 
 function init_map(){
@@ -150,13 +149,15 @@ return ret;
 function popup_open_photo(photo){
     var i=0;
     var text='<h1>'+photo.title+'</h1>';
-    if(photo.link){
-        text+='<a target="_blank" title="'+message.title_link+'" href="'+photo.link+'">';
-    }
+    text+='<table><tr><td class="thumb">'
+    if(photo.thumb){
+    if(photo.link){text+='<a target="_blank" title="'+message.title_link+'" href="'+photo.link+'">';}
     text+='<img src="'+photo.thumb+'" alt="'+message.thumbnail+'" />';
-    if(photo.link){
-        text+='</a>';
+    if(photo.link){text+='</a>';}
+    } else {
+        text+=message.no_thumb;
     }
+    text+='</td><td>';
     text+='<ul class="description"><li>'+message.id+': '+photo.id+'</li>';
     text+='<li>'+message.lat+': '+photo.lat+'</li>';
     text+='<li>'+message.lon+': '+photo.lon+'</li>';
@@ -170,7 +171,7 @@ function popup_open_photo(photo){
             text+='<li>osm:way=<a href="http://www.openstreetmap.org/browse/way/'+photo.way[i]+'">'+photo.way[i]+'</a></li>';
         }
     }
-    text+='</ul><ul>';
+    text+='</ul></td></tr></table><ul class="commands">';
     if(photo.link) text+='<li><a target="_blank" title="'+message.title_link+'" href="'+photo.link+'">'+message.action_link+'</a></li>';
     if(photo.original) text+='<li><a target="_blank" title="'+message.title_original+'" href="'+photo.original+'">'+message.action_original+'</a></li>';
     if(photo.rss) text+= '<li><a target="_blank" title="'+message.title_rss+'" href="'+photo.rss+'">'+message.action_rss+'</a></li>';
@@ -242,7 +243,7 @@ function AJAXI(photos_i){
   for(id in photos_i){
     if (!photos[id]){
       var photo_i=photos_i[id];
-      var photo={
+      photos[id]=create_feature({
         id: id,
         lat: photo_i.la,
         lon: photo_i.lo,
@@ -254,8 +255,7 @@ function AJAXI(photos_i){
         node: photo_i.n,
         way: photo_i.w,
         rss: photo_i.r
-      };
-      photos[id]=create_feature(photo);
+      });
       photos.length++;
     }
   }
@@ -266,7 +266,6 @@ function AJAXI(photos_i){
  */
 function create_feature(photo){
   var feature = new OpenLayers.Feature(layer, new OpenLayers.LonLat(lon2x(photo.lon), lat2y(photo.lat)), {icon: icons[photo.state].clone()});
-  feature.popupClass = OpenLayers.Class(OpenLayers.Popup.FramedCloud);
   feature.photo=photo;
   var marker = feature.createMarker();
   marker.events.register("click", feature, marker_click);
@@ -309,34 +308,33 @@ OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
     click: function(ev){
         var lonlat=map.getLonLatFromPixel(ev.xy);
         if(!new_point_feature){
-            new_point_feature = new OpenLayers.Feature(layer, lonlat, {icon: icons[4]});
-            new_point_feature.popupClass = OpenLayers.Class(OpenLayers.Popup.FramedCloud);
+            new_point_feature = new OpenLayers.Feature(layer, lonlat, {icon: icons[4].clone()});
             new_point_feature.photo={id:0};
         } else {
-            new_point_feature.lonlat=map.getLonLatFromPixel(ev.xy);
             map.removePopup(new_point_feature.popup);
             new_point_feature.popup.destroy();
             layer.removeMarker(new_point_feature.marker);
+            new_point_feature.marker.destroy();
+            new_point_feature.data.icon=icons[4].clone();
+            new_point_feature.lonlat=lonlat;
         }
-        marker=new_point_feature.createMarker();
-        new_point_feature.popup=new new_point_feature.popupClass(new_point_feature.id+'_popup',
+        var marker=new_point_feature.createMarker();
+        marker.events.register("click", new_point_feature, marker_click);
+        marker.events.register("mouseover", new_point_feature, marker_mouseover);
+        marker.events.register("mouseout", new_point_feature, marker_mouseout);
+        layer.addMarker(marker);
+        new_point_feature.popup =new OpenLayers.Popup.FramedCloud(new_point_feature.id+'_popup',
             lonlat,
             new_point_feature.data.popupSize,
             popup_new_point(x2lon(lonlat.lon),y2lat(lonlat.lat)),
             marker.icon,
             true,
             popup_close);
+        new_point_feature.popup.panMapIfOutOfView=false;
         new_point_feature.popup.feature=new_point_feature;
         map.addPopup(new_point_feature.popup);
-        if(!new_point_feature.popuped){
-            numOfPopuping++;
-            new_point_feature.popuped=true;
-            document.getElementById("numberOfPopuping").innerHTML = numOfPopuping;
-        }
-        marker.events.register("click", new_point_feature, marker_click);
-        marker.events.register("mouseover", new_point_feature, marker_mouseover);
-        marker.events.register("mouseout", new_point_feature, marker_mouseout);
-        layer.addMarker(marker);
+        new_point_feature.popuped=true;
+        document.getElementById("numberOfPopuping").innerHTML = map.popups.length;
         OpenLayers.Event.stop(ev);
     }
 });
@@ -351,10 +349,6 @@ function refresh(){
   
   if (params.zoom > 10) {
     url=make_url(Math.round(lon*20),Math.round(lat*20));
-    document.getElementById("rsslink").style.display = "list-item";
-    document.getElementById("rsslink").innerHTML = message.rsslink;
-  } else {
-    document.getElementById("rsslink").style.display = "none";
   }
   document.getElementById("permalink").href = lonlat+layers;
   document.getElementById("osmlink").href = 'http://www.openstreetmap.org/'+lonlat;
@@ -365,37 +359,35 @@ function refresh(){
 /** Marker events */
 function marker_click(ev){// "this" means feature
     if (this.popuped){
-        map.removePopup(this.popup)
+        map.removePopup(this.popup);
         this.popuped=false;
-        numOfPopuping--;
-    } else if (numOfPopuping<20){
-        map.addPopup(this.popup);
+    } else if (map.popups.length<20){
+        if(!this.popup.map){map.addPopup(this.popup);}
         this.popuped=true;
-        numOfPopuping++;
     }
     document.getElementById("photoID").innerHTML = this.photo.id;
-    document.getElementById("numberOfPopuping").innerHTML = numOfPopuping;
+    document.getElementById("numberOfPopuping").innerHTML = map.popups.length;
     OpenLayers.Event.stop(ev);
 }
 
 function popup_close(ev){
     this.feature.popuped=false;
-    numOfPopuping--;
     map.removePopup(this);
-    document.getElementById("numberOfPopuping").innerHTML = numOfPopuping;
+    document.getElementById("numberOfPopuping").innerHTML = map.popups.length;
     OpenLayers.Event.stop(ev);
 }
 
 function marker_mouseover(ev){
   if (!this.popuped){
     if(!this.popup){
-        this.popup = new this.popupClass(this.id+'_popup',
+        this.popup = new OpenLayers.Popup.FramedCloud(this.id+'_popup',
                 this.lonlat,
                 this.data.popupSize,
                 popup_open_photo(this.photo),
                 this.marker.icon,
                 true,
                 popup_close);
+        this.popup.panMapIfOutOfView=false;
         this.popup.feature = this;
     }
     map.addPopup(this.popup);

@@ -1,6 +1,7 @@
 var message={
 'photo':'写真',
 'thumbnail' : '縮小版',
+'no_thumb': '縮小版なし',
 'nickname': 'ニックネーム',
 'id':'ID',
 'lat':'緯度',

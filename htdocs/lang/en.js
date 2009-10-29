@@ -1,6 +1,7 @@
 var message={
 'photo':'Photo',
 'thumbnail' : 'Thumbnail',
+'no_thumb': 'No thumbnail',
 'nickname': 'Nickname',
 'id': 'ID',
 'lat':'latitude',

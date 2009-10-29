@@ -27,7 +27,7 @@
  * Shun "Nazotoko" Watanabe <nazotoko@gmail.com>
  */
 .olPopup{
-        cursor:default;    
+        cursor:default;
 }
 .olFramedCloudPopupContent
 {
@@ -115,24 +115,22 @@ border:0;
 }
 
 
-.olFramedCloudPopupContent ul
+.olFramedCloudPopupContent ul.commands
 {
 	margin-left: 0px;
 	margin-right: 0px;
-	margin-top: 10px;
+	margin-top: 6px;
 	margin-bottom: 0px;
 	
 	padding-left: 0px;
 	padding-right: 0px;
-	padding-top: 5px;
+	padding-top: 0px;
 	padding-bottom: 0px;
-
-	border-top: solid 1px gray;
 
 	text-align: center;
 }
 
-.olFramedCloudPopupContent ul li
+.olFramedCloudPopupContent ul.commands li
 {
 	display: inline;
 
@@ -146,14 +144,23 @@ ul.description {
 }
 ul.description li
 {
-	display: list-item;
-
 	margin-left: 8px;
-	margin-right: 8px;
-
-	padding: 0px;
+	margin-right: 0px;
+	margin-top: 0px;
+	margin-bottom: 2px;
+	padding-left: 0px;
 }
-
+.olFramedCloudPopupContent table{
+    border-bottom: 1px solid;
+    border-spacing:0px;
+}
+.olFramedCloudPopupContent td.thumb{
+    text-align: center;
+    width: 110px;
+    margin: 0px;
+    padding-left: 2px;
+    border-right: 1px solid;
+}
 .olFramedCloudPopupContent form
 {
 	margin-top: 10px;
