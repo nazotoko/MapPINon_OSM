@@ -85,7 +85,7 @@ public class FlickrProtocal extends XML {
         String[] args = s.split("/");
         title="Flickr photos";
         try { //if the sercg condition is invalld
-            if(readDate!=null)sp.setMinUploadDate(readDate);
+//            if(readDate!=null)sp.setMinUploadDate(readDate);
             readDate = new Date();
             for(int i = 0; i < args.length; i++){
                 if(args[i].startsWith("tags")){
@@ -103,7 +103,7 @@ public class FlickrProtocal extends XML {
                     System.out.println("set: " + photoset.getTitle());
                     //sp.????(args[i+1]);
                     title+=" from set &quot;"+photoset.getTitle()+"&quot;.";
-                    return photoSeti.getPhotos(args[i + 1], 60, 1);// extra, Flickr.PRIVACY_LEVEL_PUBLIC
+                    return photoSeti.getPhotos(args[i + 1], extra, Flickr.PRIVACY_LEVEL_PUBLIC, 60, 1);// extra, Flickr.PRIVACY_LEVEL_PUBLIC
                 } else {
                     System.out.println("uesrid: " + args[i]);
                     User u = peoplei.getInfo(args[i]);
@@ -121,7 +121,7 @@ public class FlickrProtocal extends XML {
         } catch(FlickrException ex) {
             System.out.println("Flickr has some trable: " + ex.getMessage());
         }
-        return null;
+        return new PhotoList();
     }
 
     @Override

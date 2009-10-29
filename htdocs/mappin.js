@@ -29,6 +29,7 @@ var data_path ="data/photo";
 /** valuables of openlayers' object */
 var map = null;
 var layer = null;
+var vectorLayer=null;
 var permalink = null;
 var icons={};
 
@@ -54,19 +55,26 @@ function init_map(){
     });
     layer = new OpenLayers.Layer.Markers("Photos",{wrapDateLine: true});
     layer.setOpacity(0.7);
+    vectorlayer=new OpenLayers.Layer.Vector("line",{
+        styleMap: new OpenLayers.StyleMap({
+            strokeColor: "#666666",
+            strokeWidth: 1
+        })
+    });
     map.addLayers([new OpenLayers.Layer.OSM.Mapnik("Mapnik",{wrapDateLine: true}),
         new OpenLayers.Layer.OSM.CycleMap("CycleMap",{wrapDateLine: true}),
         new OpenLayers.Layer.OSM.Osmarender("Osmarender",{wrapDateLine: true}),
         new OpenLayers.Layer.OSM( "Relief",
             "http://maps-for-free.com/layer/relief/z${z}/row${y}/${z}_${x}-${y}.jpg",
             {numZoomLevels:12,wrapDateLine: true}),
-        layer,
         new OpenLayers.Layer.OSM( "Contour",
         "http://www.heywhatsthat.com/bin/contour_tiles.cgi?x=${x}&y=${y}&zoom=${z}&interval=25&color=ff0000",{
             isBaseLayer:false,
             visibility: false,
             wrapDateLine: true
-        })
+        }),
+        vectorlayer,
+        layer
     ]);
 
     map.setCenter(new OpenLayers.LonLat(0, 0).transform(

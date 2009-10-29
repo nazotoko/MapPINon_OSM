@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="index.xsl" type="text/xsl" ?>
+<!--
+    Document   : ja.xml
+    Created on : 2009/10/28, 11:14
+    Author     : nazotoko
+    Description: Japanese messages.
+-->
+<m:index lang="ja" xml:lang="ja" xmlns:m="http://mappinon.hp2.jp/develop" xmlns="http://www.w3.org/1999/xhtml">
+    <m:text>
+        <p><a href="http://www.openstreetmap.org">OpenStreetMap</a>
+        の地図上にRSSから得た写真のリンクを載せます。</p>
+        <p><span class="warn">著作権で保護されている地図より得たGeoタグデータを付けた写真を
+        置かないでください。</span> 例えば、Google Mapsのような地図を見て付けたものは駄目です。
+        GPSを使って付けたタグか、
+        <a href="http://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA</a>
+        ライセンスと互換性のある地図によって付けたものにしてください。</p>
+        <p>写真を見るには、マーカーをクリックしてください。</p>
+    </m:text>
+    <m:blog>MapPIN'on OSM ブログ</m:blog>
+    <m:registration>あなたの写真ブログなどのRSSの登録フォーム</m:registration>
+    <m:rssList>登録されているRSS リスト</m:rssList>
+    <m:currentView>現在のビューに対する:</m:currentView>
+    <m:links>
+        <m:permalink>パーマリンク</m:permalink>
+        <m:osmlink>OpenStreetMap</m:osmlink>
+        <m:osblink>OpenStreetBugs</m:osblink>
+        <m:geofabrik>Geofabrik Map</m:geofabrik>
+    </m:links>
+    <m:ie6><![CDATA[
+  <h4>あなたのブラウザーは、時代遅れだって知ってました?</h4>
+  <p>私たちのウェブサイトを最良の状態での使用を体験してもらうために、あなたのブラウザーをもっと新しいバージョンにアップグレードすることをおすすめします。最新のバージョンは、<a class="getie8" href="http://upgradeie.s3.amazonaws.com/eng/index.html">Internet Explorer 8</a>です。アップグレードは無料です。もし、あなたのPCが仕事場のものなら、IT 管理者に連絡を取った方がいいでしょう。</p>
+  <p>もし好みなら、<a class="ie6expl" href="http://getfirefox.com">Firefox</a>, <a class="ie6expl" href="http://www.opera.com">Opera</a> や <a class="ie6expl" href="http://www.apple.com/safari/download/">Safari</a>のような他の人気のあるインターネットブラウザーも試してみてもいいと思います。</p>
+    ]]></m:ie6>
+    <m:noscript>
+        <h2>Javascript が見つかりません。</h2>
+        <p>残念ながら、この地図には Javascript が必要です。<br/>
+           あなたのブラウザーは、 Javascript をサポートしていないか、あなたが無効にしています。<br/>
+           この地図を見るときには、有効にしてください。</p>
+    </m:noscript>
+    <m:message>
+        <m:url>URL</m:url>
+        <m:html1>HTML リンク</m:html1>
+        <m:html2>HTML リンク 2</m:html2>
+        <m:image>地図イメージ</m:image>
+        <m:imageText>地図イメージと文</m:imageText>
+    </m:message>
+</m:index>

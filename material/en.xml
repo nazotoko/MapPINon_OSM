@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="index.xsl" type="text/xsl" ?>
+
+<!--
+    Document   : en.xml
+    Created on : 2009/10/27, 11:14
+    Author     : nazotoko
+    Description: English messages.
+-->
+<m:index lang="en" xml:lang="en" xmlns:m="http://mappinon.hp2.jp/develop" xmlns="http://www.w3.org/1999/xhtml">
+    <m:text>
+        <p>Markers are placed at the locations of photos on
+            <a href="http://www.openstreetmap.org">OpenStreetMap</a> and they
+            have links to mapping photos gotten by RSSes.
+        </p>
+        <p>
+            <span class="warn">Don't tag geographic information gotten from
+            copyrighted maps to your photos.</span> For example, google maps
+            and Yahoo maps are copyrighted. Photo album sites provide to us
+            functions to tag location information to photo by using those
+            copyrighted maps, but don't use them. Use GPS logs or  waypoints,
+            otherwise use
+            <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA</a>
+            compativle maps like as OpenStreetMap.
+        </p>
+        <p>To see details on each photos, click the markers.</p>
+    </m:text>
+    <m:blog>MapPIN'on OSM Blog</m:blog>
+    <m:registration>Registration form of RSS of your photo blogs.</m:registration>
+    <m:rssList>RSS list (registered)</m:rssList>
+    <m:currentView>Current view:</m:currentView>
+    <m:links>
+        <m:permalink>Permalink</m:permalink>
+        <m:osmlink>OpenStreetMap</m:osmlink>
+        <m:osblink>OpenStreetBugs</m:osblink>
+        <m:geofabrik>Geofabrik Map</m:geofabrik>
+    </m:links>
+    <m:ie6><![CDATA[
+        <h4>Your browser is out of date.</h4> This web site cannot support your
+        browser.
+    ]]></m:ie6>
+    <m:noscript>
+        <h2>Javascript not found</h2>
+        <p>This application requires Javascript. Please enable it to view the map.</p>
+    </m:noscript>
+    <m:message>
+        <m:url>URL</m:url>
+        <m:html1>HTML link</m:html1>
+        <m:html2>HTML link 2</m:html2>
+        <m:image>Image</m:image>
+        <m:imageText>Image and ASCII</m:imageText>
+    </m:message>
+</m:index>

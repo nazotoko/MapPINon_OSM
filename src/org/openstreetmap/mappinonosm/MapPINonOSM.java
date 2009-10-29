@@ -294,30 +294,31 @@ public class MapPINonOSM {
         } else {
             System.err.println("Warning: Photo table is not specified, so RSS table has not been saved.");            
         }
-
-        if(photo_table!=null){
-            try {
-                os = new GZIPOutputStream(new FileOutputStream(photo_table));
-                photoTable.save(os);
-                os.close();
-            } catch(FileNotFoundException ex) {
-                System.out.println("Cannot open photo.json.gz");
-            } catch(IOException ex) {
-                System.out.println("Cannot close photo.json.gz");
+        if(photoTable != null){
+            if(photo_table != null){
+                try {
+                    os = new GZIPOutputStream(new FileOutputStream(photo_table));
+                    photoTable.save(os);
+                    os.close();
+                } catch(FileNotFoundException ex) {
+                    System.out.println("Cannot open photo.json.gz");
+                } catch(IOException ex) {
+                    System.out.println("Cannot close photo.json.gz");
+                }
+            } else {
+                System.err.println("Warning: Photo table is not specified, so photo table has not saved.");
             }
-        } else {
-            System.err.println("Warning: Photo table is not specified, so photo table has not saved.");
-        }
 
-        if(backupdir!=null){
-            try {
-                os = new GZIPOutputStream(new FileOutputStream("backup/photo-" + new SimpleDateFormat("MMddHHmmss").format(new Date()) + ".json.gz"));
-                photoTable.save(os);
-                os.close();
-            } catch(FileNotFoundException ex) {
-                System.out.println("Cannot open photo.json.gz");
-            } catch(IOException ex) {
-                System.out.println("Cannot close photo.json.gz");
+            if(backupdir != null){
+                try {
+                    os = new GZIPOutputStream(new FileOutputStream("backup/photo-" + new SimpleDateFormat("MMddHHmmss").format(new Date()) + ".json.gz"));
+                    photoTable.save(os);
+                    os.close();
+                } catch(FileNotFoundException ex) {
+                    System.out.println("Cannot open photo.json.gz");
+                } catch(IOException ex) {
+                    System.out.println("Cannot close photo.json.gz");
+                }
             }
         }
     }
