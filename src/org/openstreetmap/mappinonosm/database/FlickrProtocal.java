@@ -33,7 +33,6 @@ import org.xml.sax.SAXException;
  * @author nazo
  */
 public class FlickrProtocal extends XML {
-    private String secret;
     private Flickr f=null;
     private PhotosInterface photosi;
     static private HashSet extra = new HashSet();
@@ -63,11 +62,10 @@ public class FlickrProtocal extends XML {
     }
 
     /** Called only form XMLBase.
-     * @param id integer id number 
+     * @param flickr Flickr object. It holds Flickr API keys.
      */
-    void setFlickr(Flickr flickr,String secret) {
+    void setFlickr(Flickr flickr) {
         this.f=flickr;
-        this.secret=secret;
     }
 
     private PhotoList serch(){
@@ -103,7 +101,7 @@ public class FlickrProtocal extends XML {
                     System.out.println("set: " + photoset.getTitle());
                     //sp.????(args[i+1]);
                     title+=" from set &quot;"+photoset.getTitle()+"&quot;.";
-                    return photoSeti.getPhotos(args[i + 1], extra, Flickr.PRIVACY_LEVEL_PUBLIC, 60, 1);// extra, Flickr.PRIVACY_LEVEL_PUBLIC
+                    return photoSeti.getPhotos(args[i + 1], extra, Flickr.PRIVACY_LEVEL_PUBLIC, 60, 1);
                 } else {
                     System.out.println("uesrid: " + args[i]);
                     User u = peoplei.getInfo(args[i]);
@@ -137,7 +135,7 @@ public class FlickrProtocal extends XML {
 //                System.out.println("id: " + p.getId());
             photo.setTitle(entity(p.getTitle()));
             System.out.println("\ttitle: " + p.getTitle());
-            photo.setLink("http://flic.kr/" + p.getOwner().getId() + "/" + p.getId());
+            photo.setLink(encodeBase58(Long.parseLong(p.getId())));
             System.out.println("\tlink: " + photo.getLink());
             photo.setThumbnale(p.getThumbnailUrl());
             System.out.println("\tthumbnail: " + p.getThumbnailUrl());
@@ -163,7 +161,7 @@ public class FlickrProtocal extends XML {
                 if(g != null){
                     photo.setLat(g.getLatitude());
                     photo.setLon(g.getLongitude());
-                    System.out.println("\tgeorss latlon: "+g.getLatitude()+", "+g.getLatitude());
+                    System.out.println("\tgeorss latlon: "+g.getLatitude()+", "+g.getLongitude());
                 }
             }
 
@@ -199,7 +197,7 @@ public class FlickrProtocal extends XML {
         float speedRef=0;
         ArrayList<Exif> exifal=null;
         try {
-            exifal = (ArrayList<Exif>)photosi.getExif(photoID, secret);
+            exifal = (ArrayList<Exif>)photosi.getExif(photoID, f.getSharedSecret());
         } catch(IOException ex) {
             System.out.println("EXIF not avalable:" + ex.getMessage());
             return;
@@ -294,5 +292,17 @@ public class FlickrProtocal extends XML {
                 }
             }
         }
+    }
+
+   private String encodeBase58(long num) {
+       final String base58 = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ";
+       String ret = "";
+       long div;
+       while(num >= 58){
+           div = num / 58;
+           ret = base58.charAt((int)(num - (58 * div))) + ret;
+           num = div;
+       }
+       return "http://flic.kr/p/" + base58.charAt((int)num) + ret;
     }
 }

@@ -29,7 +29,6 @@
 
 package org.openstreetmap.mappinonosm.database;
 
-import java.io.PrintStream;
 
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
@@ -39,7 +38,6 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
-import org.xml.sax.ext.DefaultHandler2;
 
 /**
  *
@@ -272,7 +270,7 @@ abstract public class XML  implements Comparable<XML>{
     /** Out put to MapPIN'on OSM
      * @param ps This PrintStrem is usually made by RSSBase.
      */
-    public void toHTML(PrintStream ps){
+    public void toHTML(PrintWriter ps){
         ps.println("<td class=\"number\">"+id+"</td>");
         ps.println("<td class=\"number\">"+counter+"</td>");
         ps.println("<td>");

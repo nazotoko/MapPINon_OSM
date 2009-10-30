@@ -34,7 +34,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -50,7 +49,6 @@ public class XMLTable extends HashSet<XML>{
     private int maxId=0;
     private PhotoTable pb=null;
     private Flickr flickr=null;
-    private String flickrSecret=null;
     /** must set pb before load
      * @param pb Photobase object you are using.
      */
@@ -66,7 +64,7 @@ public class XMLTable extends HashSet<XML>{
      */
     public void setFlickrKeys(String key, String secret) {
         flickr=new Flickr(key);
-        flickrSecret=secret;
+        flickr.setSharedSecret(secret);
     }
     /** the RSS shuld have url
      * @param xml
@@ -77,7 +75,7 @@ public class XMLTable extends HashSet<XML>{
             return false;
         }
         if(xml instanceof FlickrProtocal){
-            ((FlickrProtocal)xml).setFlickr(flickr,flickrSecret);
+            ((FlickrProtocal)xml).setFlickr(flickr);
         }
         xml.setPhotoBase(pb);
         if(xml.getId()==0){
@@ -155,34 +153,39 @@ public class XMLTable extends HashSet<XML>{
         }
     }
     public void toHTML(OutputStream os){
-        PrintStream ps = new PrintStream(os);
-        ps.println("<html lang=\"en\"><head>");
-        ps.println("<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"/>");
-        ps.println("<meta http-equiv=\"Content-Language\" content=\"en\"/>");
-        ps.println("<link rel=\"stylesheet\" href=\"css/list.css\" type=\"text/css\"/>");
-        ps.println("<title>List of resistered RSSes</title></head><body>");
-        ps.println("<h1>List of resistered RSSes</h1>");
-        ps.println("<p><a href=\"index.html\">back to the map</a>, <a href=\"blog/\">go to the blog</a></p>");
-        ps.println("<p>Timezone of timestamps are of UTC.</p>");
-        ps.println("<table><tr><th>ID</th><th>Number of photos registered</th><th>Title</th><th>URI</th><th>Read date</th><th>Registed date</th></tr>");
-
-        boolean odd = true;
-        XML [] xmls=toArray(new XML[size()]);
-        Arrays.sort(xmls);
-        for(XML x: xmls){
-            ps.print("<tr");
-            
-            if(odd){
-                ps.print(">");
-                odd = false;
-            } else {
-                ps.print(" class=\"even\">");
-                odd = true;
+        PrintWriter pw = null;
+        try {
+            pw = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
+            pw.println("<html lang=\"en\"><head>");
+            pw.println("<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"/>");
+            pw.println("<meta http-equiv=\"Content-Language\" content=\"en\"/>");
+            pw.println("<link rel=\"stylesheet\" href=\"css/list.css\" type=\"text/css\"/>");
+            pw.println("<title>List of resistered RSSes</title></head><body>");
+            pw.println("<h1>List of resistered RSSes</h1>");
+            pw.println("<p><a href=\"index.html\">back to the map</a>, <a href=\"blog/\">go to the blog</a></p>");
+            pw.println("<p>Timezone of timestamps are of UTC.</p>");
+            pw.println("<table><tr><th>ID</th><th>Number of photos registered</th><th>Title</th><th>URI</th><th>Read date</th><th>Registed date</th></tr>");
+            boolean odd = true;
+            XML[] xmls = toArray(new XML[size()]);
+            Arrays.sort(xmls);
+            for(XML x: xmls){
+                pw.print("<tr");
+                if(odd){
+                    pw.print(">");
+                    odd = false;
+                } else {
+                    pw.print(" class=\"even\">");
+                    odd = true;
+                }
+                x.toHTML(pw);
+                pw.println("</tr>");
             }
-            x.toHTML(ps);
-            ps.println("</tr>");
+            pw.println("</table>");
+            pw.println("<p><a href=\"index.html\">back to the map</a>, <a href=\"blog/\">go to the blog</a></p></body></html>");
+            pw.close();
+        } catch(UnsupportedEncodingException ex) {
+            System.err.println("This system cannot supuuprt UTF-8.:"+ex.getMessage());
+        } finally {
         }
-        ps.println("</table>");
-        ps.println("<p><a href=\"index.html\">back to the map</a>, <a href=\"blog/\">go to the blog</a></p></body></html>");
     }
 }
