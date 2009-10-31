@@ -6,7 +6,7 @@
 <xsl:output method="html" encoding="UTF-8"
 doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
 doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
-standalone="yes" indent="no" version="1.0"/>
+standalone="yes" indent="no" version="4.0"/>
 
 <xsl:template match="m:index">
 <html xmlns="http://www.w3.org/1999/xhtml">

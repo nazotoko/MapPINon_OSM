@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet href="index.xsl" type="text/xsl" ?>
+<!DOCTYPE m:index SYSTEM "MapPINonOSM.dtd">
 <!--
     Document   : ja.xml
     Created on : 2009/10/28, 11:14
@@ -45,4 +46,23 @@
         <m:image>地図イメージ</m:image>
         <m:imageText>地図イメージと文</m:imageText>
     </m:message>
+    <m:javascript>
+        <m:thumbnail>縮小版</m:thumbnail>
+        <m:no_thumb>縮小版なし</m:no_thumb>
+        <m:id>ID</m:id>
+        <m:lat>緯度</m:lat>
+        <m:lon>経度</m:lon>
+        <m:here_is>ここは、</m:here_is>
+        <m:action_link>リンク</m:action_link>
+        <m:title_link>作者の写真を公開しているページに行きます</m:title_link>
+        <m:action_original>元写真</m:action_original>
+        <m:title_original>フルサイズの写真を取りにいきます</m:title_original>
+        <m:action_rss>RSS</m:action_rss>
+        <m:title_rss>この写真が登録されているRSSへのURL</m:title_rss>
+        <m:action_edit>Potlatch</m:action_edit>
+        <m:title_edit>この写真の位置を中心にPotlatchを開きます</m:title_edit>
+        <m:try_to_tag>この位置で撮った写真に、あなたのブログで<br/>このタグを付けてみてください。</m:try_to_tag>
+        <m:action_embed>埋め込み</m:action_embed>
+        <m:title_embed>あなたのブログにこのマーカーへのリンクを作りたくないですか。</m:title_embed>
+    </m:javascript>
 </m:index>

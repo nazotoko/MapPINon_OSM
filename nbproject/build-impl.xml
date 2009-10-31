@@ -411,11 +411,14 @@ pickup the flickrapi-1.2.jar and put it into the ./lib/ directory.
             <fileset dir="${src.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
         </copy>
     </target>
-    <target name="-post-compile">
-        <!-- Empty placeholder for easier customization. -->
-        <!-- You can override this target in the ../build.xml file. -->
+    <target name="htdocs-compile">
+        <xslt in="material/en.xml" style="material/index.xsl" out="htdocs/index.html.en" />
+        <xslt in="material/ja.xml" style="material/index.xsl" out="htdocs/index.html.ja" />
+        <mkdir dir="htdocs/lang"/>
+        <xslt in="material/en.xml" style="material/javascript.xsl" out="htdocs/lang/en.js" />
+        <xslt in="material/ja.xml" style="material/javascript.xsl" out="htdocs/lang/ja.js" />
     </target>
-    <target depends="init,deps-jar,-verify-automatic-build,-pre-pre-compile,-pre-compile,-do-compile,-post-compile" description="Compile project." name="compile"/>
+    <target depends="init,deps-jar,-verify-automatic-build,-pre-pre-compile,-pre-compile,-do-compile,htdocs-compile" description="Compile project." name="compile"/>
     <target name="-pre-compile-single">
         <!-- Empty placeholder for easier customization. -->
         <!-- You can override this target in the ../build.xml file. -->
@@ -738,9 +741,6 @@ pickup the flickrapi-1.2.jar and put it into the ./lib/ directory.
         <delete dir="${build.dir}"/>
         <delete dir="${dist.dir}"/>
     </target>
-    <target name="-post-clean">
-        <!-- Empty placeholder for easier customization. -->
-        <!-- You can override this target in the ../build.xml file. -->
-    </target>
+    <target name="-post-clean"/>
     <target depends="init,deps-clean,-do-clean,-post-clean" description="Clean build products." name="clean"/>
 </project>

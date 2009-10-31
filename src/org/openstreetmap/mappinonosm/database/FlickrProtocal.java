@@ -68,10 +68,11 @@ public class FlickrProtocal extends XML {
         this.f=flickr;
     }
 
-    private PhotoList serch(){
+    private ArrayList <Photo> serch(){
         String s = uri.getSchemeSpecificPart();
         SearchParameters sp = new SearchParameters();
         PeopleInterface peoplei= f.getPeopleInterface();
+        ArrayList<Photo> ret = new ArrayList<Photo>();
 
         System.out.println("Flickr's API: "+s);
         try {
@@ -83,7 +84,7 @@ public class FlickrProtocal extends XML {
         String[] args = s.split("/");
         title="Flickr photos";
         try { //if the sercg condition is invalld
-//            if(readDate!=null)sp.setMinUploadDate(readDate);
+            if(readDate!=null)sp.setMinUploadDate(readDate);
             readDate = new Date();
             for(int i = 0; i < args.length; i++){
                 if(args[i].startsWith("tags")){
@@ -111,7 +112,14 @@ public class FlickrProtocal extends XML {
                 }
             }
             sp.setExtras(extra);
-            return photosi.search(sp, 60, 1);
+            PhotoList pl;
+            int page=0;
+            do {
+                page++;
+                pl=photosi.search(sp, 10, page);
+                ret.addAll(pl);
+            }while (pl.getPages()>page);
+            return ret;
         } catch(IOException ex) {
             System.out.println("IO Exception: " + ex.getMessage());
         } catch(SAXException ex) {
@@ -119,17 +127,16 @@ public class FlickrProtocal extends XML {
         } catch(FlickrException ex) {
             System.out.println("Flickr has some trable: " + ex.getMessage());
         }
-        return new PhotoList();
+        return ret;
     }
 
     @Override
     void read() {
         photosi = f.getPhotosInterface();
-        PhotoList plist = serch();
+        ArrayList <Photo> plist = serch();
         System.out.println("\tFound "+plist.size());
         /** analysing Photos */
-        for(Object o: plist){
-            Photo p = (Photo)o;
+        for(Photo p:plist){
             photo = new org.openstreetmap.mappinonosm.database.Photo();
             photo.setXML(this);
 //                System.out.println("id: " + p.getId());

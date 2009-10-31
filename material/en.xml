@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet href="index.xsl" type="text/xsl" ?>
-
+<!DOCTYPE m:index SYSTEM "MapPINonOSM.dtd">
 <!--
     Document   : en.xml
     Created on : 2009/10/27, 11:14
     Author     : nazotoko
     Description: English messages.
 -->
-<m:index lang="en" xml:lang="en" xmlns:m="http://mappinon.hp2.jp/develop" xmlns="http://www.w3.org/1999/xhtml">
+<m:index lang="en" xml:lang="en"
+xmlns:m="http://mappinon.hp2.jp/develop"
+xmlns="http://www.w3.org/1999/xhtml">
     <m:text>
         <p>Markers are placed at the locations of photos on
             <a href="http://www.openstreetmap.org">OpenStreetMap</a> and they
@@ -50,4 +52,23 @@
         <m:image>Image</m:image>
         <m:imageText>Image and ASCII</m:imageText>
     </m:message>
+    <m:javascript>
+        <m:thumbnail>Thumbnail</m:thumbnail>
+        <m:no_thumb>No thumbnail</m:no_thumb>
+        <m:id>ID</m:id>
+        <m:lat>latitude</m:lat>
+        <m:lon>longitude</m:lon>
+        <m:here_is>Here is</m:here_is>
+        <m:action_link>link</m:action_link>
+        <m:title_link>Go to see to the publishing page of the photo.</m:title_link>
+        <m:action_original>original photo</m:action_original>
+        <m:title_original>Go to see the fullsize original photo.</m:title_original>
+        <m:action_rss>RSS</m:action_rss>
+        <m:title_rss>URL to the RSS registing this photo.</m:title_rss>
+        <m:action_edit>Potlatch</m:action_edit>
+        <m:title_edit>Open Potlatch around this location.</m:title_edit>
+        <m:try_to_tag>Try to tag it in your blog for your photo which was taken there.</m:try_to_tag>
+        <m:action_embed>embed</m:action_embed>
+        <m:title_embed>Do you want to embed a link to this marker?</m:title_embed>
+    </m:javascript>
 </m:index>

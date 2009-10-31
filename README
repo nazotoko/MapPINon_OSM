@@ -3,35 +3,92 @@ MapPIN'on OSM is mapping photos introducing Network (service) on OpenStreetMap.
 Ususal photo blogs generate RSSes. This system read those RSS and try to get
 geometrical location of photo files with JPEG EXIF GPS tags or georss tags.
 
-This system needs 2 our servers and other photo blog sites to provide us RSSes.
-One of the server is HTTP sercer which must be show in public internet. We call
-it as the HTTP server. Another sever don't needed to be shown in public but should
+This system needs 2 our servers.
+One of the server is the HTTP server which must be show in public internet. We call
+it as the foreground server. Another sever don't needed to be shown in public but should
 be able to access internet in order to get RSSes and photo JPEG files. We call
 it as the background server.
 
-== Install ==
-=== the HTTP server ===
-Copy the all directory under htdocs to it.
-
-=== the background server ===
-The background server depends on 
-* Sun Java 1.5
+== Dependence ==
+The background server depends on
+* Sun Java Development Kit 1.5 or later.
 * Metadata Extractor 2.3.1 ( http://www.drewnoakes.com/code/exif/ )
 ** put metadata-extractor-2.3.1.jar into lib/
 * Flickrj ( http://flickrj.sourceforge.net/ )
 ** put flickrapi-1.2.jar into lib/
 
-Move dist/MapPIN.jar to ./
+The foreground server depends on nothing special. If you are not publishing
+data, you don't need http server. You can run the index.html.* file on your
+browser directory.
+
+== Build ==
+If your system have ant version 1.7.1 or later, just type
+
+$ ant
+
+This is automatically download dependance files and builds up both servers:
+* the backgorund server (dist/MapPIN.jar)
+* the HTTP server (htdocs/index.html.*)
+
+== Install ==
+Move
+* dist/MapPIN.jar to ./
+* config.txt.sample to config.txt
+and edit config.txt to configure the foreground server behavior.
+
+== Run ==
 Then, it can be run just type:
 
 java -jar MapPIN.jar [command] [args]
 
-commands are 
+commands are
 * add: adding RSSes.
 * get: getting RSS registration file form forground server.
 * read: read RSSes and photo files listed on the RSSes from internet and update local databases
 * tile: make photo markers tiles from local databases
 * loop: just do "read" and "tile".
+
+=== Registing RSSes ===
+For first of all, collecting URLs of RSSes for geotagged photos. Then, input
+a command like this:
+
+java -jar MapPIN.jar add 'http://www.flickr.com/sercice/feed?....'\
+ 'http://picasaweb.google.com/feed?...' 'http://...'
+
+or write this kind of text file somewhere:
+
+http://www.flickr.com/sercice/feed?....
+http://picasaweb.google.com/feed?...
+http://...
+
+and specify the URL on config.txt, then
+java -jar MapPIN.jar get
+
+The RSS list are recoded in a file. The file name is 'rss.json.gz' as default.
+You can change the name in config.txt.
+
+=== Reading photo data ===
+Type
+java -jar MapPIN.jar read
+to get all photo data listed on RSSes.
+
+The photo list are recoded in a file. The file name is 'photo.json.gz' as
+default. You can change the name in config.txt.
+
+=== Making tile ===
+Type
+java -jar MapPIN.jar tile
+to create photo markers tiles of getton photo data.
+
+The photo markers tile are created under a directory. The directory is
+'htdocs/data/' as default. You can change the name in config.txt.
+
+=== Browsing ===
+Open your web browser and specify the address
+file://(the base directory of the MapPIN'on OSM forground server)/htdocs/index.html.(your language)
+
+=== Publishing ===
+Copy the all directory under htdocs/ to your HTTP server.
 
 == Copyright information and Original source lists ==
 Material/MapPINonOSM.svg
