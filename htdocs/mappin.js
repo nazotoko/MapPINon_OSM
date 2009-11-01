@@ -31,10 +31,13 @@ var map = null;
 var layer = null;
 var vectorLayer=null;
 var permalink = null;
+var lang={langs:{}};
+var view={};
 var icons={};
 
 /* caches for MapPIN'on OSM */
 var photos = {length:0};/* hash object to recode the loaded photo markers */
+var popup_id=null;
 var new_point_feature=null;
 
 function init_map(){
@@ -97,11 +100,20 @@ function init_map(){
 function init()
 {
   init_map();
+  for(var i=0;i<llang.length;i++){
+      lang.langs[llang[i]]=document.getElementById('lang_'+llang[i]);
+  }
+  view.views={
+    permalink:document.getElementById("permalink"),
+    osmlink:document.getElementById("osmlink"),
+    osblink:document.getElementById("osblink"),
+    geofabrik:document.getElementById("geofabrik")
+  };
   refresh();
   var regex = new RegExp("[\\?&]id=([^&#]*)");
   var result = regex.exec(window.location.href);
   if(result != null){
-    photos[result[1]].feature.marker.click();
+        popup_id=result[1];
   }
 }
 
@@ -166,9 +178,12 @@ function popup_open_photo(photo){
         text+=message.no_thumb;
     }
     text+='</td><td>';
-    text+='<ul class="description"><li>'+message.id+': '+photo.id+'</li>';
+    text+='<ul class="description">';
     text+='<li>'+message.lat+': '+photo.lat+'</li>';
     text+='<li>'+message.lon+': '+photo.lon+'</li>';
+    if(photo.alt){
+        text+='<li>'+message.alt+': '+photo.alt+'</li>';
+    }
     if(photo.node){
         for(i=0;i<photo.node.length;i++){
             text+='<li>osm:node=<a href="http://www.openstreetmap.org/browse/node/'+photo.node[i]+'">'+photo.node[i]+'</a></li>';
@@ -255,6 +270,7 @@ function AJAXI(photos_i){
         id: id,
         lat: photo_i.la,
         lon: photo_i.lo,
+        alt: photo_i.al,
         title: photo_i.ti,
         thumb: photo_i.th,
         link: photo_i.li,
@@ -266,6 +282,12 @@ function AJAXI(photos_i){
       });
       photos.length++;
     }
+  }
+  if(popup_id){
+    var a=photos[popup_id].marker.events;
+    a.triggerEvent("mouseover");
+    a.triggerEvent("click");
+    popup_id=null;
   }
   document.getElementById("numberOfPhoto").innerHTML = photos.length;
 }
@@ -352,16 +374,23 @@ function refresh(){
   var params = permalink.createParams();
   var lon=params.lon;
   var lat=params.lat;
-  var lonlat = '?lon='+params.lon+'&lat='+params.lat+'&zoom='+params.zoom;
-  var layers = '&layers='+params.layers;
+  var lonlat = '?lon='+params.lon+'&amp;lat='+params.lat+'&amp;zoom='+params.zoom;
+  var layers = '&amp;layers='+params.layers;
   
   if (params.zoom > 10) {
     url=make_url(Math.round(lon*20),Math.round(lat*20));
   }
-  document.getElementById("permalink").href = lonlat+layers;
-  document.getElementById("osmlink").href = 'http://www.openstreetmap.org/'+lonlat;
-  document.getElementById("osblink").href = 'http://openstreetbugs.schokokeks.org/'+lonlat+layers;
-  document.getElementById("geofabrik").href = "http://tools.geofabrik.de/map/"+lonlat;
+  if(document.getElementById('NavToggle2').firstChild.data=='hide'){
+    view.views.permalink.href = lonlat+layers;
+    view.views.osmlink.href = 'http://www.openstreetmap.org/'+lonlat;
+    view.views.osblink.href = 'http://openstreetbugs.schokokeks.org/'+lonlat+layers;
+    view.views.geofabrik.href = "http://tools.geofabrik.de/map/"+lonlat;
+  }
+  if(document.getElementById('NavToggle3').firstChild.data=='hide'){
+    for(id in lang.langs){
+      langs[id].href='index.html.'+id+lonlat+layers;
+    }
+  }
 }
 
 /** Marker events */
@@ -415,7 +444,7 @@ function marker_mouseout(ev){
 function toggleBar(index) {
     var NavToggle = document.getElementById("NavToggle" + index);
     var NavContext = document.getElementById("NavContext" + index);
-    if (!NavContext || !NavToggle) {return;}
+    if (!NavContext || !NavToggle) {return false;}
     // if shown now
     if (NavToggle.firstChild.data == 'hide') {
         NavContext.style.display = 'none';
@@ -424,4 +453,5 @@ function toggleBar(index) {
         NavContext.style.display = 'block';
         NavToggle.firstChild.data = 'hide';
     }
-  }
+    return false;
+}

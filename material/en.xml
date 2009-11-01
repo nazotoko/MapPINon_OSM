@@ -7,7 +7,7 @@
     Author     : nazotoko
     Description: English messages.
 -->
-<m:index lang="en" xml:lang="en"
+<m:index lang="en" in_native="English" xml:lang="en"
 xmlns:m="http://mappinon.hp2.jp/develop"
 xmlns="http://www.w3.org/1999/xhtml">
     <m:text>
@@ -27,23 +27,24 @@ xmlns="http://www.w3.org/1999/xhtml">
         </p>
         <p>To see details on each photos, click the markers.</p>
     </m:text>
-    <m:blog>MapPIN'on OSM Blog</m:blog>
-    <m:registration>Registration form of RSS of your photo blogs.</m:registration>
-    <m:rssList>RSS list (registered)</m:rssList>
-    <m:currentView>Current view:</m:currentView>
-    <m:links>
+    <m:menu title="MENU">
+        <m:blog>MapPIN'on OSM Blog</m:blog>
+        <m:registration>Registration form of RSS of your photo blogs.</m:registration>
+        <m:rssList>RSS list (registered)</m:rssList>
+    </m:menu>
+    <m:currentView title="Current view:">
         <m:permalink>Permalink</m:permalink>
         <m:osmlink>OpenStreetMap</m:osmlink>
         <m:osblink>OpenStreetBugs</m:osblink>
         <m:geofabrik>Geofabrik Map</m:geofabrik>
-    </m:links>
+    </m:currentView>
     <m:ie6><![CDATA[
         <h4>Your browser is out of date.</h4> This web site cannot support your
         browser.
     ]]></m:ie6>
     <m:noscript>
         <h2>Javascript not found</h2>
-        <p>This application requires Javascript. Please enable it to view the map.</p>
+        <p>This application requires Javascript.<br/>Your browser doesn't support javascript or you have disabled javascript support. Please enable it to view the map.</p>
     </m:noscript>
     <m:message>
         <m:url>URL</m:url>
@@ -53,12 +54,15 @@ xmlns="http://www.w3.org/1999/xhtml">
         <m:imageText>Image and ASCII</m:imageText>
     </m:message>
     <m:javascript>
-        <m:thumbnail>Thumbnail</m:thumbnail>
-        <m:no_thumb>No thumbnail</m:no_thumb>
         <m:id>ID</m:id>
         <m:lat>latitude</m:lat>
         <m:lon>longitude</m:lon>
+        <m:alt>altitude</m:alt>
         <m:here_is>Here is</m:here_is>
+        <m:try_to_tag>Try to tag it in your blog for your photo which was taken there.</m:try_to_tag>
+
+        <m:thumbnail>Thumbnail</m:thumbnail>
+        <m:no_thumb>No thumbnail</m:no_thumb>
         <m:action_link>link</m:action_link>
         <m:title_link>Go to see to the publishing page of the photo.</m:title_link>
         <m:action_original>original photo</m:action_original>
@@ -67,7 +71,6 @@ xmlns="http://www.w3.org/1999/xhtml">
         <m:title_rss>URL to the RSS registing this photo.</m:title_rss>
         <m:action_edit>Potlatch</m:action_edit>
         <m:title_edit>Open Potlatch around this location.</m:title_edit>
-        <m:try_to_tag>Try to tag it in your blog for your photo which was taken there.</m:try_to_tag>
         <m:action_embed>embed</m:action_embed>
         <m:title_embed>Do you want to embed a link to this marker?</m:title_embed>
     </m:javascript>

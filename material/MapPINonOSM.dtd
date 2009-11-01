@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    PUBLIC ID: -//MapPINonOSM//messageTranslation//EN
+    SYSTEM ID: MapPINonOSM.dtd
+-->
+<!--
+    An example how to use this DTD from your XML document:
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE m:index SYSTEM "MapPINonOSM.dtd">
+
+    <m:index>
+    ...
+    </m:index>
+-->
+<!-- html -->
+<!ELEMENT h2 (#PCDATA|span|a|br)*>
+<!ELEMENT p (#PCDATA|span|a|br)*>
+<!ELEMENT a (#PCDATA)>
+<!ATTLIST a
+    href CDATA #IMPLIED
+>
+<!ELEMENT span (#PCDATA)>
+<!ATTLIST span
+    class CDATA #IMPLIED
+  >
+<!ELEMENT br EMPTY>
+
+<!-- MapPINonOSM messages m: -->
+<!ELEMENT m:index (m:text,m:menu,m:currentView,m:ie6,m:noscript,m:message,m:javascript)>
+<!ATTLIST m:index
+    lang CDATA #REQUIRED
+    in_native CDATA #REQUIRED
+    xml:lang CDATA #IMPLIED
+    xmlns CDATA #REQUIRED
+    xmlns:m CDATA #REQUIRED
+>
+
+<!ELEMENT m:text (p|h2|span)*>
+
+<!ATTLIST m:menu
+    title CDATA #REQUIRED
+>
+<!ELEMENT m:menu (m:blog,m:registration,m:rssList)>
+<!ELEMENT m:blog (#PCDATA)>
+<!ELEMENT m:registration (#PCDATA)>
+<!ELEMENT m:rssList (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT m:ie6 (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT m:noscript (p|h2|span)*>
+
+<!ATTLIST m:currentView
+    title CDATA #REQUIRED>
+<!ELEMENT m:currentView (m:permalink,m:osmlink,m:osblink,m:geofabrik)>
+<!ELEMENT m:permalink (#PCDATA)>
+<!ELEMENT m:osmlink (#PCDATA)>
+<!ELEMENT m:osblink (#PCDATA)>
+<!ELEMENT m:geofabrik (#PCDATA)>
+
+<!--- The embed testing box -->
+<!ELEMENT m:message (m:url,m:html1,m:html2,m:image,m:imageText)>
+<!ELEMENT m:url (#PCDATA)>
+<!ELEMENT m:html1 (#PCDATA)>
+<!ELEMENT m:html2 (#PCDATA)>
+<!ELEMENT m:image (#PCDATA)>
+<!ELEMENT m:imageText (#PCDATA)>
+
+<!--- This is for javascript messages. -->
+<!ELEMENT m:javascript (m:id,m:lat,m:lon,m:alt,m:here_is,m:try_to_tag,m:thumbnail,m:no_thumb,m:action_link,m:title_link,m:action_original,m:title_original,m:action_rss,m:title_rss,m:action_edit,m:title_edit,m:action_embed,m:title_embed)>
+<!ELEMENT m:thumbnail (#PCDATA)>
+<!ELEMENT m:no_thumb (#PCDATA)>
+<!ELEMENT m:id (#PCDATA)>
+<!ELEMENT m:lat (#PCDATA)>
+<!ELEMENT m:lon (#PCDATA)>
+<!ELEMENT m:alt (#PCDATA)>
+<!ELEMENT m:here_is (#PCDATA)>
+<!ELEMENT m:action_link (#PCDATA)>
+<!ELEMENT m:title_link (#PCDATA)>
+<!ELEMENT m:action_original (#PCDATA)>
+<!ELEMENT m:title_original (#PCDATA)>
+<!ELEMENT m:action_rss (#PCDATA)>
+<!ELEMENT m:title_rss (#PCDATA)>
+<!ELEMENT m:action_edit (#PCDATA)>
+<!ELEMENT m:title_edit (#PCDATA)>
+<!ELEMENT m:try_to_tag (#PCDATA|br)*>
+<!ELEMENT m:action_embed (#PCDATA)>
+<!ELEMENT m:title_embed (#PCDATA)>

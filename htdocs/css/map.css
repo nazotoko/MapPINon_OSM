@@ -1,4 +1,4 @@
-body { background-color: #ffffff; color: black; padding:0px;}
+body { background-color: #ffffff; color: black; padding:0px;margin:0px;}
 
 
 h1 { font-size: 1.4em; }
@@ -20,12 +20,17 @@ li {
 #left {
 	position: relative;
 	top: 0; right: 0; bottom: 0; left: 0;
-	padding: 10px;
+        margin:0px;
+        padding: 10px;
+        padding-left:15px;
+        padding-right:15px;
 	width: 190px;
 	max-width: 200px;
-	font-size: 0.9em;
 }
-
+div.text{
+	font-size: 0.9em;
+        text-align:justify;
+}
 #map {
 	position: absolute;
 	top: 0; right: 0; bottom: 20px; left: 220px;
@@ -43,37 +48,56 @@ li {
 }
 /* CSS placed here will be applied to all skins */ 
 div.NavFrame {
-    margin: 0px;
+    margin: 00px;
     padding: 0px;
     border: 1px solid #aaaaaa;
     border-collapse: collapse;
     clear:both;
-    margin-top: 1.5em;
 }
 
 div.NavFrame div.NavHead {
-    margin: 0;
-    text-align: center;
+    margin: 0px;
+    padding: 3px;
+    text-align: left;
     font-weight: bold;
+    border:none;
     background-color: #aaffaa;
+    position:relative;
+}
+div.NavFrame div.NavHead:hover {
+    background-color: #a0ff80;
+}
+div.NavFrame .NavToggle {
+    font-size: x-small;
+    position:absolute;
+    top:1px;
+    right:2px;
+}
+
+div.NavFrame div.NavHead .NavToggle{
+    display:none;
+}
+div.NavFrame div.NavHead:hover .NavToggle{
+    display:block;
+    color:orange;
 }
 
 div.NavFrame .NavContent {
-    margin: 0;
-    padding: 0;
+    margin: 0px;
+    padding: 0px;
     background-color: #f0fff0;
+    border:none;
     display:none;
 }
 
-.NavToggle {
-    font-size: x-small;
-    float:right;
+.NavContent li {
+    padding:2px;
+    margin-right:0px;
+}
+.NavContent li:hover {
+    background-color:#e0ffe0;
 }
 
-/* Workaround für Internet Explorer 6 */
-div.NavFrame, .NavToggle {
-    position:relative;
-}
 
 /* For some bizarre reason the slider image is having an top offset of 6px which
  * results in a displacement of the slider on the zoombar. Setting top to -6px 

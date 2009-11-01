@@ -52,32 +52,13 @@ standalone="yes" indent="no" version="4.0"/>
         <h1><img src="icons/logo.png" width="160" height="160" alt="MapPIN'on OSM - Mapping Photo Introducing Netwrok on OSM" style="border:none" /></h1>
         <div id="introduction" style="font-size: small;">
             <xsl:apply-templates select="m:text"/>
-            <ul>
-                <li><a href="blog/"><xsl:value-of select="m:blog"/></a></li>
-                <li><a href="registration.php"><xsl:value-of select="m:registration"/></a></li>
-                <li><a href="rsslist.html"><xsl:value-of select="m:rssList"/></a></li>
-            </ul>
         </div>
-        <h3><xsl:value-of select="m:currentView"/></h3>
-        <ul id="linkbox">
-            <xsl:apply-templates select="m:links"/>
-        </ul>
+        <xsl:apply-templates select="m:menu"/>
+        <xsl:apply-templates select="m:currentView"/>
+        <xsl:call-template name="languages"/>
+
         <div class="NavFrame">
-            <div class="NavHead">Other Languages<a id="NavToggle3" class="NavToggle" href="javascript:toggleBar(3)">show</a></div>
-            <ul id="NavContext3" class="NavContent">
-                <li>Deutsch</li>
-                <li><a href="index.html.en">English</a></li>
-                <li>Español</li>
-                <li>Français</li>
-                <li><a href="index.html.ja">日本語</a></li>
-                <li>한국어</li>
-                <li>Nederlands</li>
-                <li>简体</li>
-                <li>繁體</li>
-           </ul>
-        </div>
-        <div class="NavFrame">
-            <div class="NavHead">Debug<a id="NavToggle1" class="NavToggle" href="javascript:toggleBar(1)">show</a></div>
+            <div class="NavHead" onclick="toggleBar(1);">Debug<span id="NavToggle1" class="NavToggle">show</span></div>
             <dl id="NavContext1" class="NavContent">
                 <dt>last loaded tile:</dt><dd id="readingData">data/</dd>
                 <dt>last opened photo marker ID: </dt><dd id="photoID">0</dd>
@@ -91,42 +72,103 @@ standalone="yes" indent="no" version="4.0"/>
     </div>
     <div id="message">
         <xsl:apply-templates select="m:message"/>
-        <div id="messTest"/>
-        <div class="olPopupCloseBox" style="width: 17px; height: 17px; position: absolute; right: 13px; top: 14px; z-index: 1;" onclick="document.getElementById('message').style.display='none'"/>
     </div>
     </body>
 </html>
 </xsl:template>
 
-<xsl:template match="m:noscript">
+<xsl:template match="m:noscript|m:text">
     <xsl:for-each select="*">
         <xsl:copy-of select="current()"/>
     </xsl:for-each>
 </xsl:template>
 
-<xsl:template match="m:text">
-    <xsl:for-each select="*">
-        <xsl:copy-of select="current()"/>
-    </xsl:for-each>
-</xsl:template>
 
-<xsl:template match="m:links">
-    <xsl:for-each select="*">
-        <li>
-            <a href="#">
-                <xsl:attribute name="id"><xsl:value-of select="local-name()"/></xsl:attribute>
-                <xsl:value-of select="."/>
-            </a>
-        </li>
-    </xsl:for-each>
-</xsl:template>
+    <xsl:template match="m:menu">
+        <div class="NavFrame">
+            <div class="NavHead" onclick="toggleBar(4);">
+                <xsl:value-of select="@title"/>
+                <span id="NavToggle4" class="NavToggle">show</span>
+            </div>
+            <ul id="NavContext4" class="NavContent">
+                <li>
+                    <a href="blog/">
+                        <xsl:value-of select="m:blog"/>
+                    </a>
+                </li>
+                <li>
+                    <a href="registration.php">
+                        <xsl:value-of select="m:registration"/>
+                    </a>
+                </li>
+                <li>
+                    <a href="rsslist.html">
+                        <xsl:value-of select="m:rssList"/>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </xsl:template>
 
-<xsl:template match="m:message">
-<input type="text" id="messBox" name="htmlCode" value=""/><br/>
-<input type="radio" name="kind" value="ascii" checked="true" onclick="messBox.embed2('a')"/><xsl:value-of select="m:url"/><br/>
-<input type="radio" name="kind" value="html" onclick="messBox.embed2('h')"/><xsl:value-of select="m:html1"/><br/>
-<input type="radio" name="kind" value="html" onclick="messBox.embed2('H')"/><xsl:value-of select="m:html2"/><br/>
-<input type="radio" name="kind" value="map" onclick="messBox.embed2('O')"/><xsl:value-of select="m:image"/><br/>
-<input type="radio" name="kind" value="MnA" onclick="messBox.embed2('OA')"/><xsl:value-of select="m:imageText"/><br/>
-</xsl:template>
+    <xsl:template match="m:currentView">
+        <div class="NavFrame">
+            <div class="NavHead" onclick="toggleBar(2);refresh();">
+                <xsl:value-of select="@title"/>
+                <span id="NavToggle2" class="NavToggle">show</span>
+            </div>
+            <ul id="NavContext2" class="NavContent">
+                <xsl:for-each select="*">
+                    <li>
+                        <a href="#">
+                            <xsl:attribute name="id">
+                                <xsl:value-of select="local-name()"/>
+                            </xsl:attribute>
+                            <xsl:value-of select="."/>
+                        </a>
+                    </li>
+                </xsl:for-each>
+            </ul>
+        </div>
+    </xsl:template>
+
+    <xsl:template name="languages">
+        <div class="NavFrame">
+            <div class="NavHead" onclick="toggleBar(3);refresh();">Other Languages<span id="NavToggle3" class="NavToggle">show</span></div>
+            <ul id="NavContext3" class="NavContent">
+                <xsl:for-each select="document('common.xml')/common/languages/*">
+                    <xsl:if test="/m:index/@lang!=local-name()">
+                        <li>
+                            <a>
+                                <xsl:attribute name="id">lang_<xsl:value-of select="local-name()"/></xsl:attribute>
+                                <xsl:attribute name="href">index.html.<xsl:value-of select="local-name()"/></xsl:attribute>
+                                <xsl:value-of select="document(concat(local-name(),'.xml'))/m:index/@in_native"/>
+                            </a>
+                        </li>
+                    </xsl:if>
+                </xsl:for-each>
+           </ul>
+        </div>
+    </xsl:template>
+
+    <xsl:template match="m:message">
+        <input type="text" id="messBox" name="htmlCode" value=""/>
+        <br/>
+        <input type="radio" name="kind" value="ascii" checked="true" onclick="messBox.embed2('a')"/>
+        <xsl:value-of select="m:url"/>
+        <br/>
+        <input type="radio" name="kind" value="html" onclick="messBox.embed2('h')"/>
+        <xsl:value-of select="m:html1"/>
+        <br/>
+        <input type="radio" name="kind" value="html" onclick="messBox.embed2('H')"/>
+        <xsl:value-of select="m:html2"/>
+        <br/>
+        <input type="radio" name="kind" value="map" onclick="messBox.embed2('O')"/>
+        <xsl:value-of select="m:image"/>
+        <br/>
+        <input type="radio" name="kind" value="MnA" onclick="messBox.embed2('OA')"/>
+        <xsl:value-of select="m:imageText"/>
+        <br/>
+        <div id="messTest"/>
+        <div class="olPopupCloseBox" style="width: 17px; height: 17px; position: absolute; right: 13px; top: 14px; z-index: 1;" onclick="document.getElementById('message').style.display='none'"/>
+    </xsl:template>
 </xsl:stylesheet>

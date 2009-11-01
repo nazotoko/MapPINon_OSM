@@ -7,7 +7,7 @@
     Author     : nazotoko
     Description: Japanese messages.
 -->
-<m:index lang="ja" xml:lang="ja" xmlns:m="http://mappinon.hp2.jp/develop" xmlns="http://www.w3.org/1999/xhtml">
+<m:index lang="ja" in_native="日本語" xml:lang="ja" xmlns:m="http://mappinon.hp2.jp/develop" xmlns="http://www.w3.org/1999/xhtml">
     <m:text>
         <p><a href="http://www.openstreetmap.org">OpenStreetMap</a>
         の地図上にRSSから得た写真のリンクを載せます。</p>
@@ -18,22 +18,23 @@
         ライセンスと互換性のある地図によって付けたものにしてください。</p>
         <p>写真を見るには、マーカーをクリックしてください。</p>
     </m:text>
-    <m:blog>MapPIN'on OSM ブログ</m:blog>
-    <m:registration>あなたの写真ブログなどのRSSの登録フォーム</m:registration>
-    <m:rssList>登録されているRSS リスト</m:rssList>
-    <m:currentView>現在のビューに対する:</m:currentView>
-    <m:links>
+    <m:menu title="メニュー">
+        <m:blog>MapPIN'on OSM ブログ</m:blog>
+        <m:registration>あなたの写真ブログなどのRSSの登録フォーム</m:registration>
+        <m:rssList>登録されているRSS リスト</m:rssList>
+    </m:menu>
+    <m:currentView title="現在のビューに対する:">
         <m:permalink>パーマリンク</m:permalink>
         <m:osmlink>OpenStreetMap</m:osmlink>
         <m:osblink>OpenStreetBugs</m:osblink>
         <m:geofabrik>Geofabrik Map</m:geofabrik>
-    </m:links>
-    <m:ie6><![CDATA[
+   </m:currentView>
+   <m:ie6><![CDATA[
   <h4>あなたのブラウザーは、時代遅れだって知ってました?</h4>
   <p>私たちのウェブサイトを最良の状態での使用を体験してもらうために、あなたのブラウザーをもっと新しいバージョンにアップグレードすることをおすすめします。最新のバージョンは、<a class="getie8" href="http://upgradeie.s3.amazonaws.com/eng/index.html">Internet Explorer 8</a>です。アップグレードは無料です。もし、あなたのPCが仕事場のものなら、IT 管理者に連絡を取った方がいいでしょう。</p>
   <p>もし好みなら、<a class="ie6expl" href="http://mozilla.jp/">Firefox</a>, <a class="ie6expl" href="http://www.opera.com">Opera</a> や <a class="ie6expl" href="http://www.apple.com/safari/download/">Safari</a>のような他の人気のあるインターネットブラウザーも試してみてもいいと思います。</p>
-    ]]></m:ie6>
-    <m:noscript>
+   ]]></m:ie6>
+   <m:noscript>
         <h2>Javascript が見つかりません。</h2>
         <p>残念ながら、この地図には Javascript が必要です。<br/>
            あなたのブラウザーは、 Javascript をサポートしていないか、あなたが無効にしています。<br/>
@@ -47,12 +48,15 @@
         <m:imageText>地図イメージと文</m:imageText>
     </m:message>
     <m:javascript>
-        <m:thumbnail>縮小版</m:thumbnail>
-        <m:no_thumb>縮小版なし</m:no_thumb>
         <m:id>ID</m:id>
         <m:lat>緯度</m:lat>
         <m:lon>経度</m:lon>
+        <m:alt>高度</m:alt>
         <m:here_is>ここは、</m:here_is>
+        <m:try_to_tag>この位置で撮った写真に、あなたのブログで<br/>このタグを付けてみてください。</m:try_to_tag>
+
+        <m:thumbnail>縮小版</m:thumbnail>
+        <m:no_thumb>縮小版なし</m:no_thumb>
         <m:action_link>リンク</m:action_link>
         <m:title_link>作者の写真を公開しているページに行きます</m:title_link>
         <m:action_original>元写真</m:action_original>
@@ -61,7 +65,6 @@
         <m:title_rss>この写真が登録されているRSSへのURL</m:title_rss>
         <m:action_edit>Potlatch</m:action_edit>
         <m:title_edit>この写真の位置を中心にPotlatchを開きます</m:title_edit>
-        <m:try_to_tag>この位置で撮った写真に、あなたのブログで<br/>このタグを付けてみてください。</m:try_to_tag>
         <m:action_embed>埋め込み</m:action_embed>
         <m:title_embed>あなたのブログにこのマーカーへのリンクを作りたくないですか。</m:title_embed>
     </m:javascript>

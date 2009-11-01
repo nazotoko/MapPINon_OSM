@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<common>
+    <languages>
+        <en/>
+        <ja/>
+<!--    <de>Deutsch</de>
+    <es>Español</es>
+    <fr>Français</fr>
+    <ko>한국어</ko>
+    <ne>Nederlands</ne>
+    <zh-hans>简体</zh-hans>
+    <zh-hant>繁體</zh-hant>-->
+    </languages>
+    <current_view>
+        <osmlink>http://www.openstreetmap.org/</osmlink>
+        <osblink layers="yes">http://openstreetbugs.schokokeks.org/</osblink>
+        <geofabrik>http://tools.geofabrik.de/map/</geofabrik>
+    </current_view>
+</common>
