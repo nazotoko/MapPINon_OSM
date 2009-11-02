@@ -737,7 +737,7 @@ public class Photo {
             pw.print(",tr:" + track );
         }
         if(focalLength!=0){
-            pw.print(",fl:" + focalLength);
+            pw.print(",av:" + Math.round(Math.atan(18/focalLength)*180/Math.PI));
         }
         if(node != null){
             pw.print(",n:" + node.toString());

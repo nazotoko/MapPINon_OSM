@@ -58,6 +58,7 @@ xmlns="http://www.w3.org/1999/xhtml">
         <m:lat>latitude</m:lat>
         <m:lon>longitude</m:lon>
         <m:alt>altitude</m:alt>
+        <m:av>angle of view</m:av>
         <m:here_is>Here is</m:here_is>
         <m:try_to_tag>Try to tag it in your blog for your photo which was taken there.</m:try_to_tag>
 

@@ -52,6 +52,7 @@
         <m:lat>緯度</m:lat>
         <m:lon>経度</m:lon>
         <m:alt>高度</m:alt>
+        <m:av>画角</m:av>
         <m:here_is>ここは、</m:here_is>
         <m:try_to_tag>この位置で撮った写真に、あなたのブログで<br/>このタグを付けてみてください。</m:try_to_tag>
 
