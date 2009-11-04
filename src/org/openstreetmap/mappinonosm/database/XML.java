@@ -65,9 +65,12 @@ abstract public class XML  implements Comparable<XML>{
     /** URL of main link */
     protected URL link=null;
     
-    /** id given by RSSBase */
+    /** id given by XMLTable */
     protected int id=0;
+    /** Counter for geotagged photo */
     protected int counter=0;
+    /** Counter for geotagged photo */
+    protected int newCounter=0;
 
     /** for work*/
     protected Photo photo = null;
@@ -181,7 +184,7 @@ abstract public class XML  implements Comparable<XML>{
         }
     }
 
-    abstract void read();
+    abstract int read();
 
     /**
      * Make a instance of XML. It is selected from subclass of XML by the scheame.
@@ -269,8 +272,9 @@ abstract public class XML  implements Comparable<XML>{
     }
     /** Out put to MapPIN'on OSM
      * @param ps This PrintStrem is usually made by RSSBase.
+     * @return interger: number of photos having geotags
      */
-    public void toHTML(PrintWriter ps){
+    public int toHTML(PrintWriter ps){
         ps.println("<td class=\"number\">"+id+"</td>");
         ps.println("<td class=\"number\">"+counter+"</td>");
         ps.println("<td>");
@@ -285,6 +289,7 @@ abstract public class XML  implements Comparable<XML>{
         ps.println("<td>"+uri.toString()+"</td>");
         ps.println("<td>"+htmlDateFormat.format(readDate)+"</td>");
         ps.println("<td>"+htmlDateFormat.format(registeredDate)+"</td>");
+        return counter;
     }
 
     @Override

@@ -29,9 +29,10 @@
 
 package org.openstreetmap.mappinonosm;
 
-import com.aetrion.flickr.photos.PhotosInterface;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.openstreetmap.mappinonosm.database.PhotoTable;
 import org.openstreetmap.mappinonosm.database.Photo;
 import org.openstreetmap.mappinonosm.database.Tile;
@@ -50,10 +51,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import org.openstreetmap.mappinonosm.database.HistoryTable;
 import org.openstreetmap.mappinonosm.database.XML;
+import org.openstreetmap.mappinonosm.database.History;
 
 /**
  *
@@ -62,7 +64,8 @@ import org.openstreetmap.mappinonosm.database.XML;
 public class MapPINonOSM {
     private PhotoTable photoTable;
     private XMLTable xmlTable;
-    private PhotosInterface pi;
+    private HistoryTable hisTable;
+    private History history;
 
     /** local file */
     private File rss_table=null;
@@ -72,6 +75,7 @@ public class MapPINonOSM {
     private File history_table=null;
     /** local file */
     private File rssList=null;
+    private File historyList=null;
 
     private String domain=null;
     private String registration=null;
@@ -86,7 +90,8 @@ public class MapPINonOSM {
         "flickrKey",
         "flickrSecret",
         "backupDir",
-        "dataDir"
+        "dataDir",
+        "historyList"
     };
     private File backupdir=null;
     private File dataDir=null;
@@ -99,6 +104,8 @@ public class MapPINonOSM {
         String flickrKey = null;
         String flickrSecret = null;
         int i;
+        hisTable=new HistoryTable();
+        history=new History();
         try {
             BufferedReader br=new BufferedReader(new InputStreamReader(new FileInputStream("./config.txt"),"UTF-8"));
             while((line=br.readLine())!=null){
@@ -147,6 +154,9 @@ public class MapPINonOSM {
                             case 9:
                                 dataDir=new File(value);
                                 break;
+                            case 10:
+                                historyList=new File(value);
+                                break;
                         }
                     }
                 }
@@ -157,12 +167,26 @@ public class MapPINonOSM {
         } catch(IOException ex){
             System.out.println("config file cannot be closed.");
         }
-        
         photoTable = new PhotoTable();
         xmlTable = new XMLTable(photoTable);
         if(flickrKey != null && flickrSecret != null){
             xmlTable.setFlickrKeys(flickrKey, flickrSecret);
         }
+
+        if(history_table != null){
+            try {
+                hisTable.load(is = new GZIPInputStream(new FileInputStream(history_table)));
+                is.close();
+            } catch(FileNotFoundException ex) {
+                System.out.println("History table file '" + history_table.getPath() + "' cannot be read.");
+            } catch(IOException ex) {
+                System.out.println("Histroy table file '" + history_table.getPath() + "' cannot be closed.");
+            }
+        } else {
+            System.err.println("Warning: History table file is not specified.");
+        }
+        hisTable.add(history);
+
         if(rss_table==null){
             System.err.println("RSS table file is not specified.");
             return;
@@ -241,7 +265,9 @@ public class MapPINonOSM {
     
     /** second: reading RSS */
     public void read() {
-        xmlTable.read();
+        history.setNumOfRSS(xmlTable.size());
+        int numOfNewPhoto=xmlTable.read();
+        history.setNumOfNewPhoto(numOfNewPhoto);
     }
 
     /** making tiles and statistics */
@@ -268,11 +294,17 @@ public class MapPINonOSM {
             System.out.println("Becase dataDir is not specified, Tiles are not made.");
         }
         if(rssList!=null){
+            OutputStream os;
             try {
-                xmlTable.toHTML(new FileOutputStream(rssList));
+                os=new FileOutputStream(rssList);
+                history.setNumOfPhoto(xmlTable.toHTML(os));
+                os.close();
             } catch(FileNotFoundException ex) {
                 System.out.println("Error! Cannot make RSS list HTML.");
+            } catch(IOException ex) {
+                Logger.getLogger(MapPINonOSM.class.getName()).log(Level.SEVERE, null, ex);
             }
+
         }
     }
     /** save the tables
@@ -294,6 +326,20 @@ public class MapPINonOSM {
         } else {
             System.err.println("Warning: Photo table is not specified, so RSS table has not been saved.");            
         }
+
+        if(history_table != null){
+            history.setDate();
+            try {
+                os = new GZIPOutputStream(new FileOutputStream(history_table));
+                hisTable.save(os);
+                os.close();
+            } catch(FileNotFoundException ex) {
+                System.out.println("Cannot open history.json.gz");
+            } catch(IOException ex) {
+                System.out.println("Cannot close history.json.gz");
+            }
+        }
+
         if(photoTable != null){
             if(photo_table != null){
                 try {
@@ -311,13 +357,13 @@ public class MapPINonOSM {
 
             if(backupdir != null){
                 try {
-                    os = new GZIPOutputStream(new FileOutputStream("backup/photo-" + new SimpleDateFormat("MMddHHmmss").format(new Date()) + ".json.gz"));
+                    os = new GZIPOutputStream(new FileOutputStream(new File(backupdir, "photo-" + new SimpleDateFormat("MMddHHmmss").format(history.getDate()) + ".json.gz")));
                     photoTable.save(os);
                     os.close();
                 } catch(FileNotFoundException ex) {
-                    System.out.println("Cannot open photo.json.gz");
+                    System.out.println("Cannot open backup.");
                 } catch(IOException ex) {
-                    System.out.println("Cannot close photo.json.gz");
+                    System.out.println("Cannot close backup.");
                 }
             }
         }

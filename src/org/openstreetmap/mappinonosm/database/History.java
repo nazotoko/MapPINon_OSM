@@ -28,6 +28,7 @@
  */
 package org.openstreetmap.mappinonosm.database;
 
+import java.io.PrintWriter;
 import java.util.Date;
 
 /**
@@ -45,6 +46,59 @@ public class History implements Comparable<History> {
     protected int numOfRSS=0;
 
     protected int id=0;
+
+    /**
+     * Make a instance of History. It is selected from subclass of XML by the scheame.
+     * @param line 1 line string
+     * @return instance of XML. If it is invaled scheame, it returens null.
+     */
+    static public History load(String line){
+        boolean end = true;
+        int a, b, c, id;
+        String key, value=null;
+        History ret = new History();
+
+        a = line.indexOf(':');
+        if (a < 0) {
+            return null;
+        }
+        id = Integer.parseInt(line.substring(0, a));
+        line = line.substring(line.indexOf('{', a + 1) + 1, line.lastIndexOf('}'));
+
+        ret.id = id;
+        a=0;c=0;
+        do {
+            b = line.indexOf(':', a + 1);
+            if(b < 0){
+                break;
+            }
+            key = line.substring(a, b);
+            if(line.charAt(b + 1) == '"'){
+                c = line.indexOf('"', b + 2);
+                value = line.substring(b + 2, c);
+                c++;
+            } else {
+                c = line.indexOf(',', b + 1);
+                if(c < 0){
+                    end = false;
+                    value = line.substring(b + 1);
+                } else {
+                    value = line.substring(b + 1, c);
+                }
+            }
+            if(key.equals("date")){
+                ret.date = new Date(Long.parseLong(value) * 1000);
+            } else if(key.equals("numOfRSS")){
+                ret.numOfRSS = Integer.parseInt(value);
+            } else if(key.equals("numOfPhoto")){
+                ret.numOfPhoto = Integer.parseInt(value);
+            } else if(key.equals("numOfNewPhoto")){
+                ret.numOfNewPhoto = Integer.parseInt(value);
+            }
+            a = c + 1;
+        } while(end);
+        return ret;
+    }
 
     public History() {
         date=new Date();
@@ -77,8 +131,40 @@ public class History implements Comparable<History> {
     public int getId() {
         return id;
     }
-    void setId(int id) {
+    public Date getDate(){
+        return date;
+    }
+    public void setId(int id) {
         this.id=id;
     }
+    public void setDate() {
+        this.date=new Date();
+    }
+    public void setNumOfPhoto(int n) {
+        this.numOfPhoto=n;
+    }
+    public void setNumOfRSS(int n) {
+        this.numOfRSS=n;
+    }
+    public void setNumOfNewPhoto(int n) {
+        this.numOfNewPhoto=n;
+    }
 
+    void save(PrintWriter pw) {
+        pw.print(id+":{");
+        pw.print("date:"+(date.getTime()/1000)+",");
+        pw.print("numOfRSS:"+numOfRSS+",");
+        pw.print("numOfPhoto:"+numOfPhoto+",");
+        pw.print("numOfNewPhoto:"+numOfNewPhoto+",");
+        pw.print("}");
+    }
+
+    void toHTML(PrintWriter pw){
+        pw.print("<tr>");
+        pw.print("<td>"+date.toString()+"</td>");
+        pw.print("<td>"+numOfPhoto+"</td>");
+        pw.print("<td>"+numOfRSS+"</td>");
+        pw.print("<td>"+numOfNewPhoto+"</td>");
+        pw.println("</tr>");
+    }
 }

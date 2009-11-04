@@ -29,9 +29,14 @@
 
 package org.openstreetmap.mappinonosm.database;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.TreeSet;
 
 /**
@@ -57,10 +62,72 @@ public class HistoryTable extends TreeSet <History>{
         return true;
     }
 
-    public void toRSS(PrintStream ps) {
+    public void toRSS(OutputStream os) {
     }
+    public void toHTML(OutputStream os) {
+        PrintWriter pw = null;
+        try {
+            pw = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
+            pw.println("<html lang=\"en\"><head>");
+            pw.println("<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"/>");
+            pw.println("<meta http-equiv=\"Content-Language\" content=\"en\"/>");
+            pw.println("<link rel=\"stylesheet\" href=\"css/list.css\" type=\"text/css\"/>");
+            pw.println("<title>History</title></head><body>");
+            pw.println("<h1>List of resistered RSSes</h1>");
+            pw.println("<p><a href=\"index.html\">back to the map</a>, <a href=\"blog/\">go to the blog</a></p>");
+            pw.println("<p>Timezone of timestamps are of UTC.</p>");
+            pw.println("<table><tr><th>Date</th><th>Number of photos registered</th><th># of RSS</th><th># of new photos</th></tr>");
+            boolean odd = true;
+            for(History h: this){
+                pw.print("<tr");
+                if(odd){
+                    pw.print(">");
+                    odd = false;
+                } else {
+                    pw.print(" class=\"even\">");
+                    odd = true;
+                }
+                h.toHTML(pw);
+                pw.println("</tr>");
+            }
+            pw.println("</table>");
+            pw.println("<p><a href=\"index.html\">back to the map</a>, <a href=\"blog/\">go to the blog</a></p></body></html>");
+            pw.flush();
+        } catch(UnsupportedEncodingException ex) {
+            System.err.println("This system cannot supuuprt UTF-8.:"+ex.getMessage());
+        }
+    }
+
     public void load(InputStream is) {
+        BufferedReader br=null;
+        String line;
+        try {
+            br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            History his;
+            while(true){
+                if((line = br.readLine())==null){
+                    break;
+                }
+                his=History.load(line);
+                add(his);
+            }
+        } catch(UnsupportedEncodingException ex) {
+            System.err.println("Program error in XMLTable.load()." + ex.getMessage());
+        } catch (IOException ex){
+            System.err.println("End?");
+        }
     }
+
     public void save(OutputStream os) {
+        try {
+            PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
+            for(History h: this){
+                h.save(pw);
+                pw.println(",");
+            }
+            pw.flush();
+        } catch(UnsupportedEncodingException ex) {
+            System.out.println("Output Stream cannot open. at "+HistoryTable.class.getName());
+        }
     }
 }

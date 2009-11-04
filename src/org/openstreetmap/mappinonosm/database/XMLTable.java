@@ -110,8 +110,6 @@ public class XMLTable extends HashSet<XML>{
         try {
             br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
             XML xml;
-            int id;
-            int a;
             while(true){
                 if((line = br.readLine())==null){
                     break;
@@ -146,14 +144,18 @@ public class XMLTable extends HashSet<XML>{
     }
     /**
      * read RSSes in the database
+     * @return integer: number of new photos
      */
-    public void read() {
+    public int read() {
+        int newPhoto=0;
         for(XML x: this){
-            x.read();
+            newPhoto+=x.read();
         }
+        return newPhoto;
     }
-    public void toHTML(OutputStream os){
+    public int toHTML(OutputStream os){
         PrintWriter pw = null;
+        int numberOfPhotos=0;
         try {
             pw = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
             pw.println("<html lang=\"en\"><head>");
@@ -177,15 +179,15 @@ public class XMLTable extends HashSet<XML>{
                     pw.print(" class=\"even\">");
                     odd = true;
                 }
-                x.toHTML(pw);
+                numberOfPhotos+=x.toHTML(pw);
                 pw.println("</tr>");
             }
             pw.println("</table>");
             pw.println("<p><a href=\"index.html\">back to the map</a>, <a href=\"blog/\">go to the blog</a></p></body></html>");
-            pw.close();
+            pw.flush();
         } catch(UnsupportedEncodingException ex) {
             System.err.println("This system cannot supuuprt UTF-8.:"+ex.getMessage());
-        } finally {
         }
+        return numberOfPhotos;
     }
 }
