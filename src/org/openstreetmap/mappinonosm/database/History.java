@@ -29,22 +29,39 @@
 package org.openstreetmap.mappinonosm.database;
 
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  *
  * @author nazo
  */
 public class History implements Comparable<History> {
+    static private SimpleDateFormat htmlDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    static private SimpleDateFormat rssDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z",Locale.UK);
+    static private SimpleDateFormat fileDateFormat = new SimpleDateFormat("MMddHHmmss");
+    static {
+        rssDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        htmlDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        fileDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+    }
+
     /** the date of last updated */
     protected Date date=null;
     /** number of added photo*/
-    protected int numOfNewPhoto=0;
+    protected int numOfNewPhotos=0;
     /** number of all photo*/
     protected int numOfPhoto=0;
     /** number of RSS*/
     protected int numOfRSS=0;
-
+    /** number of photo removed */
+    protected int numOfRemoved = 0;
+    /** number of photo reread */
+    protected int numOfReread = 0;
+    /** ID */
     protected int id=0;
 
     /**
@@ -93,7 +110,11 @@ public class History implements Comparable<History> {
             } else if(key.equals("numOfPhoto")){
                 ret.numOfPhoto = Integer.parseInt(value);
             } else if(key.equals("numOfNewPhoto")){
-                ret.numOfNewPhoto = Integer.parseInt(value);
+                ret.numOfNewPhotos = Integer.parseInt(value);
+            } else if(key.equals("numOfRemoved")){
+                ret.numOfRemoved = Integer.parseInt(value);
+            } else if(key.equals("numOfReread")){
+                ret.numOfReread = Integer.parseInt(value);
             }
             a = c + 1;
         } while(end);
@@ -125,7 +146,7 @@ public class History implements Comparable<History> {
         if(equals(other)){
             return 0;
         }
-        return (other.id - id);// descending order
+        return other.date.compareTo(date);// descending order
     }
 
     public int getId() {
@@ -137,17 +158,43 @@ public class History implements Comparable<History> {
     public void setId(int id) {
         this.id=id;
     }
+
     public void setDate() {
         this.date=new Date();
     }
+
     public void setNumOfPhoto(int n) {
         this.numOfPhoto=n;
     }
+
     public void setNumOfRSS(int n) {
         this.numOfRSS=n;
     }
+
     public void setNumOfNewPhoto(int n) {
-        this.numOfNewPhoto=n;
+        this.numOfNewPhotos=n;
+    }
+
+    public void setNumOfRemoved(int n) {
+        this.numOfRemoved=n;
+    }
+
+    public void setNumOfReread(int n) {
+        this.numOfReread=n;
+    }
+    void toRSS(PrintWriter pw,String base) {
+        pw.println("<item>");
+        pw.println("<title>" + htmlDateFormat.format(date) + "</title>");
+        pw.println("<link>" + base + getBackupFileName() + "</link>");
+        pw.println("<description><![CDATA[");
+        pw.print("RSS: "+numOfRSS+", ");
+        pw.print("Photo: " + numOfPhoto + ", ");
+        pw.print("New Photo: " + numOfNewPhotos + ", ");
+        pw.print("Removed Photo: " + numOfRemoved + ", ");
+        pw.print("Updated Photo:" + numOfReread);
+        pw.println("]]></description>");
+        pw.println("<pubDate>" + rssDateFormat.format(date) + "</pubDate>");
+        pw.println("</item>");
     }
 
     void save(PrintWriter pw) {
@@ -155,16 +202,24 @@ public class History implements Comparable<History> {
         pw.print("date:"+(date.getTime()/1000)+",");
         pw.print("numOfRSS:"+numOfRSS+",");
         pw.print("numOfPhoto:"+numOfPhoto+",");
-        pw.print("numOfNewPhoto:"+numOfNewPhoto+",");
+        pw.print("numOfNewPhoto:"+numOfNewPhotos+",");
+        pw.print("numOfRemoved:"+numOfRemoved+",");
+        pw.print("numOfReread:"+numOfReread+",");
         pw.print("}");
     }
 
-    void toHTML(PrintWriter pw){
-        pw.print("<tr>");
-        pw.print("<td>"+date.toString()+"</td>");
-        pw.print("<td>"+numOfPhoto+"</td>");
-        pw.print("<td>"+numOfRSS+"</td>");
-        pw.print("<td>"+numOfNewPhoto+"</td>");
-        pw.println("</tr>");
+    public String getBackupFileName() {
+        return "photo-" + fileDateFormat.format(date) + ".json.gz";
+    }
+
+    void toHTML(PrintWriter pw,String base){
+        pw.print("<td>"+htmlDateFormat.format(date)+"</td>");
+        String backup = getBackupFileName();
+        pw.print("<td><a href=\""+base+backup+"\">"+backup+"</a></td>");
+        pw.print("<td class=\"number\">"+numOfPhoto+"</td>");
+        pw.print("<td class=\"number\">"+numOfRSS+"</td>");
+        pw.print("<td class=\"number\">"+numOfNewPhotos+"</td>");
+        pw.print("<td class=\"number\">"+numOfRemoved+"</td>");
+        pw.print("<td class=\"number\">"+numOfReread+"</td>");
     }
 }

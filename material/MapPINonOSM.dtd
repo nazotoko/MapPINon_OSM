@@ -40,10 +40,11 @@
 <!ATTLIST m:menu
     title CDATA #REQUIRED
 >
-<!ELEMENT m:menu (m:blog,m:registration,m:rssList)>
+<!ELEMENT m:menu (m:blog,m:registration,m:rssList,m:history)>
 <!ELEMENT m:blog (#PCDATA)>
 <!ELEMENT m:registration (#PCDATA)>
 <!ELEMENT m:rssList (#PCDATA)>
+<!ELEMENT m:history (#PCDATA)>
 
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT m:ie6 (#PCDATA)>

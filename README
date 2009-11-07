@@ -27,19 +27,19 @@ If your system have ant version 1.7.1 or later, just type
 $ ant
 
 This is automatically download dependance files and builds up both servers:
-* the backgorund server (dist/MapPIN.jar)
+* the backgorund server (dist/MapPINon.jar)
 * the HTTP server (htdocs/index.html.*)
 
 == Install ==
 Move
-* dist/MapPIN.jar to ./
+* dist/MapPINon.jar to ./
 * config.txt.sample to config.txt
 and edit config.txt to configure the foreground server behavior.
 
 == Run ==
 Then, it can be run just type:
 
-java -jar MapPIN.jar [command] [args]
+java -jar MapPINon.jar [command] [args]
 
 commands are
 * add: adding RSSes.
@@ -52,7 +52,7 @@ commands are
 For first of all, collecting URLs of RSSes for geotagged photos. Then, input
 a command like this:
 
-java -jar MapPIN.jar add 'http://www.flickr.com/sercice/feed?....'\
+java -jar MapPINon.jar add 'http://www.flickr.com/sercice/feed?....'\
  'http://picasaweb.google.com/feed?...' 'http://...'
 
 or write this kind of text file somewhere:
@@ -62,14 +62,14 @@ http://picasaweb.google.com/feed?...
 http://...
 
 and specify the URL on config.txt, then
-java -jar MapPIN.jar get
+java -jar MapPINon.jar get
 
 The RSS list are recoded in a file. The file name is 'rss.json.gz' as default.
 You can change the name in config.txt.
 
 === Reading photo data ===
 Type
-java -jar MapPIN.jar read
+java -jar MapPINon.jar read
 to get all photo data listed on RSSes.
 
 The photo list are recoded in a file. The file name is 'photo.json.gz' as
@@ -77,7 +77,7 @@ default. You can change the name in config.txt.
 
 === Making tile ===
 Type
-java -jar MapPIN.jar tile
+java -jar MapPINon.jar tile
 to create photo markers tiles of getton photo data.
 
 The photo markers tile are created under a directory. The directory is

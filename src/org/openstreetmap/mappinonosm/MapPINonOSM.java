@@ -50,7 +50,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import org.openstreetmap.mappinonosm.database.HistoryTable;
@@ -67,18 +66,42 @@ public class MapPINonOSM {
     private HistoryTable hisTable;
     private History history;
 
-    /** local file */
-    private File rss_table=null;
-    /** local file */
-    private File photo_table=null;
-    /** local file */
-    private File history_table=null;
-    /** local file */
-    private File rssList=null;
-    private File historyList=null;
-
     private String domain=null;
-    private String registration=null;
+
+    /** Local Directory */
+    private File localHtdocsDir=null;
+
+    /** ftp Directory */
+    private String ftpHtdocsDir=null;
+
+    /** http Directory */
+    private String httpHtdocsDir=null;
+
+    /** relative to domain/httpHtdocsDir */
+    private String registration = null;
+
+    /** file path  */
+    private File rss_table=null;
+
+    /** file path  */
+    private File photo_table=null;
+
+    /** file path */
+    private File history_table=null;
+
+    /** directory path relative to htdocs */
+    private String backupdir = null;
+    /** directory path relative to htdocs */
+    private String dataDir=null;
+
+    /** file path relative to htdocs */
+    private String rssList=null;
+
+    /** file path relative to htdocs */
+    private String historyList=null;
+
+    /** file path relative to htdocs */
+    private String historyRSS=null;
 
     final static private String [] configKeys=new String []{
         "photoTable",
@@ -86,15 +109,17 @@ public class MapPINonOSM {
         "historyTable",
         "RSSList",
         "domain",
-        "registration",
+        "registrationFile",
         "flickrKey",
         "flickrSecret",
         "backupDir",
         "dataDir",
-        "historyList"
+        "historyList",
+        "historyRSS",
+        "localHtdocsDir",
+        "ftpHtdocsDir",
+        "httpHtdocsDir",
     };
-    private File backupdir=null;
-    private File dataDir=null;
 
     /** initiallizing */
     public MapPINonOSM() {
@@ -104,8 +129,6 @@ public class MapPINonOSM {
         String flickrKey = null;
         String flickrSecret = null;
         int i;
-        hisTable=new HistoryTable();
-        history=new History();
         try {
             BufferedReader br=new BufferedReader(new InputStreamReader(new FileInputStream("./config.txt"),"UTF-8"));
             while((line=br.readLine())!=null){
@@ -123,7 +146,7 @@ public class MapPINonOSM {
                                 history_table=new File(value);
                                 break;
                             case 3:
-                                rssList = new File(value);
+                                rssList = value;
                                 break;
                             case 4:
                                 domain = value;
@@ -138,24 +161,25 @@ public class MapPINonOSM {
                                 flickrSecret =value;
                                 break;
                             case 8:
-                                backupdir=new File(value);
-                                if(!backupdir.exists()){
-                                    if(!backupdir.mkdir()){
-                                        System.out.println("Warning: It cannot make backup directory.");
-                                        backupdir=null;
-                                    }
-                                } else {
-                                    if(!backupdir.isDirectory()){
-                                        System.out.println("Warning: The '"+backupdir+"' is not directory.");
-                                        backupdir=null;
-                                    }
-                                }
+                                backupdir=value;
                                 break;
                             case 9:
-                                dataDir=new File(value);
+                                dataDir=value;
                                 break;
                             case 10:
-                                historyList=new File(value);
+                                historyList=value;
+                                break;
+                            case 11:
+                                historyRSS=value;
+                                break;
+                            case 12:
+                                localHtdocsDir = new File(value);
+                                break;
+                            case 13:
+                                ftpHtdocsDir=value;
+                                break;
+                            case 14:
+                                httpHtdocsDir=value;
                                 break;
                         }
                     }
@@ -167,6 +191,12 @@ public class MapPINonOSM {
         } catch(IOException ex){
             System.out.println("config file cannot be closed.");
         }
+        if(localHtdocsDir == null){
+            System.err.println("You must set localHtdocsDir at least.");
+            System.exit(1);
+        }
+        hisTable=new HistoryTable();
+        history=new History();
         photoTable = new PhotoTable();
         xmlTable = new XMLTable(photoTable);
         if(flickrKey != null && flickrSecret != null){
@@ -247,7 +277,7 @@ public class MapPINonOSM {
         URL url = null;
         String s;
         try {
-            url = new URL("http", domain, registration);
+            url = new URL("http", domain, httpHtdocsDir + registration);
             br = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
             while((s = br.readLine()) != null){
                 xmlTable.add(XML.getInstance(new URI(s)));
@@ -277,7 +307,7 @@ public class MapPINonOSM {
         Tile t;
         if(dataDir!=null){
             try {
-                tb = new TileTable(dataDir);
+                tb = new TileTable(new File(localHtdocsDir, dataDir));
                 for(Photo p: photoTable){
                     int id = TileTable.getID(p.getLon(), p.getLat());
                     if((t = tb.get(id)) == null){
@@ -296,7 +326,7 @@ public class MapPINonOSM {
         if(rssList!=null){
             OutputStream os;
             try {
-                os=new FileOutputStream(rssList);
+                os = new FileOutputStream(new File(localHtdocsDir, rssList));
                 history.setNumOfPhoto(xmlTable.toHTML(os));
                 os.close();
             } catch(FileNotFoundException ex) {
@@ -304,7 +334,6 @@ public class MapPINonOSM {
             } catch(IOException ex) {
                 Logger.getLogger(MapPINonOSM.class.getName()).log(Level.SEVERE, null, ex);
             }
-
         }
     }
     /** save the tables
@@ -327,11 +356,41 @@ public class MapPINonOSM {
             System.err.println("Warning: Photo table is not specified, so RSS table has not been saved.");            
         }
 
+        history.setDate();
         if(history_table != null){
-            history.setDate();
             try {
                 os = new GZIPOutputStream(new FileOutputStream(history_table));
                 hisTable.save(os);
+                os.close();
+            } catch(FileNotFoundException ex) {
+                System.out.println("Cannot open history.json.gz");
+            } catch(IOException ex) {
+                System.out.println("Cannot close history.json.gz");
+            }
+        }
+        try {
+            hisTable.setRoot(new URL("http", domain, httpHtdocsDir));
+        } catch(MalformedURLException ex) {
+            System.err.println("the URL is illigal: "+ex.getMessage());
+        }
+        hisTable.setBackupDir(backupdir);
+        hisTable.setHistoryList(historyList);
+        hisTable.setHistoryRSS(historyRSS);
+        if(historyList != null){
+            try {
+                os = new FileOutputStream(new File(localHtdocsDir, historyList));
+                hisTable.toHTML(os);
+                os.close();
+            } catch(FileNotFoundException ex) {
+                System.out.println("Cannot open history.json.gz");
+            } catch(IOException ex) {
+                System.out.println("Cannot close history.json.gz");
+            }
+        }
+        if(historyRSS != null){
+            try {
+                os = new FileOutputStream(new File(localHtdocsDir, historyRSS));
+                hisTable.toRSS(os);
                 os.close();
             } catch(FileNotFoundException ex) {
                 System.out.println("Cannot open history.json.gz");
@@ -356,8 +415,21 @@ public class MapPINonOSM {
             }
 
             if(backupdir != null){
+                File backupFile = new File(localHtdocsDir, backupdir);
+                if(!backupFile.exists()){
+                    if(!backupFile.mkdir()){
+                        System.out.println("Warning: It cannot make backup directory.");
+                        backupFile = null;
+                    }
+                } else {
+                    if(!backupFile.isDirectory()){
+                        System.out.println("Warning: The '" + backupFile + "' is not directory.");
+                        backupFile = null;
+                    }
+                }
+                backupFile = new File(backupFile,history.getBackupFileName());
                 try {
-                    os = new GZIPOutputStream(new FileOutputStream(new File(backupdir, "photo-" + new SimpleDateFormat("MMddHHmmss").format(history.getDate()) + ".json.gz")));
+                    os = new GZIPOutputStream(new FileOutputStream(backupFile));
                     photoTable.save(os);
                     os.close();
                 } catch(FileNotFoundException ex) {

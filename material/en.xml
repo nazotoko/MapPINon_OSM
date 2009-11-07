@@ -31,6 +31,7 @@ xmlns="http://www.w3.org/1999/xhtml">
         <m:blog>MapPIN'on OSM Blog</m:blog>
         <m:registration>Registration form of RSS of your photo blogs.</m:registration>
         <m:rssList>RSS list (registered)</m:rssList>
+        <m:history>History of statistics</m:history>
     </m:menu>
     <m:currentView title="Current view:">
         <m:permalink>Permalink</m:permalink>

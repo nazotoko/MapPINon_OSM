@@ -44,7 +44,7 @@ standalone="yes" indent="no" version="4.0"/>
         <title>MapPIN'on OSM - Mapping Photo Introducing Network on OpenStreetMap</title>
     </head>
     <body onload="init()">
-<xsl:comment><![CDATA[[if lte IE 6]>
+<xsl:comment><![CDATA[[if lt IE 6]>
     <style type="text/css">#left, #map{display:none;}</style>
     <div id="ie6msg">]]><xsl:value-of select="m:ie6"/><![CDATA[</div>
 <![endif]]]></xsl:comment>
@@ -104,6 +104,11 @@ standalone="yes" indent="no" version="4.0"/>
                 <li>
                     <a href="rsslist.html">
                         <xsl:value-of select="m:rssList"/>
+                    </a>
+                </li>
+                <li>
+                    <a href="backup/history.html">
+                        <xsl:value-of select="m:history"/>
                     </a>
                 </li>
             </ul>

@@ -30,6 +30,7 @@
 package org.openstreetmap.mappinonosm.database;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -37,6 +38,10 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.TreeSet;
 
 /**
@@ -45,6 +50,10 @@ import java.util.TreeSet;
  */
 public class HistoryTable extends TreeSet <History>{
     private int maxId = 0;
+    private URL root=null;
+    private String backupDir=null;
+    private String historyRSS=null;
+    private String historyList=null;
     /** the History shuld have date
      * @param his
      */
@@ -61,8 +70,56 @@ public class HistoryTable extends TreeSet <History>{
         }
         return true;
     }
+    /**
+     * do it before
+     * @param u
+     */
+    public void setRoot(URL u) {
+        root=u;
+    }
+    /**
+     * do it before
+     * @param dir
+     */
+    public void setBackupDir(String dir) {
+        backupDir=dir;
+    }
+    /**
+     * do it before
+     * @param file
+     */
+    public void setHistoryList(String file) {
+        historyList=file;
+    }
+    /**
+     * do it before
+     * @param file
+     */
+    public void setHistoryRSS(String file) {
+        historyRSS=file;
+    }
 
     public void toRSS(OutputStream os) {
+        PrintWriter pw = null;
+        try {
+            pw = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
+            pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+            pw.println("<rss version=\"2.0\">");
+            pw.println("<channel>");
+            pw.println("<title>Updating history of MapPIN'on OSM</title>");
+//            pw.println("<pubDate>" + new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.UK).format(new Date()) + "</pubDate>");
+            pw.println("<lastBuildDate>" + new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.UK).format(new Date()) + "</lastBuildDate>");
+            pw.println("<link>"+root+historyList+"</link>");
+            pw.println("<language>en</language>");
+            for(History h:this){
+                h.toRSS(pw,root+backupDir);
+            }
+            pw.println("</channel>");
+            pw.println("</rss>");
+            pw.flush();
+        } catch(UnsupportedEncodingException ex) {
+            System.err.println("This system cannot supuuprt UTF-8.:"+ex.getMessage());
+        }
     }
     public void toHTML(OutputStream os) {
         PrintWriter pw = null;
@@ -71,12 +128,21 @@ public class HistoryTable extends TreeSet <History>{
             pw.println("<html lang=\"en\"><head>");
             pw.println("<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"/>");
             pw.println("<meta http-equiv=\"Content-Language\" content=\"en\"/>");
-            pw.println("<link rel=\"stylesheet\" href=\"css/list.css\" type=\"text/css\"/>");
-            pw.println("<title>History</title></head><body>");
-            pw.println("<h1>List of resistered RSSes</h1>");
+            pw.println("<link rel=\"alternate\" type=\"application/rss+xml\" title=\"History RSS Feed\" href=\""+root+historyRSS+"\" />");
+            pw.println("<link rel=\"stylesheet\" href=\"../css/list.css\" type=\"text/css\"/>");
+            pw.println("<title>Updating history of MapPIN'on OSM</title></head><body>");
+            pw.println("<h1>Updating history of MapPIN'on OSM</h1>");
             pw.println("<p><a href=\"index.html\">back to the map</a>, <a href=\"blog/\">go to the blog</a></p>");
-            pw.println("<p>Timezone of timestamps are of UTC.</p>");
-            pw.println("<table><tr><th>Date</th><th>Number of photos registered</th><th># of RSS</th><th># of new photos</th></tr>");
+            pw.println("<p>These backup dataTable are licensed by owners of all Photographs.</p>");
+            pw.println("<table><tr>");
+            pw.print("<th>Date (UTC)</th>");
+            pw.print("<th>All photo table file</th>");
+            pw.print("<th># of photos registered</th>");
+            pw.print("<th># of RSS</th>");
+            pw.print("<th># of new photos</th>");
+            pw.print("<th># of photos removed</th>");
+            pw.print("<th># of photos reread</th>");
+            pw.println("</tr>");
             boolean odd = true;
             for(History h: this){
                 pw.print("<tr");
@@ -87,7 +153,7 @@ public class HistoryTable extends TreeSet <History>{
                     pw.print(" class=\"even\">");
                     odd = true;
                 }
-                h.toHTML(pw);
+                h.toHTML(pw, root + backupDir);
                 pw.println("</tr>");
             }
             pw.println("</table>");
