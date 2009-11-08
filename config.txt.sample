@@ -11,7 +11,7 @@ registrationFile=data/new_rss.txt
 backupDir=backup/
 dataDir=data/
 RSSList=rsslist.html
-historyList=backup/history.html
+historyList=backup/index.html
 historyRSS=backup/history.rss
 
 flickrKey=

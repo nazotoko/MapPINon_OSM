@@ -144,14 +144,11 @@ public class XMLTable extends HashSet<XML>{
     }
     /**
      * read RSSes in the database
-     * @return integer: number of new photos
      */
-    public int read() {
-        int newPhoto=0;
+    public void read() {
         for(XML x: this){
-            newPhoto+=x.read();
+            x.read();
         }
-        return newPhoto;
     }
     public int toHTML(OutputStream os){
         PrintWriter pw = null;

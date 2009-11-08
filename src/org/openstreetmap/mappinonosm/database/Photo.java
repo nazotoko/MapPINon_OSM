@@ -50,8 +50,10 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URLConnection;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Locale;
 import javax.print.attribute.standard.MediaSize.Other;
 /**
  * Information of a Photo
@@ -59,7 +61,10 @@ import javax.print.attribute.standard.MediaSize.Other;
  */
 public class Photo {
     static private DecimalFormat df = new DecimalFormat("###.######");
-//    public static final int STATE_??? = 3;
+    static private String base64 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_.";
+    static private String base36str = "0123456789abcdefghijklmnopqrstuvwxyz";
+
+    //    public static final int STATE_??? = 3;
     public static final int STATE_RED = 2;
     public static final int STATE_YELLOW = 1;
     public static final int STATE_BLUE = 0;
@@ -224,6 +229,11 @@ public class Photo {
      * </dl>
      */
     private ArrayList<Integer> node = null;
+
+    /** new flag for statistics */
+    private boolean newPhoto = false;
+    /** new flag for statistics */
+    private boolean Reread = false;
 
     /** Standard constractor */
     public Photo() {
@@ -670,7 +680,6 @@ public class Photo {
      * @param code String of the mappin:at code.
      */
     public void getMappinAt(String code) {
-        String base36str = "0123456789abcdefghijklmnopqrstuvwxyz";
         System.out.println("\tmappin:at=" + code);
         if(code.length()<11){
             System.out.println("Too Short.");
@@ -973,5 +982,63 @@ public class Photo {
 
     void setDownloadDate(Date date) {
         downloadedDate = date;
+    }
+
+    /**
+     * @param newPhoto the newPhoto to set
+     */
+    public void setNewPhoto(boolean newPhoto) {
+        this.newPhoto = newPhoto;
+    }
+
+    /**
+     * @return the Reread
+     */
+    public boolean isReread() {
+        return Reread;
+    }
+
+    /**
+     * @param Reread the Reread to set
+     */
+    public void setReread(boolean Reread) {
+        this.Reread = Reread;
+    }
+    Boolean toRSS(PrintWriter pw) {
+        if(newPhoto && (latitude != 0 || longitude != 0)){
+            pw.println("<item><title>" + title + "</title>");
+            pw.println("<pubDate>" + new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.UK).format(readDate) + "</pubDate>");
+            pw.println("<description>&lt;img src=\"" + thumbnale + "\" /&gt;");
+            String code = "";
+            int i;
+            int digit=((int)((longitude+180)*1000000));
+            int mod;
+            for(i=0;i<4;i++){
+                mod=digit % 64;
+                code +=base64.charAt(mod);
+                digit /= 64;
+            }
+            mod=digit;
+            digit=(int)((latitude+90.0)*1000000.0);
+            code += base64.charAt((digit % 2) * 32 + mod);
+            digit /= 2;
+            for(i=0;i<4;i++){
+                mod = (int)(digit & 0x3f);
+                code += base64.charAt(mod);
+                digit /= 64;
+            }
+            digit = (id * 16) + digit;
+            while(digit > 0){
+                mod = (int)(digit % 64);
+                code += base64.charAt(mod);
+                digit /= 64;
+            }
+            pw.println("lat=" + df.format(latitude) + ", lon=" + df.format(longitude) +"</description>");
+            pw.println("<link>http://mappin.hp2.jp/s.php?c=" + code+ "</link>");
+            pw.println("</item>");
+            return true;
+        } else {
+            return false;
+        }
     }
 }

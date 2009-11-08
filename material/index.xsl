@@ -34,6 +34,7 @@ standalone="yes" indent="no" version="4.0"/>
         <meta name="copyright" content="GPLv3" />
         <link rel="shortcut icon" type="image/png" href="icons/logo48.png" />
         <link rel="icon" type="image/x-icon" href="favicon.ico" />
+        <link rel="alternate" type="application/rss+xml" title="Today's new Photo of MapPIN'on OSM" href="newPhoto.rss" />
         <link rel="stylesheet" href="css/map.css" type="text/css" />
         <link rel="stylesheet" href="css/popups.css" type="text/css" />
         <xsl:comment><![CDATA[[if IE]><link rel="StyleSheet" type="text/css" href="css/stylesheet-ie.css" media="screen" /><![endif]]]></xsl:comment>
@@ -107,8 +108,13 @@ standalone="yes" indent="no" version="4.0"/>
                     </a>
                 </li>
                 <li>
-                    <a href="backup/history.html">
+                    <a href="backup/index.html">
                         <xsl:value-of select="m:history"/>
+                    </a>
+                </li>
+                <li>
+                    <a href="newPhoto.rss">
+                        <xsl:value-of select="m:newPhoto"/>
                     </a>
                 </li>
             </ul>

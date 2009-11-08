@@ -37,7 +37,11 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 
 /**
  *
@@ -156,5 +160,34 @@ public class PhotoTable extends HashSet<Photo> {
             }
         }
         return null;
+    }
+    /** makeing RSS for new photo file
+     *
+     * @param os
+     * @param root
+     * @param histroy
+     */
+    public void toRSS(OutputStream os, URL root, History histroy) {
+        int numberOfNewPhoto=0;
+        try{
+            PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
+            pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+            pw.println("<rss version=\"2.0\">");
+            pw.println("<channel>");
+            pw.println("<title>Today's New photos of MapPIN'on OSM</title>");
+            pw.println("<lastBuildDate>" + new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.UK).format(new Date()) + "</lastBuildDate>");
+            pw.println("<link>"+root+"</link>");
+            pw.println("<language>en</language>");
+            for(Photo p: this){
+                if(p.toRSS(pw)){
+                    numberOfNewPhoto++;
+                }
+            }
+            pw.println("</channel>");
+            pw.println("</rss>");
+            pw.flush();
+        } catch(UnsupportedEncodingException ex) {
+        }
+        histroy.setNumOfNewPhoto(numberOfNewPhoto);
     }
 }

@@ -216,6 +216,14 @@ public class MapPINonOSM {
             System.err.println("Warning: History table file is not specified.");
         }
         hisTable.add(history);
+        try {
+            hisTable.setRoot(new URL("http", domain, httpHtdocsDir));
+        } catch(MalformedURLException ex) {
+            System.err.println("the URL is illigal: "+ex.getMessage());
+        }
+        hisTable.setBackupDir(backupdir);
+        hisTable.setHistoryList(historyList);
+        hisTable.setHistoryRSS(historyRSS);
 
         if(rss_table==null){
             System.err.println("RSS table file is not specified.");
@@ -230,6 +238,7 @@ public class MapPINonOSM {
             System.out.println("RSS table file '"+rss_table.getPath()+"' cannot be closed.");
         }
     }
+
     /** photoload */
     public void photoload() {
         InputStream is;
@@ -296,8 +305,7 @@ public class MapPINonOSM {
     /** second: reading RSS */
     public void read() {
         history.setNumOfRSS(xmlTable.size());
-        int numOfNewPhoto=xmlTable.read();
-        history.setNumOfNewPhoto(numOfNewPhoto);
+        xmlTable.read();
     }
 
     /** making tiles and statistics */
@@ -319,6 +327,11 @@ public class MapPINonOSM {
                 tb.save();
             } catch(IOException ex) {
                 System.out.println("Fail to open tile directory: " + ex.getMessage());
+            }
+            try {
+                photoTable.toRSS(new FileOutputStream(new File(localHtdocsDir, "newPhoto.rss")),hisTable.getRoot(),history);
+            } catch(FileNotFoundException ex) {
+                System.out.println("Fail to open rss file: " + ex.getMessage());
             }
         } else {
             System.out.println("Becase dataDir is not specified, Tiles are not made.");
@@ -368,14 +381,6 @@ public class MapPINonOSM {
                 System.out.println("Cannot close history.json.gz");
             }
         }
-        try {
-            hisTable.setRoot(new URL("http", domain, httpHtdocsDir));
-        } catch(MalformedURLException ex) {
-            System.err.println("the URL is illigal: "+ex.getMessage());
-        }
-        hisTable.setBackupDir(backupdir);
-        hisTable.setHistoryList(historyList);
-        hisTable.setHistoryRSS(historyRSS);
         if(historyList != null){
             try {
                 os = new FileOutputStream(new File(localHtdocsDir, historyList));

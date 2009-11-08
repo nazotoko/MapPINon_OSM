@@ -131,7 +131,7 @@ public class FlickrProtocal extends XML {
     }
 
     @Override
-    int read() {
+    void read() {
         photosi = f.getPhotosInterface();
         ArrayList <Photo> plist = serch();
         System.out.println("\tFound "+plist.size());
@@ -180,6 +180,7 @@ public class FlickrProtocal extends XML {
                     photoTable.remove(oldPhoto);
                     photoTable.add(photo);
                     setExifParameters(p.getId());
+                    photo.setReread(true);
                     System.out.println("\tThe JPEG is replaced! photo ID: " + photo.getId());
                 } else {
                     oldPhoto.upDate(photo);
@@ -187,13 +188,12 @@ public class FlickrProtocal extends XML {
                 }
             } else {
                 // This means new photo.
-                newCounter++;
+                photo.setNewPhoto(true);
                 setExifParameters(p.getId());
                 System.out.println("\tnew photo ID: " + photo.getId());
             }
         }// end of one photo
         System.out.println("Done: Flickr API.");
-        return newCounter;
     }
 
     private void setExifParameters(String photoID) {

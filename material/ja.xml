@@ -23,6 +23,7 @@
         <m:registration>あなたの写真ブログなどのRSSの登録フォーム</m:registration>
         <m:rssList>登録されているRSS リスト</m:rssList>
         <m:history>統計の遍歴</m:history>
+        <m:newPhoto>今日の新しい写真 (MapPIN'on OSM 発のRSS)</m:newPhoto>
     </m:menu>
     <m:currentView title="現在のビューに対する:">
         <m:permalink>パーマリンク</m:permalink>

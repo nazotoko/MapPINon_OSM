@@ -36,6 +36,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -69,8 +70,6 @@ abstract public class XML  implements Comparable<XML>{
     protected int id=0;
     /** Counter for geotagged photo */
     protected int counter=0;
-    /** Counter for geotagged photo */
-    protected int newCounter=0;
 
     /** for work*/
     protected Photo photo = null;
@@ -116,7 +115,7 @@ abstract public class XML  implements Comparable<XML>{
     public void setPhotoBase(PhotoTable photoTable) {
         this.photoTable = photoTable;
     }
-
+    /** Called from Photo.toJavascript() */
     void addCount() {
         counter++;
     }
@@ -184,7 +183,7 @@ abstract public class XML  implements Comparable<XML>{
         }
     }
 
-    abstract int read();
+    abstract void read();
 
     /**
      * Make a instance of XML. It is selected from subclass of XML by the scheame.

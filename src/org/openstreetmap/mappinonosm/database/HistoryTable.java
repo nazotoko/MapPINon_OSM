@@ -109,10 +109,10 @@ public class HistoryTable extends TreeSet <History>{
             pw.println("<title>Updating history of MapPIN'on OSM</title>");
 //            pw.println("<pubDate>" + new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.UK).format(new Date()) + "</pubDate>");
             pw.println("<lastBuildDate>" + new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.UK).format(new Date()) + "</lastBuildDate>");
-            pw.println("<link>"+root+historyList+"</link>");
+            pw.println("<link>"+getRoot()+historyList+"</link>");
             pw.println("<language>en</language>");
             for(History h:this){
-                h.toRSS(pw,root+backupDir);
+                h.toRSS(pw,getRoot()+backupDir);
             }
             pw.println("</channel>");
             pw.println("</rss>");
@@ -128,11 +128,11 @@ public class HistoryTable extends TreeSet <History>{
             pw.println("<html lang=\"en\"><head>");
             pw.println("<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"/>");
             pw.println("<meta http-equiv=\"Content-Language\" content=\"en\"/>");
-            pw.println("<link rel=\"alternate\" type=\"application/rss+xml\" title=\"History RSS Feed\" href=\""+root+historyRSS+"\" />");
+            pw.println("<link rel=\"alternate\" type=\"application/rss+xml\" title=\"History RSS Feed\" href=\""+getRoot()+historyRSS+"\" />");
             pw.println("<link rel=\"stylesheet\" href=\"../css/list.css\" type=\"text/css\"/>");
             pw.println("<title>Updating history of MapPIN'on OSM</title></head><body>");
             pw.println("<h1>Updating history of MapPIN'on OSM</h1>");
-            pw.println("<p><a href=\"index.html\">back to the map</a>, <a href=\"blog/\">go to the blog</a></p>");
+            pw.println("<p><a href=\"/index.html\">back to the map</a>, <a href=\"/blog/\">go to the blog</a></p>");
             pw.println("<p>These backup dataTable are licensed by owners of all Photographs.</p>");
             pw.println("<table><tr>");
             pw.print("<th>Date (UTC)</th>");
@@ -153,11 +153,11 @@ public class HistoryTable extends TreeSet <History>{
                     pw.print(" class=\"even\">");
                     odd = true;
                 }
-                h.toHTML(pw, root + backupDir);
+                h.toHTML(pw, getRoot() + backupDir);
                 pw.println("</tr>");
             }
             pw.println("</table>");
-            pw.println("<p><a href=\"index.html\">back to the map</a>, <a href=\"blog/\">go to the blog</a></p></body></html>");
+            pw.println("<p><a href=\"/index.html\">back to the map</a>, <a href=\"/blog/\">go to the blog</a></p></body></html>");
             pw.flush();
         } catch(UnsupportedEncodingException ex) {
             System.err.println("This system cannot supuuprt UTF-8.:"+ex.getMessage());
@@ -195,5 +195,12 @@ public class HistoryTable extends TreeSet <History>{
         } catch(UnsupportedEncodingException ex) {
             System.out.println("Output Stream cannot open. at "+HistoryTable.class.getName());
         }
+    }
+
+    /**
+     * @return the root
+     */
+    public URL getRoot() {
+        return root;
     }
 }

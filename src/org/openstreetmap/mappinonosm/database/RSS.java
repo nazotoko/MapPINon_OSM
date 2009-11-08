@@ -107,7 +107,7 @@ public class RSS extends XML implements LexicalHandler, ContentHandler {
         return urls.toArray(new URL[urls.size()]);
     }
 
-    int read(){
+    void read(){
         XMLReader parser;
         try {
             parser = XMLReaderFactory.createXMLReader();
@@ -118,7 +118,6 @@ public class RSS extends XML implements LexicalHandler, ContentHandler {
         } catch(IOException ex) {
             System.out.println("IOException");
         }
-        return newCounter;
     }
     @Override
     public void startDocument() throws SAXException {
@@ -200,6 +199,7 @@ public class RSS extends XML implements LexicalHandler, ContentHandler {
                         photo.setId(oldPhoto.getId());
                         photoTable.remove(oldPhoto);
                         photoTable.add(photo);
+                        photo.setReread(true);
                         photo.getEXIF();
                         System.out.println("\tThe JPEG is replaced! photo ID: " + photo.getId());
                     } else {
@@ -207,7 +207,7 @@ public class RSS extends XML implements LexicalHandler, ContentHandler {
                         System.out.println("\tphoto ID: " + oldPhoto.getId());
                     }
                 } else {// This means new photo.
-                    newCounter++;
+                    photo.setNewPhoto(true);
                     photo.getEXIF();
                     System.out.println("\tnew photo ID: " + photo.getId());
                 }
