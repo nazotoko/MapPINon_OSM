@@ -36,6 +36,7 @@ xmlns="http://www.w3.org/1999/xhtml">
     </m:menu>
     <m:currentView title="Current view:">
         <m:permalink>Permalink</m:permalink>
+        <m:rssTile>RSS for the photo tile</m:rssTile>
         <m:osmlink>OpenStreetMap</m:osmlink>
         <m:osblink>OpenStreetBugs</m:osblink>
         <m:geofabrik>Geofabrik Map</m:geofabrik>

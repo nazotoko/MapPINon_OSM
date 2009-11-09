@@ -27,6 +27,7 @@
     </m:menu>
     <m:currentView title="現在のビューに対する:">
         <m:permalink>パーマリンク</m:permalink>
+        <m:rssTile>写真タイルのRSS</m:rssTile>
         <m:osmlink>OpenStreetMap</m:osmlink>
         <m:osblink>OpenStreetBugs</m:osblink>
         <m:geofabrik>Geofabrik Map</m:geofabrik>

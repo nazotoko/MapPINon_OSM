@@ -107,6 +107,7 @@ function init()
   }
   view.views={
     permalink:document.getElementById("permalink"),
+    rssTile:document.getElementById("rssTile"),
     osmlink:document.getElementById("osmlink"),
     osblink:document.getElementById("osblink"),
     geofabrik:document.getElementById("geofabrik")
@@ -405,13 +406,16 @@ function refresh(){
   var params = permalink.createParams();
   var lon=params.lon;
   var lat=params.lat;
-  var lonlat = '?lon='+params.lon+'&amp;lat='+params.lat+'&amp;zoom='+params.zoom;
-  var layers = '&amp;layers='+params.layers;
+  var x=Math.round(lon*20);
+  var y=Math.round(lat*20);
+  var lonlat = '?lon='+params.lon+'&lat='+params.lat+'&zoom='+params.zoom;
+  var layers = '&layers='+params.layers;
   
   if (params.zoom > 10) {
-    url=make_url(Math.round(lon*20),Math.round(lat*20));
+      url=make_url(x,y);
   }
   if(document.getElementById('NavToggle2').firstChild.data=='hide'){
+    view.views.rssTile.href='rss.php?x='+x+'&y='+y;
     view.views.permalink.href = lonlat+layers;
     view.views.osmlink.href = 'http://www.openstreetmap.org/'+lonlat;
     view.views.osblink.href = 'http://openstreetbugs.schokokeks.org/'+lonlat+layers;

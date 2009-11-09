@@ -55,8 +55,9 @@
 
 <!ATTLIST m:currentView
     title CDATA #REQUIRED>
-<!ELEMENT m:currentView (m:permalink,m:osmlink,m:osblink,m:geofabrik)>
+<!ELEMENT m:currentView (m:permalink,m:rssTile,m:osmlink,m:osblink,m:geofabrik)>
 <!ELEMENT m:permalink (#PCDATA)>
+<!ELEMENT m:rssTile (#PCDATA)>
 <!ELEMENT m:osmlink (#PCDATA)>
 <!ELEMENT m:osblink (#PCDATA)>
 <!ELEMENT m:geofabrik (#PCDATA)>
