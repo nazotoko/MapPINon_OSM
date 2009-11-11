@@ -45,8 +45,7 @@ public class Tile extends ArrayList <Photo> {
             PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
             pw.println("AJAXI({");
             for(Photo p: this){
-                if(p.getLat() != 0 || p.getLon() != 0){
-                    p.toJavaScript(pw);
+                if(p.toJavaScript(pw)){
                     pw.println(",");
                 }
             }

@@ -118,7 +118,7 @@ public class FlickrProtocal extends XML {
                 page++;
                 pl=photosi.search(sp, 10, page);
                 ret.addAll(pl);
-            }while (pl.getPages()>page);
+            } while(pl.getPages() > page);
             return ret;
         } catch(IOException ex) {
             System.out.println("IO Exception: " + ex.getMessage());

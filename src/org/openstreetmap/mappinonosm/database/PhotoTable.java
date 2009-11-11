@@ -39,7 +39,6 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
 
@@ -82,8 +81,7 @@ public class PhotoTable extends HashSet<Photo> {
             PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
             pw.println("AJAXI({");
             for(Photo p: this){
-                if(p.getLat() != 0 || p.getLon() != 0){
-                    p.toJavaScript(pw);
+                if(p.toJavaScript(pw)){
                     pw.println(",");
                 }
             }
@@ -100,8 +98,9 @@ public class PhotoTable extends HashSet<Photo> {
         try {
             PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
             for(Photo p: this){
-                p.save(pw);
-                pw.println(",");
+                if(p.save(pw)){
+                    pw.println(",");
+                }
             }
             pw.flush();
         } catch(UnsupportedEncodingException ex){
@@ -125,15 +124,7 @@ public class PhotoTable extends HashSet<Photo> {
                     break;
                 }
                 line_number++;
-                a = line.indexOf(':');
-                if(a<0){
-                    continue;
-                }
-                id=Integer.parseInt(line.substring(0, a));
-                line = line.substring(line.indexOf('{', a + 1)+1,line.lastIndexOf('}'));
-                p=new Photo();
-                p.setId(id);
-                p.load(line,xt);
+                p=Photo.load(line,xt);
                 add(p);
             }
         } catch(UnsupportedEncodingException ex) {
@@ -161,26 +152,33 @@ public class PhotoTable extends HashSet<Photo> {
         }
         return null;
     }
-    /** makeing RSS for new photo file
+    /** makeing RSS, Today's new photo.
      *
      * @param os
      * @param root
      * @param histroy
      */
     public void toRSS(OutputStream os, URL root, History histroy) {
-        int numberOfNewPhoto=0;
+        int numberOfNewPhoto = 0;
+        int numberOfReread = 0;
+        int numberOfRemoved = 0;
         try{
             PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
             pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-            pw.println("<rss version=\"2.0\">");
+            pw.println("<rss version=\"2.0\" xmlns:georss=\"http://www.georss.org/georss\">");
             pw.println("<channel>");
             pw.println("<title>Today's New photos of MapPIN'on OSM</title>");
-            pw.println("<lastBuildDate>" + new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.UK).format(new Date()) + "</lastBuildDate>");
+            pw.println("<lastBuildDate>" + new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.UK).format(histroy.getDate()) + "</lastBuildDate>");
             pw.println("<link>"+root+"</link>");
-            pw.println("<language>en</language>");
             for(Photo p: this){
-                if(p.toRSS(pw)){
+                if(p.toRSS(pw,root)){
                     numberOfNewPhoto++;
+                }
+                if(p.isReread()){
+                    numberOfReread++;
+                }
+                if(p.isDeleted()){
+                    numberOfRemoved++;
                 }
             }
             pw.println("</channel>");
@@ -189,5 +187,7 @@ public class PhotoTable extends HashSet<Photo> {
         } catch(UnsupportedEncodingException ex) {
         }
         histroy.setNumOfNewPhoto(numberOfNewPhoto);
+        histroy.setNumOfReread(numberOfReread);
+        histroy.setNumOfRemoved(numberOfRemoved);
     }
 }

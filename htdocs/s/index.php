@@ -1,6 +1,6 @@
 <?php
 $base64="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_.";
-$code=$_GET['c'];
+$code=$_SERVER['QUERY_STRING'];
 
 $base=1;
 $lon=0;

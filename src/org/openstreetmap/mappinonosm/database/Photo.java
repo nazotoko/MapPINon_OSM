@@ -38,12 +38,9 @@ import com.drew.metadata.MetadataException;
 import com.drew.metadata.exif.ExifDirectory;
 import com.drew.metadata.exif.GpsDirectory;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import com.drew.metadata.exif.ExifReader;
 import com.drew.metadata.iptc.IptcReader;
 import java.io.InputStream;
@@ -54,7 +51,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Locale;
-import javax.print.attribute.standard.MediaSize.Other;
 /**
  * Information of a Photo
  * @author Shun "Nazotoko" Watanabe
@@ -233,7 +229,9 @@ public class Photo {
     /** new flag for statistics */
     private boolean newPhoto = false;
     /** new flag for statistics */
-    private boolean Reread = false;
+    private boolean reread = false;
+    /** new flag for statistics */
+    private boolean deleted = false;
 
     /** Standard constractor */
     public Photo() {
@@ -244,7 +242,10 @@ public class Photo {
      */
     @Override
     public int hashCode(){
-        return link.hashCode();
+        if(link != null){
+            return link.hashCode();
+        }
+        return 0;
     }
 
     /**
@@ -257,6 +258,9 @@ public class Photo {
             return false;
         }
         if(getClass() != obj.getClass()){
+            return false;
+        }
+        if(link==null){
             return false;
         }
         final Photo other = (Photo)obj;
@@ -716,14 +720,17 @@ public class Photo {
     /** Output JavaScript code. It will be called from Tile.
      * @param pw PrintWriter given by tile. It is used for the output.
      */
-    void toJavaScript(PrintWriter pw) {
+    boolean toJavaScript(PrintWriter pw) {
+        if(deleted){
+            return false;
+        } else if(latitude == 0 && longitude == 0){
+            return false;
+        }
         pw.print(id+":{la:" + df.format(latitude) +
                 ",lo:" + df.format(longitude) +
                 ",s:" + state +
-                ",li:'" + link + "'");
-        if(xml.getLink() != null){
-            pw.print(",r:'" + xml.getLink() + "'");
-        }
+                ",li:'" + link + "'" +
+                ",r:'" + xml.getLink() + "'");
         if(title != null){
             pw.print(",ti:'" + title + "'");
         }
@@ -756,13 +763,17 @@ public class Photo {
         }
         pw.print("}");
         xml.addCount();
+        return true;
     }
     
     /** only called from PhotoTable
      * @param pw PrintWriter given from PhotoTable
      */
-    void save(PrintWriter pw){
-        pw.print(id+":{la:" + latitude +
+    boolean save(PrintWriter pw){
+        if(deleted){
+            return false;
+        }
+        pw.print(id + ":{la:" + latitude +
                 ",lo:" + longitude +
                 ",li:'" + link + "'" +
                 ",r:" + xml.getId() +
@@ -834,17 +845,27 @@ public class Photo {
             pw.print(",published:" + publishedDate.getTime()/1000 );
         }
         pw.print("}");
+        return true;
     }
 
     /** only called from PhotoTable
      * @param line 1 line string
      * @param xt XMLTable to specify XML by ID number.
+     * @return new <code>Photo</code> instance. It returns <code>null</code>, when the line don't has id number.
      */
-    void load(String line,XMLTable xt){
+    static Photo load(String line, XMLTable xt) throws
+            StringIndexOutOfBoundsException, NumberFormatException {
         boolean end=true;
         int a,b,c;
         String key,value;
-        a=0;
+        Photo ret=new Photo();
+        a = line.indexOf(':');
+        if(a < 0){
+            return null;
+        }
+        ret.id = Integer.parseInt(line.substring(0, a));
+        line = line.substring(line.indexOf('{', a + 1) + 1, line.lastIndexOf('}'));
+        a = 0;
         do {
             b = line.indexOf(':', a + 1);
             if(b < 0){
@@ -869,70 +890,75 @@ public class Photo {
                 }
             }
             if(key.equals("readDate")){
-                readDate = new Date(Long.parseLong(value) * 1000);
+                ret.readDate = new Date(Long.parseLong(value) * 1000);
             } else if(key.equals("updateDate")){
-                updateDate = new Date(Long.parseLong(value) * 1000);
+                ret.updateDate = new Date(Long.parseLong(value) * 1000);
             } else if(key.equals("downloaded")){
-                downloadedDate = new Date(Long.parseLong(value) * 1000);
+                ret.downloadedDate = new Date(Long.parseLong(value) * 1000);
             } else if(key.equals("published")){
-                publishedDate = new Date(Long.parseLong(value) * 1000);
+                ret.publishedDate = new Date(Long.parseLong(value) * 1000);
             } else if(key.equals("la")){
-                latitude = Double.parseDouble(value);
+                ret.latitude = Double.parseDouble(value);
             } else if(key.equals("lo")){
-                longitude = Double.parseDouble(value);
+                ret.longitude = Double.parseDouble(value);
             } else if(key.equals("al")){
-                altitude = Float.parseFloat(value);
+                ret.altitude = Float.parseFloat(value);
             } else if(key.equals("di")){
-                direction = Float.parseFloat(value);
+                ret.direction = Float.parseFloat(value);
             } else if(key.equals("sp")){
-                speed = Float.parseFloat(value);
+                ret.speed = Float.parseFloat(value);
             } else if(key.equals("tr")){
-                track = Float.parseFloat(value);
+                ret.track = Float.parseFloat(value);
             } else if(key.equals("fl")){
-                focalLength = Float.parseFloat(value);
+                ret.focalLength = Float.parseFloat(value);
             } else if(key.equals("r")){
-                xml = xt.get(Integer.parseInt(value));
+                ret.xml = xt.get(Integer.parseInt(value));
+                if(ret.xml == null){
+                    ret.deleted = true;
+                    System.out.println("removing photo id: "+ret.id);
+                }
             } else if(key.equals("li")){
                 try {
-                    link = new URL(value);
+                    ret.link = new URL(value);
                 } catch(MalformedURLException ex) {
                     System.err.println("Illigal URL?");
                 }
             } else if(key.equals("o")){
                 try {
-                    original = new URL(value);
+                    ret.original = new URL(value);
                 } catch(MalformedURLException ex) {
                     System.err.println("Illigal URL?");
                 }
             } else if(key.equals("th")){
                 try {
-                    thumbnale = new URL(value);
+                    ret.thumbnale = new URL(value);
                 } catch(MalformedURLException ex) {
                     System.err.println("Illigal URL?");
                 }
             } else if(key.equals("n")){
-                node = new ArrayList<Integer>();
+                ret.node = new ArrayList<Integer>();
                 int s=0,e;
                 while((e=value.indexOf(",", s))>0){
-                    node.add(Integer.parseInt(value.substring(s,e)));
+                    ret.node.add(Integer.parseInt(value.substring(s,e)));
                     s = e+1;
                 }
-                node.add(Integer.parseInt(value.substring(s)));
+                ret.node.add(Integer.parseInt(value.substring(s)));
             } else if(key.equals("w")){
-                way = new ArrayList<Integer>();
+                ret.way = new ArrayList<Integer>();
                 int s=0,e;
                 while((e=value.indexOf(",", s))>0){
-                    way.add(Integer.parseInt(value.substring(s,e)));
+                    ret.way.add(Integer.parseInt(value.substring(s,e)));
                     s = e + 1;
                 }
-                way.add(Integer.parseInt(value.substring(s)));
+                ret.way.add(Integer.parseInt(value.substring(s)));
             } else if(key.equals("ti")){
-                title=value;
+                ret.title=value;
             } else if(key.equals("s")){
-                state=Integer.parseInt(value);
+                ret.state=Integer.parseInt(value);
             }
             a = c + 1;
         } while(end);
+        return ret;
     }
 
     /** Specially called from FlickrProtocal.getExifParameters()
@@ -992,23 +1018,39 @@ public class Photo {
     }
 
     /**
-     * @return the Reread
+     * @return the reread
      */
     public boolean isReread() {
-        return Reread;
+        return reread;
     }
 
     /**
-     * @param Reread the Reread to set
+     * @return the reread
      */
-    public void setReread(boolean Reread) {
-        this.Reread = Reread;
+    public boolean isDeleted() {
+        return deleted;
     }
-    Boolean toRSS(PrintWriter pw) {
-        if(newPhoto && (latitude != 0 || longitude != 0)){
-            pw.println("<item><title>" + title + "</title>");
-            pw.println("<pubDate>" + new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.UK).format(readDate) + "</pubDate>");
-            pw.println("<description>&lt;img src=\"" + thumbnale + "\" /&gt;");
+
+    /**
+     * @param reread the reread to set
+     */
+    public void setReread(boolean reread) {
+        this.reread = reread;
+    }
+    /** Today's new photos. It is also 
+     *
+     * @param pw PrintWriter for writing Today's new photos
+     * @param root URL of the base of site
+     * @return true if the photo is
+     */
+    Boolean toRSS(PrintWriter pw, URL root) {
+        if(deleted){
+            return false;
+        } else if(newPhoto && (latitude != 0 || longitude != 0)){
+            pw.print("<item><title>" + title + "</title>");
+            pw.print("<pubDate>" + new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.UK).format(readDate) + "</pubDate>");
+            pw.print("<description><![CDATA[");
+            pw.print("<img src=\"" + thumbnale + "\" /><br/>");
             String code = "";
             int i;
             int digit=((int)((longitude+180)*1000000));
@@ -1033,8 +1075,11 @@ public class Photo {
                 code += base64.charAt(mod);
                 digit /= 64;
             }
-            pw.println("lat=" + df.format(latitude) + ", lon=" + df.format(longitude) +"</description>");
-            pw.println("<link>http://mappin.hp2.jp/s.php?c=" + code+ "</link>");
+            pw.print("<a href=\"http://mappin.hp2.jp/s?" + code+ "\">lat=" + df.format(latitude) + ", lon=" + df.format(longitude) +"</a><br/>");
+            pw.print("<a href=\"" + link + "\">link</a><br/>");
+            pw.print("]]></description>");
+            pw.print("<link>http://mappin.hp2.jp/s?" + code+ "</link>");
+            pw.print("<georss:point>"+latitude+" "+longitude+"</georss:point>");
             pw.println("</item>");
             return true;
         } else {

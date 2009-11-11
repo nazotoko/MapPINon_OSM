@@ -275,6 +275,20 @@ public class MapPINonOSM {
     }
 
     /**
+     *
+     * @param ids
+     */
+    public void removeRSS(String... ids){
+        /** Second stage: removing RSSes */
+        int id;
+        for(String u: ids){
+            id = Integer.parseInt(u);
+            xmlTable.remove(id);
+            System.out.println("remove: " + u);
+        }
+    }
+
+    /**
      * getXML from foreground servers registration text file.
      */
     public void getRSS() {
@@ -404,7 +418,7 @@ public class MapPINonOSM {
             }
         }
 
-        if(photoTable != null){
+        if(photoTable.size() != 0){
             if(photo_table != null){
                 try {
                     os = new GZIPOutputStream(new FileOutputStream(photo_table));
@@ -461,6 +475,7 @@ public class MapPINonOSM {
         System.err.println("\ttile: create tiles and rss lists.");
 //        System.err.println("\tupload: upload tiles and rss list. arg1:hostname arg2:username arg3:password");
         System.err.println("\tloop: get, read and tile.");
+        System.err.println("\tremove: the same as \"loop\" with removing RSS. The args are ID to be removed.");
         System.exit(1);
     }
 
@@ -473,8 +488,13 @@ public class MapPINonOSM {
         }
         System.err.println("=========== Loading data tables ===========");
         MapPINonOSM database = new MapPINonOSM();
-        database.photoload();
-
+        if(args[0].equals("remove")){
+            System.err.println("=========== removing RSS ===========");
+            for(int i = 1; i < args.length; i++){
+                database.removeRSS(args[i]);
+            }
+        }
+        database.photoload();// load and remove
         if(args[0].equals("add")){
             for(int i = 1; i < args.length; i++){
                 database.addRSS(args[i]);
@@ -482,19 +502,20 @@ public class MapPINonOSM {
             database.save();
             System.exit(0);
         }
-        if(args[0].equals("get") || args[0].equals("loop")){
+
+        if(args[0].equals("get") || args[0].equals("loop") || args[0].equals("remove")){
             System.err.println("=========== Registering RSSes ===========");
             database.getRSS();
         }
-        if(args[0].endsWith("read")||args[0].equals("loop")){
+        if(args[0].endsWith("read") || args[0].equals("loop") || args[0].equals("remove")){
             System.err.println("=========== Starting to downloading RSSes and photo files ===========");
             database.read();
         }
-        if(args[0].endsWith("tile")||args[0].equals("loop")){
+        if(args[0].endsWith("tile") || args[0].equals("loop") || args[0].equals("remove")){
             System.err.println("=========== Starting to make tiles ===========");
             database.makeTiles();
         }
-        if(args[0].endsWith("upload")||args[0].equals("loop")){
+        if(args[0].endsWith("upload") || args[0].equals("loop") || args[0].equals("remove")){
         }
         System.err.println("=========== Saving data tables ===========");
         database.save();

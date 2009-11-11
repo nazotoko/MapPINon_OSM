@@ -96,6 +96,23 @@ public class XMLTable extends HashSet<XML>{
         }
         return null;
     }
+
+    /** get a XML entry by ID
+     * @param id
+     */
+    public void remove(int id) {
+        XML it=null;
+        for(XML entry:this){
+            if(entry.getId()==id){
+                it=entry;
+                break;
+            }
+        }
+        if(it!=null){
+            remove(it);
+        }
+    }
+
     /**
      * 
      * @param is Inputsteam of savedparaeters.

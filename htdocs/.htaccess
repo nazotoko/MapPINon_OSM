@@ -2,11 +2,14 @@ AddDefaultCharset UTF-8
 Options MultiViews FollowSymLinks
 ErrorDocument 404 /404_not_found.xhtml
 
-RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME} !-l
-RewriteRule ^/s/([0-9a-zA-Z._]+)$ /s.php?c=$1 [PT,L,QSA]
+AddType application/xhtml+xml .xhtml
+AddType text/xml .xml
+AddType text/css .css
+AddType text/javascript .js
+AddType image/x-icon .ico
+AddType application/rss+xml .rss
+AddType application/x-gzip .gz
+AddType text/xml .osm
 
 LanguagePriority en ja
 AddLanguage ca .ca
