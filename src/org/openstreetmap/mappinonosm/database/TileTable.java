@@ -85,4 +85,21 @@ public class TileTable extends HashMap<Integer,Tile>{
             }
         }
     }
+    public void upload(){
+    }
+    public boolean addPhoto(Photo p){
+        double lat=p.getLat();
+        double lon=p.getLon();
+        if(lat==0&&lon==0){
+            return false;
+        }
+        int id = TileTable.getID(lat, lon);
+        Tile t;
+        if((t = get(id)) == null){
+            t = new Tile();
+            put(id, t);
+        }
+        t.add(p);
+        return true;
+    }
 }

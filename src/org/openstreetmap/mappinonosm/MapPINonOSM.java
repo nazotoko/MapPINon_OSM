@@ -331,24 +331,21 @@ public class MapPINonOSM {
             try {
                 tb = new TileTable(new File(localHtdocsDir, dataDir));
                 for(Photo p: photoTable){
-                    int id = TileTable.getID(p.getLon(), p.getLat());
-                    if((t = tb.get(id)) == null){
-                        t = new Tile();
-                        tb.put(id, t);
-                    }
-                    t.add(p);
+                    tb.addPhoto(p);
                 }
-                tb.save();
+                tb.save();// this will make number of geophoto for each xml.
             } catch(IOException ex) {
                 System.out.println("Fail to open tile directory: " + ex.getMessage());
             }
-            try {
-                photoTable.toRSS(new FileOutputStream(new File(localHtdocsDir, "newPhoto.rss")),hisTable.getRoot(),history);
-            } catch(FileNotFoundException ex) {
-                System.out.println("Fail to open rss file: " + ex.getMessage());
-            }
         } else {
             System.out.println("Becase dataDir is not specified, Tiles are not made.");
+        }
+
+        /**** making statistics ****/
+        try {
+            photoTable.toRSS(new FileOutputStream(new File(localHtdocsDir, "newPhoto.rss")), hisTable.getRoot(), history);
+        } catch(FileNotFoundException ex) {
+            System.out.println("Fail to open rss file: " + ex.getMessage());
         }
         if(rssList!=null){
             OutputStream os;

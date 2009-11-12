@@ -210,6 +210,13 @@ public class Photo {
      */
     private Date publishedDate=null;
 
+        /** the date of taking the photo
+     * <dl>
+     * <dt>save</dt><dd>taken:integer</dd>
+     * </dl>
+     */
+    private Date takenDate=null;
+
     /** osm:way tag
      * <dl>
      * <dt>tile</dt><dd>w:[ingerger,..]</dd>
@@ -415,6 +422,13 @@ public class Photo {
     }
 
     /**
+     * @return takenDate
+     */
+    public Date getTakenDate() {
+        return takenDate;
+    }
+
+    /**
      * only called from PhotoTable, XMLTable
      * @param id
      */
@@ -523,6 +537,13 @@ public class Photo {
      */
     void setPublishedDate(Date date) {
         publishedDate = date;
+    }
+
+    /**
+     * @param date the date to set
+     */
+    void setTakenDate(Date date) {
+        takenDate = date;
     }
 
     void addNode(int id) {
@@ -722,8 +743,6 @@ public class Photo {
      */
     boolean toJavaScript(PrintWriter pw) {
         if(deleted){
-            return false;
-        } else if(latitude == 0 && longitude == 0){
             return false;
         }
         pw.print(id+":{la:" + df.format(latitude) +
