@@ -35,6 +35,9 @@ if($f){
             echo '<a href="'.$li[1].'" >link</a>';
             echo ']]></description>';
             echo "<georss:point>".$lat[1]." ".$lon[1]."</georss:point>";
+            if(preg_match("/,al:([-0-9.]+)[,}]/",$line,$al)>0) {
+                echo "<georss:ele>".$al[1]."</georss:ele>";
+            }
             echo '</item>'."\n";
         }
     }

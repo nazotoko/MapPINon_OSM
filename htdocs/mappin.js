@@ -31,8 +31,7 @@ var map = null;
 var layer = null;
 var vectorLayer=null;
 var permalink = null;
-var lang={langs:{}};
-var view={};
+var menu={langs:{},views:{}};
 var icons={};
 
 /* caches for MapPIN'on OSM */
@@ -90,10 +89,12 @@ function init_map(){
 
     icon_size = new OpenLayers.Size(12, 12);
     icon_offset = new OpenLayers.Pixel(-icon_size.w/2, -icon_size.h/2);
-    icons[0]= new OpenLayers.Icon(img_path+'blue.png', icon_size, icon_offset);
-    icons[1]= new OpenLayers.Icon(img_path+'yellow.png', icon_size, icon_offset);
-    icons[2]= new OpenLayers.Icon(img_path+'red.png', icon_size, icon_offset);
-    icons[4]= new OpenLayers.Icon(img_path+'new.png', icon_size, icon_offset);
+    icons={
+        0:new OpenLayers.Icon(img_path+'blue.png', icon_size, icon_offset),
+        1:new OpenLayers.Icon(img_path+'yellow.png', icon_size, icon_offset),
+        2:new OpenLayers.Icon(img_path+'red.png', icon_size, icon_offset),
+        4:new OpenLayers.Icon(img_path+'new.png', icon_size, icon_offset)
+    };
     map.events.register('moveend', map, refresh);
     click.activate();
     map.addControl(permalink=new OpenLayers.Control.Permalink());
@@ -103,12 +104,14 @@ function init()
 {
   init_map();
   for(var i=0;i<llang.length;i++){
-      lang.langs[llang[i]]=document.getElementById('lang_'+llang[i]);
+      menu.langs[llang[i]]=document.getElementById('lang_'+llang[i]);
   }
-  view.views={
+  menu.views={
     permalink:document.getElementById("permalink"),
     rssTile:document.getElementById("rssTile"),
     osmlink:document.getElementById("osmlink"),
+    potlatch:document.getElementById("potlatch"),
+    josm:document.getElementById("josm"),
     osblink:document.getElementById("osblink"),
     geofabrik:document.getElementById("geofabrik")
   };
@@ -206,7 +209,7 @@ function popup_open_photo(photo){
     if(photo.original) text+='<li><a target="_blank" title="'+message.title_original+'" href="'+photo.original+'">'+message.action_original+'</a></li>';
     if(photo.rss) text+= '<li><a target="_blank" title="'+message.title_rss+'" href="'+photo.rss+'">'+message.action_rss+'</a></li>';
     if(photo.state!=2)text+= '<li><a target="_blank" title="'+message.title_edit+'" href="http://www.openstreetmap.org/edit?lat='+photo.lat+'&amp;lon='+photo.lon+'&amp;zoom=17">'+message.action_edit+'</a></li>';
-    text+='<li><a href="javascript:messBox.embed('+photo.id+')" title="'+message.title_embed+'" >'+message.action_embed+'</a></li>';
+    text+='<li><a href="javascript:embedBox.embed('+photo.id+')" title="'+message.title_embed+'" >'+message.action_embed+'</a></li>';
     return text+'</ul>';
 }
 
@@ -223,30 +226,16 @@ text+=base36(lat,6);
 return text+'"/></p>';
 }
 
-var messBox={
+var embedBox={
     embed: function(id){
-	var params = permalink.createParams();
-        this.lat = photos[id].photo.lat;
-        this.lon = photos[id].photo.lon;
-        this.zoom = params.zoom;
-	var layers=params.layers;
-        this.ref=domain+server_path+'?lat='+this.lat+'&lon='+this.lon+'&zoom='+this.zoom+'&layers='+layers+"&id="+id;
-        var text;
-        this.div=document.getElementById('message');
-        this.div.style.display='block';
-        this.embed2('a');
-    },
-    embed2: function(s) {
-        var box=document.getElementById("messBox");
-        var test=document.getElementById("messTest");
-        if(s=="a") box.value=this.ref;
-        if(s=="h") box.value='<a href="'+this.ref+'">See it on OpenStreetMap.</a>';
-        if(s=="H") box.value='<a href="'+this.ref+'">lat='+this.lat+', lon='+this.lon+'</a>';
-        if(s=="O") box.value='<a href="'+this.ref+'"><img src="http://tah.openstreetmap.org/MapOf/?lat='+this.lat+'&long='+this.lon+'&z='+this.zoom+'&w=96&h=96&format=png" width="96" height="96"/></a>';
-        if(s=="OA") box.value='<a href="'+this.ref+'"><img src="http://tah.openstreetmap.org/MapOf/?lat='+this.lat+'&long='+this.lon+'&z='+this.zoom+'&w=96&h=96&format=png" width="96" height="96"/>See it on OpenStreetMap</a>';
-        test.innerHTML=box.value;
+        this.id=id;
+        var script = document.createElement("script");
+        script.src = 'js/embed.js';
+        script.type = "text/javascript";
+        document.getElementById("readingData").appendChild(script);
     }
 }
+
 /*
  * AJAX functions
  */
@@ -410,20 +399,23 @@ function refresh(){
   var y=Math.round(lat*20);
   var lonlat = '?lon='+params.lon+'&lat='+params.lat+'&zoom='+params.zoom;
   var layers = '&layers='+params.layers;
+  var bbox ='left='+(lon-0.025)+'&right='+(lon+0.025)+'&top='+(lat+0.025)+'&bottom='+(lat-0.025);
   
   if (params.zoom > 10) {
       url=make_url(x,y);
   }
   if(document.getElementById('NavToggle2').firstChild.data=='hide'){
-    view.views.rssTile.href='rss.php?x='+x+'&y='+y;
-    view.views.permalink.href = lonlat+layers;
-    view.views.osmlink.href = 'http://www.openstreetmap.org/'+lonlat;
-    view.views.osblink.href = 'http://openstreetbugs.schokokeks.org/'+lonlat+layers;
-    view.views.geofabrik.href = "http://tools.geofabrik.de/map/"+lonlat;
+    menu.views.rssTile.href='rss.php?x='+x+'&y='+y;
+    menu.views.permalink.href = lonlat+layers;
+    menu.views.osmlink.href = 'http://www.openstreetmap.org/'+lonlat;
+    menu.views.potlatch.href = 'http://www.openstreetmap.org/edit'+lonlat;
+    menu.views.josm.href = 'http://localhost:8111/load_and_zoom?'+bbox;
+    menu.views.osblink.href = 'http://openstreetbugs.schokokeks.org/'+lonlat+layers;
+    menu.views.geofabrik.href = "http://tools.geofabrik.de/map/"+lonlat;
   }
   if(document.getElementById('NavToggle3').firstChild.data=='hide'){
     for(id in lang.langs){
-      lang.langs[id].href='index.html.'+id+lonlat+layers;
+      menu.langs[id].href='index.html.'+id+lonlat+layers;
     }
   }
 }

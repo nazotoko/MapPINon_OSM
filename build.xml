@@ -12,10 +12,6 @@
     <import file="nbproject/build-impl.xml"/>
     <!--
 
-    There exist several targets which are by default empty and which can be 
-    used for execution of your tasks. These targets are usually executed 
-    before and after some main targets. They are: 
-
       -pre-init:                 called before initialization of project properties
       -post-init:                called after initialization of project properties
       -pre-compile:              called before javac compilation
@@ -30,45 +26,64 @@
       -post-jar:                 called after JAR building
       -post-clean:               called after cleaning build products
 
-    (Targets beginning with '-' are not intended to be called on their own.)
-
-    Example of inserting an obfuscator after compilation could look like this:
-
-        <target name="-post-compile">
-            <obfuscate>
-                <fileset dir="${build.classes.dir}"/>
-            </obfuscate>
-        </target>
-
-    For list of available properties check the imported 
-    nbproject/build-impl.xml file. 
-
-
-    Another way to customize the build is by overriding existing main targets.
-    The targets of interest are: 
-
-      -init-macrodef-javac:     defines macro for javac compilation
-      -init-macrodef-junit:     defines macro for junit execution
-      -init-macrodef-debug:     defines macro for class debugging
-      -init-macrodef-java:      defines macro for class execution
-      -do-jar-with-manifest:    JAR building (if you are using a manifest)
-      -do-jar-without-manifest: JAR building (if you are not using a manifest)
-      run:                      execution of project 
-      -javadoc-build:           Javadoc generation
-      test-report:              JUnit report generation
-
-    An example of overriding the target for project execution could look like this:
-
-        <target name="run" depends="MapPIN-impl.jar">
-            <exec dir="bin" executable="launcher.exe">
-                <arg file="${dist.jar}"/>
-            </exec>
-        </target>
-
-    Notice that the overridden target depends on the jar target and not only on 
-    the compile target as the regular run target does. Again, for a list of available 
-    properties which you can use, check the target you are overriding in the
-    nbproject/build-impl.xml file. 
-
     -->
+    <target name="-metaext-check">
+        <echo>checking</echo>
+        <mkdir dir="lib"/>
+        <condition property="metaext.notexist"><not>
+            <available file="${file.reference.metadata-extractor-2.3.1.jar}" property="metaext.exist" />
+        </not></condition>
+    </target>
+
+    <target depends="-metaext-check" name="metaext-jar" if="metaext.notexist">
+        <echo>
+Now this is downloading ${file.reference.metadata-extractor-2.3.1.jar}.
+metadata-extractor is public domain. You can download it without any license,
+thought, please respect the author. Here is a message from his homepage,
+http://www.drewnoakes.com/code/exif/ .
+------------------------------------------------------------------------------
+You're free to use this code as you see fit. Please send me a short email to
+let me know if you find it useful. If you make interesting changes, mail me a
+copy and I'll include the details on this site. The continual contact with
+users and contributors of the library encourages and motivates me to keep
+making improvements. The code is protected by copyright, though only to avoid
+people selling it unmodified or copyrighting it themselves. You are free to
+sell work based upon this library, though please consider making a donation.
+
+I've posted javadoc. Though it's not very thoroughly annotated, it still gives
+an easy way to browse the class structure and members.
+    </echo>
+        <get src="http://www.drewnoakes.com/code/exif/releases/metadata-extractor-2.3.1.jar"
+        dest="${file.reference.metadata-extractor-2.3.1.jar}"
+        description="Metadata Extractor"
+        verbose="true" />
+    </target>
+
+    <target name="-flickrj-check">
+        <echo>checking</echo>
+        <mkdir dir="lib"/>
+        <condition property="flickrj.notexist"><not>
+            <available file="${file.reference.flickrapi-1.2.jar}" property="flickrj.exist"/>
+        </not></condition>
+    </target>
+
+    <target depends="-flickrj-check" name="flickrj-jar" if="flickrj.notexist">
+        <echo>
+Go to flickrj's download page
+http://sourceforge.net/projects/flickrj/files/
+and download flickrapi-1.2.zip.
+pickup the flickrapi-1.2.jar and put it into the ./lib/ directory.
+    </echo>
+    <fail description="Fail because of lack of flickrapi-1.2.jar." />
+    </target>
+
+    <target name="-pre-compile" depends="metaext-jar,flickrj-jar"/>
+
+    <target name="-post-compile">
+        <xslt in="material/en.xml" style="material/index.xsl" out="htdocs/index.html.en" />
+        <xslt in="material/ja.xml" style="material/index.xsl" out="htdocs/index.html.ja" />
+        <mkdir dir="htdocs/lang"/>
+        <xslt in="material/en.xml" style="material/javascript.xsl" out="htdocs/lang/en.js" />
+        <xslt in="material/ja.xml" style="material/javascript.xsl" out="htdocs/lang/ja.js" />
+    </target>
 </project>

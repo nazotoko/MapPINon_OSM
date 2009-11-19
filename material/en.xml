@@ -38,6 +38,8 @@ xmlns="http://www.w3.org/1999/xhtml">
         <m:permalink>Permalink</m:permalink>
         <m:rssTile>RSS for the photo tile</m:rssTile>
         <m:osmlink>OpenStreetMap</m:osmlink>
+        <m:potlatch>Potlatch</m:potlatch>
+        <m:josm>JOSM (using remote plugin)</m:josm>
         <m:osblink>OpenStreetBugs</m:osblink>
         <m:geofabrik>Geofabrik Map</m:geofabrik>
     </m:currentView>
@@ -49,13 +51,6 @@ xmlns="http://www.w3.org/1999/xhtml">
         <h2>Javascript not found</h2>
         <p>This application requires Javascript.<br/>Your browser doesn't support javascript or you have disabled javascript support. Please enable it to view the map.</p>
     </m:noscript>
-    <m:message>
-        <m:url>URL</m:url>
-        <m:html1>HTML link</m:html1>
-        <m:html2>HTML link 2</m:html2>
-        <m:image>Image</m:image>
-        <m:imageText>Image and ASCII</m:imageText>
-    </m:message>
     <m:javascript>
         <m:id>ID</m:id>
         <m:lat>latitude</m:lat>
@@ -77,5 +72,11 @@ xmlns="http://www.w3.org/1999/xhtml">
         <m:title_edit>Open Potlatch around this location.</m:title_edit>
         <m:action_embed>embed</m:action_embed>
         <m:title_embed>Do you want to embed a link to this marker?</m:title_embed>
+
+        <m:url>URL</m:url>
+        <m:html1>HTML link</m:html1>
+        <m:html2>HTML link 2</m:html2>
+        <m:image>Image</m:image>
+        <m:imageText>Image and ASCII</m:imageText>
     </m:javascript>
 </m:index>

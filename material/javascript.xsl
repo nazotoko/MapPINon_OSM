@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    Document   : javascript.xsl.xsl
+    Document   : javascript.xsl
     Created on : 2009/10/30, 13:01
     Author     : nazo
     Description: creating javascript message array.

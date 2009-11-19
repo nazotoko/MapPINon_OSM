@@ -71,9 +71,9 @@ standalone="yes" indent="no" version="4.0"/>
     <div id="map">
         <noscript><xsl:apply-templates select="m:noscript"/></noscript>
     </div>
-    <div id="message">
+<!--    <div id="message">
         <xsl:apply-templates select="m:message"/>
-    </div>
+    </div>-->
     </body>
 </html>
 </xsl:template>
@@ -130,7 +130,7 @@ standalone="yes" indent="no" version="4.0"/>
             <ul id="NavContext2" class="NavContent">
                 <xsl:for-each select="*">
                     <li>
-                        <a href="#">
+                        <a href="#" target="_blank">
                             <xsl:attribute name="id">
                                 <xsl:value-of select="local-name()"/>
                             </xsl:attribute>

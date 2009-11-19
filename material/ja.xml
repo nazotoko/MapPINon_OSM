@@ -29,6 +29,8 @@
         <m:permalink>パーマリンク</m:permalink>
         <m:rssTile>写真タイルのRSS</m:rssTile>
         <m:osmlink>OpenStreetMap</m:osmlink>
+        <m:potlatch>Potlatch</m:potlatch>
+        <m:josm>JOSM (remote プラグインによる)</m:josm>
         <m:osblink>OpenStreetBugs</m:osblink>
         <m:geofabrik>Geofabrik Map</m:geofabrik>
    </m:currentView>
@@ -43,13 +45,6 @@
            あなたのブラウザーは、 Javascript をサポートしていないか、あなたが無効にしています。<br/>
            この地図を見るときには、有効にしてください。</p>
     </m:noscript>
-    <m:message>
-        <m:url>URL</m:url>
-        <m:html1>HTML リンク</m:html1>
-        <m:html2>HTML リンク 2</m:html2>
-        <m:image>地図イメージ</m:image>
-        <m:imageText>地図イメージと文</m:imageText>
-    </m:message>
     <m:javascript>
         <m:id>ID</m:id>
         <m:lat>緯度</m:lat>
@@ -71,5 +66,11 @@
         <m:title_edit>この写真の位置を中心にPotlatchを開きます</m:title_edit>
         <m:action_embed>埋め込み</m:action_embed>
         <m:title_embed>あなたのブログにこのマーカーへのリンクを作りたくないですか。</m:title_embed>
+
+        <m:url>URL</m:url>
+        <m:html1>HTML リンク</m:html1>
+        <m:html2>HTML リンク 2</m:html2>
+        <m:image>地図イメージ</m:image>
+        <m:imageText>地図イメージと文</m:imageText>
     </m:javascript>
 </m:index>

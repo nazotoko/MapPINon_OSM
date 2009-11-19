@@ -33,23 +33,27 @@ is divided into following sections:
                 INITIALIZATION SECTION 
                 ======================
             -->
-    <target name="-init-private">
+    <target name="-pre-init">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the ../build.xml file. -->
+    </target>
+    <target depends="-pre-init" name="-init-private">
         <property file="nbproject/private/config.properties"/>
         <property file="nbproject/private/configs/${config}.properties"/>
         <property file="nbproject/private/private.properties"/>
     </target>
-    <target depends="-init-private" name="-init-user">
+    <target depends="-pre-init,-init-private" name="-init-user">
         <property file="${user.properties.file}"/>
         <!-- The two properties below are usually overridden -->
         <!-- by the active platform. Just a fallback. -->
         <property name="default.javac.source" value="1.4"/>
         <property name="default.javac.target" value="1.4"/>
     </target>
-    <target depends="-init-private,-init-user" name="-init-project">
+    <target depends="-pre-init,-init-private,-init-user" name="-init-project">
         <property file="nbproject/configs/${config}.properties"/>
         <property file="nbproject/project.properties"/>
     </target>
-    <target depends="-init-private,-init-user,-init-project,-init-macrodef-property" name="-do-init">
+    <target depends="-pre-init,-init-private,-init-user,-init-project,-init-macrodef-property" name="-do-init">
         <available file="${manifest.file}" property="manifest.available"/>
         <condition property="manifest.available+main.class">
             <and>
@@ -126,7 +130,7 @@ is divided into following sections:
         <!-- Empty placeholder for easier customization. -->
         <!-- You can override this target in the ../build.xml file. -->
     </target>
-    <target depends="-init-private,-init-user,-init-project,-do-init" name="-init-check">
+    <target depends="-pre-init,-init-private,-init-user,-init-project,-do-init" name="-init-check">
         <fail unless="src.dir">Must set src.dir</fail>
         <fail unless="test.src.dir">Must set test.src.dir</fail>
         <fail unless="build.dir">Must set build.dir</fail>
@@ -326,63 +330,13 @@ is divided into following sections:
             </jar>
         </presetdef>
     </target>
-    <target depends="-init-private,-init-user,-init-project,-do-init,-post-init,-init-check,-init-macrodef-property,-init-macrodef-javac,-init-macrodef-junit,-init-macrodef-nbjpda,-init-macrodef-debug,-init-macrodef-java,-init-presetdef-jar" name="init"/>
+    <target depends="-pre-init,-init-private,-init-user,-init-project,-do-init,-post-init,-init-check,-init-macrodef-property,-init-macrodef-javac,-init-macrodef-junit,-init-macrodef-nbjpda,-init-macrodef-debug,-init-macrodef-java,-init-presetdef-jar" name="init"/>
     <!--
                 ===================
                 COMPILATION SECTION
                 ===================
             -->
-    <target name="metaext-check">
-        <echo>checking</echo>
-        <mkdir dir="lib"/>
-        <condition property="metaext.notexist"><not>
-            <available file="${file.reference.metadata-extractor-2.3.1.jar}" property="metaext.exist" />
-        </not></condition>
-    </target>
-
-    <target depends="metaext-check" name="metaext-jar" if="metaext.notexist">
-        <echo>
-Now this is downloading ${file.reference.metadata-extractor-2.3.1.jar}.
-metadata-extractor is public domain. You can download it without any license,
-thought, please respect the author. Here is a message from his homepage,
-http://www.drewnoakes.com/code/exif/ .
-------------------------------------------------------------------------------
-You're free to use this code as you see fit. Please send me a short email to
-let me know if you find it useful. If you make interesting changes, mail me a
-copy and I'll include the details on this site. The continual contact with
-users and contributors of the library encourages and motivates me to keep
-making improvements. The code is protected by copyright, though only to avoid
-people selling it unmodified or copyrighting it themselves. You are free to
-sell work based upon this library, though please consider making a donation.
-
-I've posted javadoc. Though it's not very thoroughly annotated, it still gives
-an easy way to browse the class structure and members.
-    </echo>
-        <get src="http://www.drewnoakes.com/code/exif/releases/metadata-extractor-2.3.1.jar"
-        dest="${file.reference.metadata-extractor-2.3.1.jar}"
-        description="Metadata Extractor"
-        verbose="true" />
-    </target>
-
-    <target name="flickrj-check">
-        <echo>checking</echo>
-        <mkdir dir="lib"/>
-        <condition property="flickrj.notexist"><not>
-            <available file="${file.reference.flickrapi-1.2.jar}" property="flickrj.exist"/>
-        </not></condition>
-    </target>
-
-    <target depends="flickrj-check" name="flickrj-jar" if="flickrj.notexist">
-        <echo>
-Go to flickrj's download page
-http://sourceforge.net/projects/flickrj/files/
-and download flickrapi-1.2.zip.
-pickup the flickrapi-1.2.jar and put it into the ./lib/ directory.
-    </echo>
-    <fail description="Fail because of lack of flickrapi-1.2.jar." />
-    </target>
-
-    <target name="deps-jar" depends="metaext-jar,flickrj-jar"/>
+    <target depends="init" name="deps-jar" unless="no.deps"/>
     <target depends="init,-check-automatic-build,-clean-after-automatic-build" name="-verify-automatic-build"/>
     <target depends="init" name="-check-automatic-build">
         <available file="${build.classes.dir}/.netbeans_automatic_build" property="netbeans.automatic.build"/>
@@ -411,14 +365,11 @@ pickup the flickrapi-1.2.jar and put it into the ./lib/ directory.
             <fileset dir="${src.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
         </copy>
     </target>
-    <target name="htdocs-compile">
-        <xslt in="material/en.xml" style="material/index.xsl" out="htdocs/index.html.en" />
-        <xslt in="material/ja.xml" style="material/index.xsl" out="htdocs/index.html.ja" />
-        <mkdir dir="htdocs/lang"/>
-        <xslt in="material/en.xml" style="material/javascript.xsl" out="htdocs/lang/en.js" />
-        <xslt in="material/ja.xml" style="material/javascript.xsl" out="htdocs/lang/ja.js" />
+    <target name="-post-compile">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the ../build.xml file. -->
     </target>
-    <target depends="init,deps-jar,-verify-automatic-build,-pre-pre-compile,-pre-compile,-do-compile,htdocs-compile" description="Compile project." name="compile"/>
+    <target depends="init,deps-jar,-verify-automatic-build,-pre-pre-compile,-pre-compile,-do-compile,-post-compile" description="Compile project." name="compile"/>
     <target name="-pre-compile-single">
         <!-- Empty placeholder for easier customization. -->
         <!-- You can override this target in the ../build.xml file. -->
@@ -741,6 +692,9 @@ pickup the flickrapi-1.2.jar and put it into the ./lib/ directory.
         <delete dir="${build.dir}"/>
         <delete dir="${dist.dir}"/>
     </target>
-    <target name="-post-clean"/>
+    <target name="-post-clean">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the ../build.xml file. -->
+    </target>
     <target depends="init,deps-clean,-do-clean,-post-clean" description="Clean build products." name="clean"/>
 </project>

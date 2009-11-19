@@ -37,7 +37,7 @@ div.text{
 	border: 1px solid black;
 	background-color: #cbced5;
 }
-#message{
+.message{
     right:0px;
     bottom:20px;
     background:white;
