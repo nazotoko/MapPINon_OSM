@@ -15,9 +15,22 @@ echo '<?xml version="1.0" encoding="UTF-8"?>'; ?>
     <body>
         <h1>MapPIN'on OSM - Registration form of RSS</h1>
         <?php
-if($url=$_REQUEST['rss']){
+$reload=trim($_REQUEST['reload']);
+if($reload){
+    $f=fopen("data/request.txt","a");
+    fwrite($f,"reload:".$reload."\n");
+    fclose($f);
+}
+$remove=trim($_REQUEST['remove']);
+if($remove){
+    $f=fopen("data/request.txt","a");
+    fwrite($f,"remove:".$remove."\n");
+    fclose($f);
+}
+$url=$_REQUEST['rss'];
+if($url){
     $url=trim($url);
-    if(strpos($url,"http://")===0 ||strpos($url,"flickr:")===0){
+    if(strpos($url,"http://")===0||strpos($url,"flickr:")===0) {
         $f=fopen("data/new_rss.txt","a");
         fwrite($f,$url."\n");
         fclose($f);
@@ -32,6 +45,7 @@ if($url=$_REQUEST['rss']){
         <p><form action="registration.php" method="post">
             <input type="text" name="rss"/><input type="submit"/>
         </form></p>
+        <br/>
         <table><tr><th>The URL of registering RSS</th></tr>
 <?php
 if($f=@fopen("data/new_rss.txt","r")){
@@ -41,6 +55,16 @@ if($f=@fopen("data/new_rss.txt","r")){
     fclose($f);
 }
 ?>
-        </table>
+        </table><br/>
+<?php
+if($f=@fopen('data/request.txt','r')){
+    echo '<table><tr><th>Request query</th></tr>';
+    while($url=fgets($f,1500)){
+        echo '<tr><td>'.$url.'</td></tr>'."\n";
+    }
+    fclose($f);
+    echo '</table>';
+}
+?>
     </body>
 </html>

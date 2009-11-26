@@ -152,6 +152,14 @@ public class PhotoTable extends HashSet<Photo> {
         }
         return null;
     }
+    public Photo get(int id){
+        for(Photo entry:this){
+            if(entry.getId()==id){
+                return entry;
+            }
+        }
+        return null;
+    }
     /** makeing RSS, Today's new photo.
      *
      * @param os

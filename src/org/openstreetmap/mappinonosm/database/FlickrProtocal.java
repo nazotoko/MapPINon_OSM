@@ -26,6 +26,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.xml.sax.SAXException;
 
 /**
@@ -36,8 +38,10 @@ public class FlickrProtocal extends XML {
     private Flickr f=null;
     private PhotosInterface photosi;
     static private HashSet extra = new HashSet();
+    static final String base58 = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ";
     static{
         extra.add(Extras.DATE_UPLOAD);
+        extra.add(Extras.DATE_TAKEN);
         extra.add(Extras.LAST_UPDATE);
         extra.add(Extras.URL_O);
 //        extra.add(Extras.URL_T);
@@ -140,39 +144,7 @@ public class FlickrProtocal extends XML {
             photo = new org.openstreetmap.mappinonosm.database.Photo();
             photo.setXML(this);
 //                System.out.println("id: " + p.getId());
-            photo.setTitle(entity(p.getTitle()));
-            System.out.println("\ttitle: " + p.getTitle());
-            photo.setLink(encodeBase58(Long.parseLong(p.getId())));
-            System.out.println("\tlink: " + photo.getLink());
-            photo.setThumbnale(p.getThumbnailUrl());
-            System.out.println("\tthumbnail: " + p.getThumbnailUrl());
-            try {
-                photo.setOriginal(p.getOriginalUrl());
-                System.out.println("\toriginal: " + p.getOriginalUrl());
-            } catch(FlickrException ex) {
-                System.out.println("\toriginal: not avalable.");
-            }
-//            System.out.println("\ttaken:" + p.getDateTaken());
-            photo.setPublishedDate(p.getDatePosted());
-            System.out.println("\tposted:" + p.getDatePosted());
-            photo.setUpdateDate(p.getLastUpdate());
-            System.out.println("\tupdated:" + p.getLastUpdate());
-            for(Object o2: p.getTags()){
-                Tag t = (Tag)o2;
-                machineTags(t.getValue());
-                System.out.println("\ttag: " + t.getValue());
-            }
-                /*** get georss information  ***/
-            if(photo.getLat() == 0 && photo.getLon() == 0){
-                GeoData g = p.getGeoData();
-                if(g != null){
-                    photo.setLat(g.getLatitude());
-                    photo.setLon(g.getLongitude());
-                    System.out.println("\tgeorss latlon: "+g.getLatitude()+", "+g.getLongitude());
-                }
-            }
-
-            photo.setReadDate(new Date());
+            setPhotoInfo(p);
             if(photoTable.add(photo) == false){
                 org.openstreetmap.mappinonosm.database.Photo oldPhoto = photoTable.get(photo);
                 if(oldPhoto.getReadDate().compareTo(photo.getPublishedDate()) < 0){
@@ -194,6 +166,43 @@ public class FlickrProtocal extends XML {
             }
         }// end of one photo
         System.out.println("Done: Flickr API.");
+    }
+
+    private void setPhotoInfo(Photo p) {
+        photo.setTitle(entity(p.getTitle()));
+        System.out.println("\ttitle: " + p.getTitle());
+        photo.setLink(encodeBase58(Long.parseLong(p.getId())));
+        System.out.println("\tlink: " + photo.getLink());
+        photo.setThumbnale(p.getThumbnailUrl());
+        System.out.println("\tthumbnail: " + p.getThumbnailUrl());
+        try {
+            photo.setOriginal(p.getOriginalUrl());
+            System.out.println("\toriginal: " + p.getOriginalUrl());
+        } catch(FlickrException ex) {
+            System.out.println("\toriginal: not avalable.");
+        }
+        photo.setTakenDate(p.getDateTaken());
+        System.out.println("\ttaken:" + p.getDateTaken());
+        photo.setPublishedDate(p.getDatePosted());
+        System.out.println("\tposted:" + p.getDatePosted());
+        photo.setUpdateDate(p.getLastUpdate());
+        System.out.println("\tupdated:" + p.getLastUpdate());
+        for(Object o2: p.getTags()){
+            Tag t = (Tag)o2;
+            machineTags(t.getValue());
+            System.out.println("\ttag: " + t.getValue());
+        }
+        /*** get georss information  ***/
+        if(photo.getLat() == 0 && photo.getLon() == 0){
+            GeoData g = p.getGeoData();
+            if(g != null){
+                photo.setLat(g.getLatitude());
+                photo.setLon(g.getLongitude());
+                System.out.println("\tgeorss latlon: " + g.getLatitude() + ", " + g.getLongitude());
+            }
+        }
+
+        photo.setReadDate(new Date());
     }
 
     private void setExifParameters(String photoID) {
@@ -304,7 +313,6 @@ public class FlickrProtocal extends XML {
     }
 
    private String encodeBase58(long num) {
-       final String base58 = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ";
        String ret = "";
        long div;
        while(num >= 58){
@@ -313,5 +321,39 @@ public class FlickrProtocal extends XML {
            num = div;
        }
        return "http://flic.kr/p/" + base58.charAt((int)num) + ret;
+    }
+    private long decodeBase58(String s) {
+        long ret=0;
+        int i=0;
+        char c;
+        while( i < s.length()){
+            c=s.charAt(i);
+            ret+=base58.indexOf(c);
+            i++;
+            if(i < s.length()){
+                ret*=58;
+            }
+        }
+        return ret;
+    }
+    void reload(org.openstreetmap.mappinonosm.database.Photo pho) {
+        this.photo=pho;
+        String code=photo.getLink().getPath();
+
+        String flickrID = Long.toString(decodeBase58(code.substring(3)));
+        PhotosInterface pi=f.getPhotosInterface();
+        try {
+            Photo p=pi.getInfo(flickrID, null);
+            setPhotoInfo(p);
+            setExifParameters(flickrID);
+        } catch(IOException ex) {
+            Logger.getLogger(FlickrProtocal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch(SAXException ex) {
+            Logger.getLogger(FlickrProtocal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch(FlickrException ex) {
+            if(ex.getErrorCode().equals("1")){
+                photo.setDeleted(true);
+            }
+        }
     }
 }

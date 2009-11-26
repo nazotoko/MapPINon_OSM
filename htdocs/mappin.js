@@ -402,7 +402,7 @@ function refresh(){
   var bbox ='left='+(lon-0.025)+'&right='+(lon+0.025)+'&top='+(lat+0.025)+'&bottom='+(lat-0.025);
   
   if (params.zoom > 10) {
-      url=make_url(x,y);
+    url=make_url(x,y);
   }
   if(document.getElementById('NavToggle2').firstChild.data=='hide'){
     menu.views.rssTile.href='rss.php?x='+x+'&y='+y;
@@ -414,7 +414,7 @@ function refresh(){
     menu.views.geofabrik.href = "http://tools.geofabrik.de/map/"+lonlat;
   }
   if(document.getElementById('NavToggle3').firstChild.data=='hide'){
-    for(id in lang.langs){
+    for(id in menu.langs){
       menu.langs[id].href='index.html.'+id+lonlat+layers;
     }
   }
@@ -429,7 +429,7 @@ function marker_click(ev){/* "this" means feature */
         if(!this.popup.map){map.addPopup(this.popup);}
         this.popuped=true;
     }
-    document.getElementById("photoID").innerHTML = this.photo.id;
+    document.getElementById("photoID").innerHTML = '<a href="registration.php?reload='+this.photo.id+'">reload:'+this.photo.id+'</a>';
     document.getElementById("numberOfPopuping").innerHTML = map.popups.length;
     OpenLayers.Event.stop(ev);
 }

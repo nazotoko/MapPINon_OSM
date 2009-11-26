@@ -7,6 +7,7 @@ localHtdocsDir=htdocs/
 httpHtdocsDir=/
 ftpHtdocsDir=site/
 registrationFile=data/new_rss.txt
+requestFile=data/request.txt
 
 backupDir=backup/
 dataDir=data/

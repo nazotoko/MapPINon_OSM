@@ -29,6 +29,7 @@
 
 package org.openstreetmap.mappinonosm.database;
 
+import com.drew.imaging.jpeg.JpegMetadataReader;
 import com.drew.imaging.jpeg.JpegProcessingException;
 import com.drew.imaging.jpeg.JpegSegmentReader;
 import com.drew.lang.Rational;
@@ -43,14 +44,28 @@ import java.net.URL;
 import java.util.Date;
 import com.drew.metadata.exif.ExifReader;
 import com.drew.metadata.iptc.IptcReader;
+import com.sun.image.codec.jpeg.JPEGCodec;
+import com.sun.image.codec.jpeg.JPEGDecodeParam;
+import com.sun.image.codec.jpeg.JPEGImageDecoder;
+import com.sun.imageio.plugins.jpeg.JPEGImageReader;
+import com.sun.imageio.plugins.jpeg.JPEGImageReaderSpi;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.io.Reader;
+import java.net.HttpURLConnection;
 import java.net.URLConnection;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.spi.ImageReaderSpi;
 /**
  * Information of a Photo
  * @author Shun "Nazotoko" Watanabe
@@ -210,7 +225,7 @@ public class Photo {
      */
     private Date publishedDate=null;
 
-        /** the date of taking the photo
+    /** the date of taking the photo
      * <dl>
      * <dt>save</dt><dd>taken:integer</dd>
      * </dl>
@@ -233,10 +248,17 @@ public class Photo {
      */
     private ArrayList<Integer> node = null;
 
+    /**
+     * osm:gps tag. 0 means not set.
+     */
+    private int osmgps = 0;
+
     /** new flag for statistics */
     private boolean newPhoto = false;
+
     /** new flag for statistics */
     private boolean reread = false;
+
     /** new flag for statistics */
     private boolean deleted = false;
 
@@ -294,6 +316,7 @@ public class Photo {
         original=newPhoto.original;
         node=newPhoto.node;
         way=newPhoto.way;
+        osmgps = newPhoto.osmgps;
 
         if((state != STATE_BLUE || newPhoto.state == STATE_BLUE) && (newPhoto.latitude != 0 || newPhoto.longitude != 0)){
             latitude = newPhoto.latitude;
@@ -546,6 +569,9 @@ public class Photo {
         takenDate = date;
     }
 
+    /**
+     * @param id osm:node
+     */
     void addNode(int id) {
         if(node==null){
             node=new ArrayList<Integer>();
@@ -559,6 +585,9 @@ public class Photo {
         }
         way.add(id);
     }
+    void setOSMGPS(int id) {
+        osmgps=id;
+    }
 
     /** EXIF reader.
      * To run this method, before you have to set feild oringinal.
@@ -570,17 +599,26 @@ public class Photo {
         }        /* getting EXIF information */
 
         try {
+            Image ig = ImageIO.read(original);
+
             URLConnection urlc = original.openConnection();
             int offset = 0, a = 0;
             int length = urlc.getContentLength();
             byte[] buf = new byte[length];
             InputStream is = urlc.getInputStream();
-            while(length > 0){
+            JPEGImageDecoder jpegDecoder=JPEGCodec.createJPEGDecoder(is);
+            BufferedImage image = jpegDecoder.decodeAsBufferedImage();
+            JPEGDecodeParam decodeParam = jpegDecoder.getJPEGDecodeParam();
+/*            while(length > 0){
                 a = is.read(buf, offset, length);
                 length -= a;
                 offset += a;
-            }
+            }*/
             is.close();
+            if(decodeParam==null){System.err.println("NULL!");}
+            if(image.getWidth()<=100){
+                thumbnale=original;
+            }
             System.out.println("\tThe original JPEG has been loaded on memory.");
             downloadedDate = new Date();
 
@@ -589,13 +627,12 @@ public class Photo {
             double lat = 0, lon = 0;
             float f;
             String s;
-
-            JpegSegmentReader segmentReader = new JpegSegmentReader(buf);
+/*            JpegSegmentReader segmentReader = new JpegSegmentReader(buf);
             byte[] exifSegment = segmentReader.readSegment(JpegSegmentReader.SEGMENT_APP1);
-            byte[] iptcSegment = segmentReader.readSegment(JpegSegmentReader.SEGMENT_APPD);
-            metadata = new Metadata();
-            new ExifReader(exifSegment).extract(metadata);
-            new IptcReader(iptcSegment).extract(metadata);
+            byte[] iptcSegment = segmentReader.readSegment(JpegSegmentReader.SEGMENT_APPD);*/
+            metadata = JpegMetadataReader.readMetadata(decodeParam);
+/*            new ExifReader(exifSegment).extract(metadata);
+            new IptcReader(iptcSegment).extract(metadata);*/
 
             directory = metadata.getDirectory(ExifDirectory.class);
             if((s = directory.getString(ExifDirectory.TAG_SOFTWARE)) != null && s.contains("Picasa")){
@@ -608,6 +645,14 @@ public class Photo {
                     System.err.println("Error in EXIF focal length");
                 }
                 System.out.println("\tfocal length: " + focalLength);
+            }
+            if(directory.containsTag(ExifDirectory.TAG_DATETIME_ORIGINAL)){
+                try {
+                    takenDate = directory.getDate(ExifDirectory.TAG_DATETIME_ORIGINAL);
+                } catch(MetadataException ex) {
+                    System.err.println("Error in EXIF focal length");
+                }
+                System.out.println("\ttakenDate: " + takenDate);
             }
             
             directory = metadata.getDirectory(GpsDirectory.class);
@@ -625,7 +670,6 @@ public class Photo {
                 } catch(MetadataException ex) {
                     System.out.println("Program error in Photo.getEXIF. " + ex.getMessage());
                 }
-
             }
 
             if(directory.containsTag(GpsDirectory.TAG_GPS_LONGITUDE)){
@@ -695,8 +739,6 @@ public class Photo {
             }
         } catch(IOException ex) {
             System.out.println("\tURL cannot open: " + ex.getMessage());
-        } catch(JpegProcessingException ex) {
-            System.out.println("\tNo EXIF");
         }
     }
 
@@ -780,6 +822,9 @@ public class Photo {
         if(way != null){
             pw.print(",w:" + way.toString());
         }
+        if(osmgps != 0){
+            pw.print(",g:" + osmgps);
+        }
         pw.print("}");
         xml.addCount();
         return true;
@@ -836,6 +881,9 @@ public class Photo {
             }
             pw.print("]");
         }
+        if (osmgps != 0) {
+            pw.print(",g:" + osmgps);
+        }
         if (altitude != -1000) {
             pw.print(",al:" + altitude);
         }
@@ -862,6 +910,9 @@ public class Photo {
         }
         if (publishedDate != null) {
             pw.print(",published:" + publishedDate.getTime()/1000 );
+        }
+        if (takenDate != null) {
+            pw.print(",takenDate:" + takenDate.getTime()/1000 );
         }
         pw.print("}");
         return true;
@@ -916,6 +967,8 @@ public class Photo {
                 ret.downloadedDate = new Date(Long.parseLong(value) * 1000);
             } else if(key.equals("published")){
                 ret.publishedDate = new Date(Long.parseLong(value) * 1000);
+            } else if(key.equals("takenDate")){
+                ret.takenDate = new Date(Long.parseLong(value) * 1000);
             } else if(key.equals("la")){
                 ret.latitude = Double.parseDouble(value);
             } else if(key.equals("lo")){
@@ -970,6 +1023,8 @@ public class Photo {
                     s = e + 1;
                 }
                 ret.way.add(Integer.parseInt(value.substring(s)));
+            } else if(key.equals("g")){
+                ret.osmgps=Integer.parseInt(value);
             } else if(key.equals("ti")){
                 ret.title=value;
             } else if(key.equals("s")){
@@ -1049,7 +1104,20 @@ public class Photo {
     public boolean isDeleted() {
         return deleted;
     }
+    /**
+     * @param b
+     */
+    public void setDeleted(boolean b) {
+        deleted=b;
+    }
 
+    /**
+     *
+     */
+    public void reset(){
+        readDate = new Date(0);
+    }
+    
     /**
      * @param reread the reread to set
      */
@@ -1103,6 +1171,30 @@ public class Photo {
             return true;
         } else {
             return false;
+        }
+    }
+
+    public void reread() {
+        if(xml instanceof FlickrProtocal){
+            FlickrProtocal fp = (FlickrProtocal)xml;
+            fp.reload(this);
+            reread=true;
+        } else if(xml instanceof RSS){
+            try {
+                URLConnection urlc = link.openConnection();
+
+                if(urlc instanceof HttpURLConnection){
+                    HttpURLConnection httpU = (HttpURLConnection)urlc;
+                    if(httpU.getResponseCode() == 404){
+                        this.deleted = true;
+                        return;
+                    }
+                    getEXIF();
+                    reread = true;
+                }
+            } catch(IOException ex) {
+                System.out.println("IO expection at photo.reread: " + ex.getMessage());
+            }
         }
     }
 }

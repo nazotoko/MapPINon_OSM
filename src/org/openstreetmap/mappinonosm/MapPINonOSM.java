@@ -50,6 +50,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Date;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import org.openstreetmap.mappinonosm.database.HistoryTable;
@@ -79,6 +80,8 @@ public class MapPINonOSM {
 
     /** relative to domain/httpHtdocsDir */
     private String registration = null;
+    /** relative to domain/httpHtdocsDir */
+    private String request=null;
 
     /** file path  */
     private File rss_table=null;
@@ -119,6 +122,7 @@ public class MapPINonOSM {
         "localHtdocsDir",
         "ftpHtdocsDir",
         "httpHtdocsDir",
+        "requestFile"
     };
 
     /** initiallizing */
@@ -181,6 +185,9 @@ public class MapPINonOSM {
                             case 14:
                                 httpHtdocsDir=value;
                                 break;
+                            case 15:
+                                request = value;
+                                break;
                         }
                     }
                 }
@@ -219,7 +226,7 @@ public class MapPINonOSM {
         try {
             hisTable.setRoot(new URL("http", domain, httpHtdocsDir));
         } catch(MalformedURLException ex) {
-            System.err.println("the URL is illigal: "+ex.getMessage());
+            System.err.println("the URL is illigal: " + ex.getMessage());
         }
         hisTable.setBackupDir(backupdir);
         hisTable.setHistoryList(historyList);
@@ -230,12 +237,12 @@ public class MapPINonOSM {
             return;
         }
         try {
-            xmlTable.load(is=new GZIPInputStream(new FileInputStream(rss_table)));
+            xmlTable.load(is = new GZIPInputStream(new FileInputStream(rss_table)));
             is.close();
         } catch(FileNotFoundException ex) {
-            System.out.println("RSS table file '"+rss_table.getPath()+"' cannot be read.");
-        } catch(IOException ex){
-            System.out.println("RSS table file '"+rss_table.getPath()+"' cannot be closed.");
+            System.out.println("RSS table file '" + rss_table.getPath() + "' cannot be read.");
+        } catch(IOException ex) {
+            System.out.println("RSS table file '" + rss_table.getPath() + "' cannot be closed.");
         }
     }
 
@@ -307,6 +314,8 @@ public class MapPINonOSM {
                 System.out.println("got: "+s);
             }
             br.close();
+
+
         } catch(MalformedURLException ex){
             System.err.println("Strange URL: "+url); 
         } catch(URISyntaxException ex) {
@@ -318,6 +327,24 @@ public class MapPINonOSM {
     
     /** second: reading RSS */
     public void read() {
+        String s;
+        URL url = null;
+        int id;
+        try {
+            url = new URL("http", domain, httpHtdocsDir + request);
+            BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
+            while((s = br.readLine()) != null){
+                if(s.startsWith("reload")){
+                    id = Integer.parseInt(s.substring(7));
+                    photoTable.get(id).reset();
+                }
+            }
+            br.close();
+        } catch(MalformedURLException ex){
+            System.err.println("Strange URL: "+url);
+        } catch(IOException ex) {
+            System.err.println("The file cannot to be accessed. URL: "+url);
+        }
         history.setNumOfRSS(xmlTable.size());
         xmlTable.read();
     }
@@ -326,11 +353,13 @@ public class MapPINonOSM {
     public void makeTiles(){
         /** third stage: making tiles from photo database*/
         TileTable tb;
-        Tile t;
         if(dataDir!=null){
             try {
                 tb = new TileTable(new File(localHtdocsDir, dataDir));
                 for(Photo p: photoTable){
+                    if(p.getReadDate().before(new Date(System.currentTimeMillis()-365L*24L*3600000L))){
+                        p.reread();
+                    }
                     tb.addPhoto(p);
                 }
                 tb.save();// this will make number of geophoto for each xml.

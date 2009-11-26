@@ -42,7 +42,7 @@ public class TileTable extends HashMap<Integer,Tile>{
     private File baseDirectory;
 
     static public int getID(double lon,double lat){
-        return (int)Math.round(lon*20)+7200*(int)Math.round(lat*20);
+        return (int)Math.round(lon * 20) + 7200 * (int)Math.round(lat * 20);
     }
 
     /**
@@ -87,13 +87,14 @@ public class TileTable extends HashMap<Integer,Tile>{
     }
     public void upload(){
     }
-    public boolean addPhoto(Photo p){
-        double lat=p.getLat();
-        double lon=p.getLon();
-        if(lat==0&&lon==0){
+
+    public boolean addPhoto(Photo p) {
+        double lat = p.getLat();
+        double lon = p.getLon();
+        if(lat == 0 && lon == 0){
             return false;
         }
-        int id = TileTable.getID(lat, lon);
+        int id = TileTable.getID(lon, lat);
         Tile t;
         if((t = get(id)) == null){
             t = new Tile();
