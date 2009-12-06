@@ -65,7 +65,9 @@ xmlns="http://www.w3.org/1999/xhtml">
         <m:action_link>link</m:action_link>
         <m:title_link>Go to see to the publishing page of the photo.</m:title_link>
         <m:action_original>original photo</m:action_original>
-        <m:title_original>Go to see the fullsize original photo.</m:title_original>
+        <m:title_original>Get the original photo.</m:title_original>
+        <m:action_large>large photo</m:action_large>
+        <m:title_large>You cannot get original photo cannot be got though, you can get the large size photo instead of it.</m:title_large>
         <m:action_rss>RSS</m:action_rss>
         <m:title_rss>URL to the RSS registing this photo.</m:title_rss>
         <m:action_edit>Potlatch</m:action_edit>

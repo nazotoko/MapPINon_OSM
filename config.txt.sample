@@ -17,3 +17,5 @@ historyRSS=backup/history.rss
 
 flickrKey=
 flickrSecret=
+ftpUser=
+ftpPassword=

@@ -138,6 +138,14 @@ public class Photo {
      */
     private URL original=null;
 
+    /** If orignial cannot get
+     * <dl>
+     * <dt>tile</dt><dd>o:'URL'</dd>
+     * <dt>save</dt><dd>o:'URL'</dd>
+     * </dl>
+     */
+    private URL large=null;
+
     /** direct URL to thumbnale newPhoto
      * <dl>
      * <dt>tile</dt><dd>th:'URL'</dd>
@@ -272,7 +280,7 @@ public class Photo {
     @Override
     public int hashCode(){
         if(link != null){
-            return link.hashCode();
+            return link.toString().hashCode();
         }
         return 0;
     }
@@ -293,7 +301,10 @@ public class Photo {
             return false;
         }
         final Photo other = (Photo)obj;
-        return this.link.equals(other.link);
+        if(other.link==null){
+            return false;
+        }
+        return this.link.toString().equals(other.link.toString());
     }
 
     /** updating information by new information read from XML.
@@ -314,6 +325,7 @@ public class Photo {
 
         thumbnale=newPhoto.thumbnale;
         original=newPhoto.original;
+        large=newPhoto.large;
         node=newPhoto.node;
         way=newPhoto.way;
         osmgps = newPhoto.osmgps;
@@ -384,6 +396,13 @@ public class Photo {
     public URL getOriginal() {
         return original;
     }
+    /**
+     * @return large
+     */
+    public URL getLarge() {
+        return large;
+    }
+
     /** getting altitude.
      * @return altitude
      */
@@ -525,17 +544,35 @@ public class Photo {
         }
     }
     /**
-     * @param original the original to set
+     * @param original the original image to set
      */
     void setOriginal(URL original) {
         this.original = original;
     }
+    /**
+     * @param large the large image to set
+     */
+    void setLarge(URL large) {
+        this.large = large;
+    }
+
     /** Setting orignal.
      * This is only called from XML.
      */
     void setOriginal(String t) {
         try {
             setOriginal(new URL(t));
+        } catch(MalformedURLException ex) {
+            System.err.println("This is program bug. The inputed URL is strange: "+t);
+        }
+    }
+
+    /** Setting large.
+     * This is only called from XML.
+     */
+    void setLarge(String t) {
+        try {
+            setLarge(new URL(t));
         } catch(MalformedURLException ex) {
             System.err.println("This is program bug. The inputed URL is strange: "+t);
         }
@@ -607,8 +644,15 @@ public class Photo {
             byte[] buf = new byte[length];
             InputStream is = urlc.getInputStream();
             JPEGImageDecoder jpegDecoder=JPEGCodec.createJPEGDecoder(is);
-            BufferedImage image = jpegDecoder.decodeAsBufferedImage();
-            JPEGDecodeParam decodeParam = jpegDecoder.getJPEGDecodeParam();
+            BufferedImage image = null;
+            JPEGDecodeParam decodeParam=null;
+            try{
+                image = jpegDecoder.decodeAsBufferedImage();
+                decodeParam = jpegDecoder.getJPEGDecodeParam();
+            } catch(com.sun.image.codec.jpeg.ImageFormatException e) {
+                System.err.println("\toriginal is not JPEG");
+                return;
+            }
 /*            while(length > 0){
                 a = is.read(buf, offset, length);
                 length -= a;
@@ -798,6 +842,9 @@ public class Photo {
         if(original != null){
             pw.print(",o:'" + original + "'");
         }
+        if(large != null){
+            pw.print(",l:'" + large + "'");
+        }
         if(thumbnale != null){
             pw.print(",th:'" + thumbnale + "'");
         }
@@ -847,6 +894,9 @@ public class Photo {
         }
         if (original != null) {
             pw.print(",o:'" + original + "'");
+        }
+        if (large != null) {
+            pw.print(",l:'" + large + "'");
         }
         if (thumbnale != null) {
             pw.print(",th:'" + thumbnale + "'");
@@ -998,6 +1048,12 @@ public class Photo {
             } else if(key.equals("o")){
                 try {
                     ret.original = new URL(value);
+                } catch(MalformedURLException ex) {
+                    System.err.println("Illigal URL?");
+                }
+            } else if(key.equals("la")){
+                try {
+                    ret.large = new URL(value);
                 } catch(MalformedURLException ex) {
                     System.err.println("Illigal URL?");
                 }

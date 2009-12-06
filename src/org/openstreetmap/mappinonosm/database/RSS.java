@@ -89,8 +89,26 @@ public class RSS extends XML implements LexicalHandler, ContentHandler {
         if(!cdata){
             context=context.replaceAll("&lt;","<").replaceAll("&gt;", ">");
         }
-        int start=0,end=0;
+        int astart=0,start=0,end=0,aend=0;
+        String before;
+        boolean thumb=false;
         while((start=context.indexOf("<img ",end))>0){
+            before=context.substring(end, start);
+            if((astart = before.lastIndexOf("<a "))>0 && before.indexOf("</a>",astart+3)<0){
+                if((aend = before.indexOf("href=", astart + 3)) > 0){
+                    if(before.charAt(aend + 5) == '"'){
+                        astart = aend + 6;
+                        aend = before.indexOf('"', astart);
+                        String s = before.substring(astart, aend);
+                        try {
+                            urls.add(new URL(s));
+                            thumb=true;
+                        } catch(MalformedURLException ex) {
+                            System.out.println("Illigal URL for <a>: " + s);
+                        }
+                    }
+                }
+            }
             if((end = context.indexOf("src=", start + 5))>0){
                 if(context.charAt(end + 4) == '"'){
                     start = end + 5;
@@ -99,7 +117,7 @@ public class RSS extends XML implements LexicalHandler, ContentHandler {
                     try {
                         urls.add(new URL(s));
                     } catch(MalformedURLException ex) {
-                        System.out.println("Illigal URL: "+s);
+                        System.out.println("Illigal URL for <img>: "+s);
                     }
                 }
             }
@@ -191,6 +209,9 @@ public class RSS extends XML implements LexicalHandler, ContentHandler {
                     }*/
                     if(urls.length==1){
                         photo.setOriginal(urls[0]);
+                    } else if(urls.length == 2){
+                        photo.setOriginal(urls[0]);
+                        photo.setThumbnale(urls[1]);
                     }
                 }
                 if(photoTable.add(photo) == false){
@@ -201,6 +222,7 @@ public class RSS extends XML implements LexicalHandler, ContentHandler {
                         photoTable.add(photo);
                         photo.setReread(true);
                         photo.getEXIF();
+                        photo.setReread(true);
                         System.out.println("\tThe JPEG is replaced! photo ID: " + photo.getId());
                     } else {
                         oldPhoto.upDate(photo);

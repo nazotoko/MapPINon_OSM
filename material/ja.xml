@@ -12,9 +12,11 @@
         <p><a href="http://www.openstreetmap.org">OpenStreetMap</a>
         の地図上にRSSから得た写真のリンクを載せます。</p>
         <p><span class="warn">著作権で保護されている地図より得たGeoタグデータを付けた写真を
-        置かないでください。</span> 例えば、Google Mapsのような地図を見て付けたものは駄目です。
-        GPSを使って付けたタグか、
-        <a href="http://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA</a>
+        置かないでください。</span> 例えば、Google MapsやYahoo!マップのような地図を
+        見て付けたものは駄目です。写真アルバムサイトはそのような著作権付きの地図によってタグ付けする
+        機能を用意している事がありますが、使わないでください。
+        GPSを使って付けたタグか、OpenStreetMap を初めとする
+        <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA</a>
         ライセンスと互換性のある地図によって付けたものにしてください。</p>
         <p>写真を見るには、マーカーをクリックしてください。</p>
     </m:text>
@@ -59,7 +61,9 @@
         <m:action_link>リンク</m:action_link>
         <m:title_link>作者の写真を公開しているページに行きます</m:title_link>
         <m:action_original>元写真</m:action_original>
-        <m:title_original>フルサイズの写真を取りにいきます</m:title_original>
+        <m:title_original>オリジナルの写真を取りにいきます</m:title_original>
+        <m:action_large>大写真</m:action_large>
+        <m:title_large>オリジナルが取得できないですが、代わりに大きいサイズの写真を取りにいきます</m:title_large>
         <m:action_rss>RSS</m:action_rss>
         <m:title_rss>この写真が登録されているRSSへのURL</m:title_rss>
         <m:action_edit>Potlatch</m:action_edit>

@@ -16,6 +16,8 @@ The background server depends on
 ** put metadata-extractor-2.3.1.jar into lib/
 * Flickrj ( http://flickrj.sourceforge.net/ )
 ** put flickrapi-1.2.jar into lib/
+* EDTftp/j (http://www.enterprisedt.com/products/edtftpj/ )
+** put edtftpk.jar into lib/
 
 The foreground server depends on nothing special. If you are not publishing
 data, you don't need http server. You can run the index.html.* file on your

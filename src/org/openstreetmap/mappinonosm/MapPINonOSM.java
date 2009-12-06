@@ -29,13 +29,14 @@
 
 package org.openstreetmap.mappinonosm;
 
+import com.enterprisedt.net.ftp.FTPException;
+import com.enterprisedt.net.ftp.FileTransferClient;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openstreetmap.mappinonosm.database.PhotoTable;
 import org.openstreetmap.mappinonosm.database.Photo;
-import org.openstreetmap.mappinonosm.database.Tile;
 import org.openstreetmap.mappinonosm.database.XMLTable;
 import org.openstreetmap.mappinonosm.database.TileTable;
 import java.io.FileNotFoundException;
@@ -74,7 +75,10 @@ public class MapPINonOSM {
 
     /** ftp Directory */
     private String ftpHtdocsDir=null;
-
+    /** ftp user name */
+    private String ftpUser = null;
+    /** ftp password */
+    private String ftpPassword = null;
     /** http Directory */
     private String httpHtdocsDir=null;
 
@@ -122,7 +126,9 @@ public class MapPINonOSM {
         "localHtdocsDir",
         "ftpHtdocsDir",
         "httpHtdocsDir",
-        "requestFile"
+        "requestFile",
+        "ftpUser",
+        "ftpPassword"
     };
 
     /** initiallizing */
@@ -187,6 +193,12 @@ public class MapPINonOSM {
                                 break;
                             case 15:
                                 request = value;
+                                break;
+                            case 16:
+                                ftpUser = value;
+                                break;
+                            case 17:
+                                ftpPassword = value;
                                 break;
                         }
                     }
@@ -324,9 +336,7 @@ public class MapPINonOSM {
             System.err.println("The file cannot to be accessed. URL: "+url);
         }
     }
-    
-    /** second: reading RSS */
-    public void read() {
+    public void reload(){
         String s;
         URL url = null;
         int id;
@@ -345,6 +355,10 @@ public class MapPINonOSM {
         } catch(IOException ex) {
             System.err.println("The file cannot to be accessed. URL: "+url);
         }
+    }
+
+    /** second: reading RSS */
+    public void read() {
         history.setNumOfRSS(xmlTable.size());
         xmlTable.read();
     }
@@ -485,6 +499,36 @@ public class MapPINonOSM {
             }
         }
     }
+    private void upload() throws IOException, FTPException {
+        if(ftpUser==null || ftpPassword==null){
+            System.out.println("Files cannot be uploaded because of lack of setting.");
+            return;
+        }
+        FileTransferClient ftc=new FileTransferClient();
+        ftc.setRemoteHost(domain);
+        ftc.setUserName(ftpUser);
+        ftc.setPassword(ftpPassword);
+        ftc.connect();
+        ftc.changeDirectory(ftpHtdocsDir);
+        ftc.uploadFile(new File(localHtdocsDir, rssList).toString(), rssList);
+        ftc.uploadFile(new File(localHtdocsDir, "newPhoto.rss").toString(), "newPhoto.rss");
+
+        ftc.changeDirectory("backup");
+        ftc.uploadFile(new File(localHtdocsDir, historyList).toString(), "index.html");
+        ftc.uploadFile(new File(localHtdocsDir, historyRSS).toString(), "history.rss");
+        String backupName = history.getBackupFileName();
+        ftc.uploadFile(new File(new File(localHtdocsDir,backupdir),backupName).toString(), backupName);
+
+        ftc.changeToParentDirectory();
+        ftc.changeDirectory("data");
+        File fileDataDir=new File(localHtdocsDir,dataDir);
+        for(String f: fileDataDir.list()){
+            System.out.println("Uploading: " + f);
+            ftc.uploadFile(new File(fileDataDir, f).toString(), request);
+        }
+        ftc.disconnect();
+        return;
+    }
     /**
      * show usage and exit
      */
@@ -508,10 +552,11 @@ public class MapPINonOSM {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    static public void main(String[] args) {
         if(args.length==0){
             usage();
         }
+
         System.err.println("=========== Loading data tables ===========");
         MapPINonOSM database = new MapPINonOSM();
         if(args[0].equals("remove")){
@@ -535,15 +580,26 @@ public class MapPINonOSM {
         }
         if(args[0].endsWith("read") || args[0].equals("loop") || args[0].equals("remove")){
             System.err.println("=========== Starting to downloading RSSes and photo files ===========");
+            database.reload();
             database.read();
         }
         if(args[0].endsWith("tile") || args[0].equals("loop") || args[0].equals("remove")){
             System.err.println("=========== Starting to make tiles ===========");
             database.makeTiles();
         }
-        if(args[0].endsWith("upload") || args[0].equals("loop") || args[0].equals("remove")){
-        }
         System.err.println("=========== Saving data tables ===========");
         database.save();
+
+        if(args[0].endsWith("upload") || args[0].equals("loop") || args[0].equals("remove")){
+            System.err.println("=========== Starting to upload tiles ===========");
+            try {
+                database.upload();
+            } catch(IOException ex) {
+                System.out.println("IOEXpection when uploading:"+ex.getMessage());
+            } catch(FTPException ex) {
+                System.out.println("FTPEXpection when uploading:"+ex.getMessage());
+            }
+        }
     }
+
 }

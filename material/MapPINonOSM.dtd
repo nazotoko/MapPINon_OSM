@@ -65,7 +65,7 @@
 <!ELEMENT m:geofabrik (#PCDATA)>
 
 <!--- This is for javascript messages. -->
-<!ELEMENT m:javascript (m:id,m:lat,m:lon,m:alt,m:av,m:here_is,m:try_to_tag,m:thumbnail,m:no_thumb,m:action_link,m:title_link,m:action_original,m:title_original,m:action_rss,m:title_rss,m:action_edit,m:title_edit,m:action_embed,m:title_embed,m:url,m:html1,m:html2,m:image,m:imageText)>
+<!ELEMENT m:javascript (m:id,m:lat,m:lon,m:alt,m:av,m:here_is,m:try_to_tag,m:thumbnail,m:no_thumb,m:action_link,m:title_link,m:action_original,m:title_original,m:action_large,m:title_large,m:action_rss,m:title_rss,m:action_edit,m:title_edit,m:action_embed,m:title_embed,m:url,m:html1,m:html2,m:image,m:imageText)>
 <!ELEMENT m:thumbnail (#PCDATA)>
 <!ELEMENT m:no_thumb (#PCDATA)>
 <!ELEMENT m:id (#PCDATA)>
@@ -83,6 +83,8 @@
 <!ELEMENT m:title_link (#PCDATA)>
 <!ELEMENT m:action_original (#PCDATA)>
 <!ELEMENT m:title_original (#PCDATA)>
+<!ELEMENT m:action_large (#PCDATA)>
+<!ELEMENT m:title_large (#PCDATA)>
 <!ELEMENT m:action_rss (#PCDATA)>
 <!ELEMENT m:title_rss (#PCDATA)>
 <!ELEMENT m:action_edit (#PCDATA)>

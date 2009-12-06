@@ -30,7 +30,6 @@
 package org.openstreetmap.mappinonosm.database;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -43,6 +42,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TreeSet;
+import java.util.Iterator;
 
 /**
  *
@@ -111,8 +111,13 @@ public class HistoryTable extends TreeSet <History>{
             pw.println("<lastBuildDate>" + new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.UK).format(new Date()) + "</lastBuildDate>");
             pw.println("<link>"+getRoot()+historyList+"</link>");
             pw.println("<language>en</language>");
-            for(History h:this){
-                h.toRSS(pw,getRoot()+backupDir);
+            History h;
+            int i=0;
+            Iterator <History> it=iterator();
+            while(it.hasNext() && i < 7){
+                h = it.next();
+                h.toRSS(pw, getRoot() + backupDir);
+                i++;
             }
             pw.println("</channel>");
             pw.println("</rss>");
@@ -144,7 +149,11 @@ public class HistoryTable extends TreeSet <History>{
             pw.print("<th># of photos reread</th>");
             pw.println("</tr>");
             boolean odd = true;
-            for(History h: this){
+            History h;
+            int i=0;
+            Iterator <History> it=iterator();
+            while(it.hasNext() && i < 7){
+                h = it.next();
                 pw.print("<tr");
                 if(odd){
                     pw.print(">");
@@ -155,6 +164,7 @@ public class HistoryTable extends TreeSet <History>{
                 }
                 h.toHTML(pw, getRoot() + backupDir);
                 pw.println("</tr>");
+                i++;
             }
             pw.println("</table>");
             pw.println("<p><a href=\"/index.html\">back to the map</a>, <a href=\"/blog/\">go to the blog</a></p></body></html>");

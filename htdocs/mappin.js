@@ -206,7 +206,11 @@ function popup_open_photo(photo){
     }
     text+='</ul></td></tr></table><ul class="commands">';
     if(photo.link) text+='<li><a target="_blank" title="'+message.title_link+'" href="'+photo.link+'">'+message.action_link+'</a></li>';
-    if(photo.original) text+='<li><a target="_blank" title="'+message.title_original+'" href="'+photo.original+'">'+message.action_original+'</a></li>';
+    if(photo.original){
+        text+='<li><a target="_blank" title="'+message.title_original+'" href="'+photo.original+'">'+message.action_original+'</a></li>';
+    } else if(photo.l){
+        text+='<li><a target="_blank" title="'+message.title_large+'" href="'+photo.l+'">'+message.action_large+'</a></li>';
+    }
     if(photo.rss) text+= '<li><a target="_blank" title="'+message.title_rss+'" href="'+photo.rss+'">'+message.action_rss+'</a></li>';
     if(photo.state!=2)text+= '<li><a target="_blank" title="'+message.title_edit+'" href="http://www.openstreetmap.org/edit?lat='+photo.lat+'&amp;lon='+photo.lon+'&amp;zoom=17">'+message.action_edit+'</a></li>';
     text+='<li><a href="javascript:embedBox.embed('+photo.id+')" title="'+message.title_embed+'" >'+message.action_embed+'</a></li>';
@@ -273,6 +277,7 @@ function AJAXI(photos_i){
         thumb: photo_i.th,
         link: photo_i.li,
         original: photo_i.o,
+        l: photo_i.l,
         state: photo_i.s,
         node: photo_i.n,
         way: photo_i.w,

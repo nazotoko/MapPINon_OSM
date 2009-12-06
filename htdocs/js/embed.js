@@ -6,9 +6,15 @@ embedBox.embed= function(id){
     var layers=params.layers;
     this.ref=domain+server_path+'?lat='+this.lat+'&lon='+this.lon+'&zoom='+this.zoom+'&layers='+layers+"&id="+id;
     this.div.style.display='block';
-    this.embed2('a');
+    this.embed2();
 };
-embedBox.embed2=function(s) {
+embedBox.embed2=function() {
+    var obj=this.div.getElementsByTagName("input");
+    for (var i = 0; obj.length > i; i++) {
+        if (obj.item(i).checked) {
+            s=obj.item(i).value;
+        }
+    }
     if(s=="a") this.box.value=this.ref;
     if(s=="h") this.box.value='<a href="'+this.ref+'">See it on OpenStreetMap.</a>';
     if(s=="H") this.box.value='<a href="'+this.ref+'">lat='+this.lat+', lon='+this.lon+'</a>';
@@ -29,9 +35,10 @@ embedBox.init=function (){
     var kind=document.createElement("input");
     kind.name='kind';
     kind.type='radio';
-    kind.value="ascii";
+    kind.value="a";
+    kind.checked=true;
     kind.onclick=function(){
-        embedBox.embed2('a')
+        embedBox.embed2();
     };
     this.div.appendChild(kind);
     this.div.appendChild(document.createTextNode(message.url));
@@ -40,9 +47,9 @@ embedBox.init=function (){
     kind=document.createElement("input");
     kind.name='kind';
     kind.type='radio';
-    kind.value="html";
+    kind.value="h";
     kind.onclick=function(){
-        embedBox.embed2('h')
+        embedBox.embed2();
     };
     this.div.appendChild(kind);
     this.div.appendChild(document.createTextNode(message.html1));
@@ -51,9 +58,9 @@ embedBox.init=function (){
     kind=document.createElement("input");
     kind.name='kind';
     kind.type='radio';
-    kind.value="html2";
+    kind.value="H";
     kind.onclick=function(){
-        embedBox.embed2('H')
+        embedBox.embed2();
     };
     this.div.appendChild(kind);
     this.div.appendChild(document.createTextNode(message.html2));
@@ -62,9 +69,9 @@ embedBox.init=function (){
     kind=document.createElement("input");
     kind.name='kind';
     kind.type='radio';
-    kind.value="map";
+    kind.value="O";
     kind.onclick=function(){
-        embedBox.embed2('O')
+        embedBox.embed2();
     };
     this.div.appendChild(kind);
     this.div.appendChild(document.createTextNode(message.image));
@@ -73,9 +80,9 @@ embedBox.init=function (){
     kind=document.createElement("input");
     kind.name='kind';
     kind.type='radio';
-    kind.value="MnA";
+    kind.value="OA";
     kind.onclick=function(){
-        embedBox.embed2('OA')
+        embedBox.embed2();
     };
     this.div.appendChild(kind);
     this.div.appendChild(document.createTextNode(message.imageText));
@@ -93,7 +100,7 @@ embedBox.init=function (){
     kind.style.top="14px";
     kind.style.zindex="1";
     kind.onclick=function(){
-        embedBox.div.style.display='none'
+        embedBox.div.style.display='none';
     };
     this.div.appendChild(kind);
 

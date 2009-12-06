@@ -44,7 +44,7 @@ public class FlickrProtocal extends XML {
         extra.add(Extras.DATE_TAKEN);
         extra.add(Extras.LAST_UPDATE);
         extra.add(Extras.URL_O);
-//        extra.add(Extras.URL_T);
+        extra.add(Extras.URL_L);
         extra.add(Extras.MACHINE_TAGS);
         extra.add(Extras.TAGS);
         extra.add(Extras.GEO);
@@ -80,7 +80,11 @@ public class FlickrProtocal extends XML {
 
         System.out.println("Flickr's API: "+s);
         try {
-            link = new URL("http://flic.kr/" + s);
+            if(s.startsWith("tags")){
+                link = new URL("http://flic.kr/tags/" + s);
+            } else {
+                link = new URL("http://flic.kr/" + s);
+            }
         } catch(MalformedURLException ex) {
             System.out.println("This is invaild. ");
             return null;
@@ -180,6 +184,7 @@ public class FlickrProtocal extends XML {
             System.out.println("\toriginal: " + p.getOriginalUrl());
         } catch(FlickrException ex) {
             System.out.println("\toriginal: not avalable.");
+            photo.setLarge(p.getLargeUrl());
         }
         photo.setTakenDate(p.getDateTaken());
         System.out.println("\ttaken:" + p.getDateTaken());
