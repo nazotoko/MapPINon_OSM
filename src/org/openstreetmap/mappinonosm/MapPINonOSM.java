@@ -524,7 +524,7 @@ public class MapPINonOSM {
         File fileDataDir=new File(localHtdocsDir,dataDir);
         for(String f: fileDataDir.list()){
             System.out.println("Uploading: " + f);
-            ftc.uploadFile(new File(fileDataDir, f).toString(), request);
+            ftc.uploadFile(new File(fileDataDir, f).toString(), f);
         }
         ftc.disconnect();
         return;

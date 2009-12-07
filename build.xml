@@ -77,7 +77,25 @@ pickup the flickrapi-1.2.jar and put it into the ./lib/ directory.
     <fail description="Fail because of lack of flickrapi-1.2.jar." />
     </target>
 
-    <target name="-pre-compile" depends="metaext-jar,flickrj-jar"/>
+    <target name="-edtftpj-check">
+        <echo>checking existance of edtftpj.jar</echo>
+        <mkdir dir="lib"/>
+        <condition property="edtftpj.notexist"><not>
+            <available file="${file.reference.edtftpj.jar}" property="edtftpj.exist" />
+        </not></condition>
+    </target>
+
+    <target depends="-edtftpj-check" name="edtftpj-jar" if="edtftpj.notexist">
+        <echo>
+Go to EDTftp/j's product page
+http://www.enterprisedt.com/products/edtftpj/
+and download edtftpj.zip.
+Pickup the edtftpj.jar from it and put it into the ./lib/ directory.
+    </echo>
+    <fail description="Fail because of lack of edtftpj.jar." />
+    </target>
+
+    <target name="-pre-compile" depends="metaext-jar,flickrj-jar,edtftpj-jar"/>
 
     <target name="-post-compile">
         <xslt in="material/en.xml" style="material/index.xsl" out="htdocs/index.html.en" />

@@ -159,6 +159,7 @@ public class XMLTable extends HashSet<XML>{
             System.err.println("Program error in XMLTable.save()." + ex.getMessage());
         }
     }
+
     /**
      * read RSSes in the database
      */
@@ -167,6 +168,7 @@ public class XMLTable extends HashSet<XML>{
             x.read();
         }
     }
+
     public int toHTML(OutputStream os){
         PrintWriter pw = null;
         int numberOfPhotos=0;
@@ -180,7 +182,7 @@ public class XMLTable extends HashSet<XML>{
             pw.println("<h1>List of resistered RSSes</h1>");
             pw.println("<p><a href=\"index.html\">back to the map</a>, <a href=\"blog/\">go to the blog</a></p>");
             pw.println("<p>Timezone of timestamps are of UTC.</p>");
-            pw.println("<table><tr><th>ID</th><th>Number of photos registered</th><th>Title</th><th>URI</th><th>Read date</th><th>Registed date</th></tr>");
+            pw.println("<table><tr><th>ID</th><th>Number of photos registered</th><th>Title</th><th>URI</th><th>The last publising date</th><th>Registed date</th></tr>");
             boolean odd = true;
             XML[] xmls = toArray(new XML[size()]);
             Arrays.sort(xmls);

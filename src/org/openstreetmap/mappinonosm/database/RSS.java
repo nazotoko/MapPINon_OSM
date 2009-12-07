@@ -216,7 +216,7 @@ public class RSS extends XML implements LexicalHandler, ContentHandler {
                 }
                 if(photoTable.add(photo) == false){
                     Photo oldPhoto = photoTable.get(photo);
-                    if(oldPhoto.getReadDate().compareTo(photo.getPublishedDate()) < 0){
+                    if(oldPhoto.getReadDate().before(photo.getPublishedDate())){
                         photo.setId(oldPhoto.getId());
                         photoTable.remove(oldPhoto);
                         photoTable.add(photo);
@@ -236,7 +236,11 @@ public class RSS extends XML implements LexicalHandler, ContentHandler {
                 photo = null;
             } else if(qualifiedName.equals("pubDate")){
                 try {
-                    photo.setPublishedDate(rssDateFormat.parse(textBuffer));
+                    Date photoPublishedDate = rssDateFormat.parse(textBuffer);
+                    photo.setPublishedDate(photoPublishedDate);
+                    if(photoPublishedDate.after(readDate)){
+                        readDate = photoPublishedDate;
+                    }
                     System.out.println("\tdate:" + photo.getPublishedDate());
                 } catch (ParseException ex) {
                     System.out.println("\tfail to parse date! original is :"+textBuffer);
@@ -279,7 +283,7 @@ public class RSS extends XML implements LexicalHandler, ContentHandler {
     @Override
     public void endDocument() throws SAXException {
         System.out.println("RSS Done");
-        readDate = new Date();
+//        readDate = new Date();
     }
 
     @Override

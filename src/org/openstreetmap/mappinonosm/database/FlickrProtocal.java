@@ -93,7 +93,6 @@ public class FlickrProtocal extends XML {
         title="Flickr photos";
         try { //if the sercg condition is invalld
             if(readDate!=null)sp.setMinUploadDate(readDate);
-            readDate = new Date();
             for(int i = 0; i < args.length; i++){
                 if(args[i].startsWith("tags")){
                     System.out.println("tags: " + args[i + 1]);
@@ -188,7 +187,11 @@ public class FlickrProtocal extends XML {
         }
         photo.setTakenDate(p.getDateTaken());
         System.out.println("\ttaken:" + p.getDateTaken());
-        photo.setPublishedDate(p.getDatePosted());
+        Date photoPosted = p.getDatePosted();
+        photo.setPublishedDate(photoPosted);
+        if(photoPosted.after(readDate)){
+            readDate = photoPosted;
+        }
         System.out.println("\tposted:" + p.getDatePosted());
         photo.setUpdateDate(p.getLastUpdate());
         System.out.println("\tupdated:" + p.getLastUpdate());
