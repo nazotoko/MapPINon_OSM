@@ -77,4 +77,28 @@
         <m:image>地図イメージ</m:image>
         <m:imageText>地図イメージと文</m:imageText>
     </m:javascript>
+    <m:php>
+        <m:registration>RSSの登録フォーム</m:registration>
+        <m:agreement_t>同意してください</m:agreement_t>
+        <m:agreement><![CDATA[
+            <p>あなた(写真の作者)は、あなたの写真のRSSを登録する前に、次の条件に同意しなければいけません。</p>
+            <dl>
+                <dt>あなたが提供するRSSにリストされている写真のファイル(JPEG) は必ず公開されていなければいけません。</dt>
+                <dd>この「公開されている」とは、標準的ブラウザーを使って誰でもhttp プロトコールで
+                写真にアクセスできると言う意味です。パブリックドメイン(著作権の放棄)や著作権の移譲を
+                求めているわけではありません。あなたの写真に関する権利は、保持されています。</dd>
+                <dt>あなたは、あなたの写真が
+                <a href="http://www.openstreetmap.org/">OpenStreetMap</a>
+                を描くのに必要な、情報源や参考資料として使われることを許す必要があります。</dt>
+                <dd>OpenStreetMap 貢献者に、写真に対するリンクを書くことで参考資料や情報源としてあなたの写真を使うことを許可してください。</dd>
+                <dt>上記の条件に同意するために、全ての写真の著作権を保持するか、許可を取得してください。</dt>
+                <dd>要するに、「許可なしに他人の写真を登録しないでください。」</dd>
+            </dl>
+            <p>同意できるなら、MapPIN&apos;on OSM に、表示したいと思う写真ブログサイトの
+            RSSのURLを入力してください。</p>
+        ]]></m:agreement>
+        <m:agree>同意して登録</m:agree>
+        <m:success>リストされました。つぎの更新まで待ってください。</m:success>
+        <m:fail>URL に見えません。</m:fail>
+    </m:php>
 </m:index>

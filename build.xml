@@ -103,5 +103,7 @@ Pickup the edtftpj.jar from it and put it into the ./lib/ directory.
         <mkdir dir="htdocs/lang"/>
         <xslt in="material/en.xml" style="material/javascript.xsl" out="htdocs/lang/en.js" />
         <xslt in="material/ja.xml" style="material/javascript.xsl" out="htdocs/lang/ja.js" />
+        <xslt in="material/en.xml" style="material/php.xsl" out="htdocs/lang/en.php" />
+        <xslt in="material/ja.xml" style="material/php.xsl" out="htdocs/lang/ja.php" />
     </target>
 </project>

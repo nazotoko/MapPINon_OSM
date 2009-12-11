@@ -26,7 +26,7 @@
 <!ELEMENT br EMPTY>
 
 <!-- MapPINonOSM messages m: -->
-<!ELEMENT m:index (m:text,m:menu,m:currentView,m:ie6,m:noscript,m:javascript)>
+<!ELEMENT m:index (m:text,m:menu,m:currentView,m:ie6,m:noscript,m:javascript,m:php)>
 <!ATTLIST m:index
     lang CDATA #REQUIRED
     in_native CDATA #REQUIRED
@@ -98,3 +98,12 @@
 <!ELEMENT m:html2 (#PCDATA)>
 <!ELEMENT m:image (#PCDATA)>
 <!ELEMENT m:imageText (#PCDATA)>
+
+<!--- This is for php script messages. -->
+<!ELEMENT m:php (m:registration,m:agreement_t,m:agreement,m:agree,m:success,m:fail)>
+<!--<!ELEMENT m:registration (#PCDATA)>-->
+<!ELEMENT m:agreement_t (#PCDATA)>
+<!ELEMENT m:agreement (#PCDATA)>
+<!ELEMENT m:agree (#PCDATA)>
+<!ELEMENT m:success (#PCDATA)>
+<!ELEMENT m:fail (#PCDATA)>

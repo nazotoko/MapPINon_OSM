@@ -81,4 +81,75 @@ xmlns="http://www.w3.org/1999/xhtml">
         <m:image>Image</m:image>
         <m:imageText>Image and ASCII</m:imageText>
     </m:javascript>
+    <m:php>
+        <m:registration>Registration form of RSS</m:registration>
+        <m:agreement_t>Agreement</m:agreement_t>
+        <m:agreement><![CDATA[
+            <p>You, author of photos, need to agree the follow terms before
+            registering your RSS for your photos.</p>
+            <dl>
+                <dt>All your photo files (JPEGs) listed in your providing RSS must be
+                in public.</dt>
+                <dd>"In public" means that anyone can access your photo by
+                http protocol used by standard web browsers. It doesn&apos;t means
+                public domain or copyright transforming.
+                Your rights for your photograph are reserved.</dd>
+                <dt>You need to allow your photos to be used as sources and
+                references for drawing
+                <a href="http://www.openstreetmap.org/">OpenStreetMap</a>.</dt>
+                <dd>Please allow OpenStreetMap contributors to use your photo
+                as a reference or a source with a link to the photo.</dd>
+                <dt>You need to hold your own copyright or a license for all
+                the photos to agree those terms above.</dt>
+                <dd>It means that "DO NOT register others&apos; photos without
+                license".</dd>
+            </dl>
+            <p>Input URL of a RSS of your photo blog site that you want to show
+            on MapPIN&apos;on OSM if you agree the above.</p>
+        ]]></m:agreement>
+        <m:agree>agree and submit</m:agree>
+        <m:success>It have been listed. Wait the next updating.</m:success>
+        <m:fail>It doesnt look a URL.</m:fail>
+        <m:duty title="Duty"><![CDATA[
+            "MapPIN&apos;on OSM" respects all rights of photographers.
+            "MapPIN&apos;on OSM" promises following items.
+            Anyone can claim if those are not kept.
+            <dl>
+                <dt>"MapPIN&apos;on OSM" keeps to link back to authors&apos; photos.</dt>
+                <dd>"MapPIN&apos;on OSM" itself does not copy, republish files except EXIF tag part.
+                It just hold links to authors&apos; photos.
+                It also assists OpenStreetMap contributors to add a source tag.</dd>
+                <dt>"MapPIN&apos;on OSM" itself does not restrict license and copyright of authors&apos; photo files at all.</dt>
+                <dd>Because "MapPIN&apos;on OSM" itself does not make any creative work.
+                If you want to stop publishing your photos, "MapPIN&apos;on OSM" also will
+                remove links to your photo files.
+                </dd>
+            </dl>
+        ]]></m:duty>
+        <m:declaimer title="Desclaimer"><![CDATA[
+            "MapPIN&apos;on OSM" does not take any responsibility about the following items.
+            <dl>
+                <dt>Privacy issue of photos introduced by "MapPIN&apos;on OSM".</dt>
+                <dd>"MapPIN&apos;on OSM" does not take any resposibility for privacy
+                information shown in your photos. "MapPIN&apos;on OSM" is just a
+                introducing site not a publishing site. All the legal
+                responsibility on a photo should be taken by an author of the photo.
+                but the author of photo can clime "MapPIN&apos;on OSM" to stop to
+                introducing the photo. Take contact to the author first.</dd>
+
+                <dt>Copyright violations of photos introduced by "MapPIN&apos;on OSM".</dt>
+                <dd>Because of the same reason with privacy issue. By this case,
+                true copyright holder can clime to MapPIN&apos;on OSM to stop to
+                introduce it, too.</dd>
+
+                <dt>Any other unlawful photos to be publish.</dt>
+                <dd>MapPIN&apos;on OSM does not check all photos introduced.
+                Sometimes you may find unlawful photos. Anyone can report them to
+                MapPIN&apos;on OSM to be removed from "MapPIN&apos;on OSM".
+                However, "MapPIN&apos;on OSM" does not take responsibility
+                for any damage by those photos, because "MapPIN&apos;on OSM" is not
+                the author, the publisher nor the photographer.</dd>
+            </dl>
+        ]]></m:declaimer>
+    </m:php>
 </m:index>

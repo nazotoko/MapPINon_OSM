@@ -40,3 +40,10 @@ td.number {
 strong{
     color: red;
 }
+dt{
+    font-weight:bold;
+    display:list-item;
+    list-style-position:inside;
+    list-style-type:disc;
+    margin-top: 1em;
+}
