@@ -21,21 +21,28 @@
         <p>写真を見るには、マーカーをクリックしてください。</p>
     </m:text>
     <m:menu title="メニュー">
-        <m:blog>MapPIN'on OSM ブログ</m:blog>
         <m:registration>あなたの写真ブログなどのRSSの登録フォーム</m:registration>
         <m:rssList>登録されているRSS リスト</m:rssList>
         <m:history>統計の遍歴</m:history>
         <m:newPhoto>今日の新しい写真 (MapPIN'on OSM 発のRSS)</m:newPhoto>
     </m:menu>
-    <m:currentView title="現在のビューに対する:">
+    <m:edit title="編集">
+        <m:potlatch>Potlatch</m:potlatch>
+        <m:josm>JOSM (remote プラグインによる)</m:josm>
+        <m:josm_w>JOSM (Web Start)</m:josm_w>
+    </m:edit>
+    <m:currentView title="ビュー">
         <m:permalink>パーマリンク</m:permalink>
         <m:rssTile>写真タイルのRSS</m:rssTile>
         <m:osmlink>OpenStreetMap</m:osmlink>
-        <m:potlatch>Potlatch</m:potlatch>
-        <m:josm>JOSM (remote プラグインによる)</m:josm>
         <m:osblink>OpenStreetBugs</m:osblink>
         <m:geofabrik>Geofabrik Map</m:geofabrik>
    </m:currentView>
+   <m:help title="ヘルプ">
+        <m:toc page_id="51">目次</m:toc>
+        <m:blog>ブログ</m:blog>
+        <m:wiki name="Ja:MapPIN'on_OSM">OpenStreetMap wiki (MapPIN'on OSM)</m:wiki>
+   </m:help>
    <m:ie6><![CDATA[
   <h4>あなたのブラウザーは、時代遅れだって知ってました?</h4>
   <p>私たちのウェブサイトを最良の状態での使用を体験してもらうために、あなたのブラウザーをもっと新しいバージョンにアップグレードすることをおすすめします。最新のバージョンは、<a class="getie8" href="http://upgradeie.s3.amazonaws.com/eng/index.html">Internet Explorer 8</a>です。アップグレードは無料です。もし、あなたのPCが仕事場のものなら、IT 管理者に連絡を取った方がいいでしょう。</p>
@@ -66,10 +73,13 @@
         <m:title_large>オリジナルが取得できないですが、代わりに大きいサイズの写真を取りにいきます</m:title_large>
         <m:action_rss>RSS</m:action_rss>
         <m:title_rss>この写真が登録されているRSSへのURL</m:title_rss>
-        <m:action_edit>Potlatch</m:action_edit>
-        <m:title_edit>この写真の位置を中心にPotlatchを開きます</m:title_edit>
         <m:action_embed>埋め込み</m:action_embed>
         <m:title_embed>あなたのブログにこのマーカーへのリンクを作りたくないですか。</m:title_embed>
+        <m:title_reload>情報が古いことを確かめたらなら、再読み込みを要求してみてください。</m:title_reload>
+
+        <m:zoom_to>レベル11までズームしてください。</m:zoom_to>
+        <m:title_potlatch>この写真の位置を中心にPotlatchを開きます</m:title_potlatch>
+        <m:title_josm>リモートコントロールプラグインを使って、 JOSM に OSM データーを読み込みます。</m:title_josm>
 
         <m:url>URL</m:url>
         <m:html1>HTML リンク</m:html1>

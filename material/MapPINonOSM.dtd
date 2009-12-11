@@ -26,7 +26,7 @@
 <!ELEMENT br EMPTY>
 
 <!-- MapPINonOSM messages m: -->
-<!ELEMENT m:index (m:text,m:menu,m:currentView,m:ie6,m:noscript,m:javascript,m:php)>
+<!ELEMENT m:index (m:text,m:menu,m:edit,m:currentView,m:help,m:ie6,m:noscript,m:javascript,m:php)>
 <!ATTLIST m:index
     lang CDATA #REQUIRED
     in_native CDATA #REQUIRED
@@ -40,8 +40,7 @@
 <!ATTLIST m:menu
     title CDATA #REQUIRED
 >
-<!ELEMENT m:menu (m:blog,m:registration,m:rssList,m:history,m:newPhoto)>
-<!ELEMENT m:blog (#PCDATA)>
+<!ELEMENT m:menu (m:registration,m:rssList,m:history,m:newPhoto)>
 <!ELEMENT m:registration (#PCDATA)>
 <!ELEMENT m:rssList (#PCDATA)>
 <!ELEMENT m:history (#PCDATA)>
@@ -53,19 +52,37 @@
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT m:noscript (p|h2|span)*>
 
+<!ATTLIST m:edit
+    title CDATA #REQUIRED>
+<!ELEMENT m:edit (m:potlatch,m:josm,m:josm_w)>
+<!ELEMENT m:potlatch (#PCDATA)>
+<!ELEMENT m:josm (#PCDATA)>
+<!ATTLIST m:josm_w
+url CDATA #IMPLIED>
+<!ELEMENT m:josm_w (#PCDATA)>
+
 <!ATTLIST m:currentView
     title CDATA #REQUIRED>
-<!ELEMENT m:currentView (m:permalink,m:rssTile,m:osmlink,m:potlatch,m:josm,m:osblink,m:geofabrik)>
+<!ELEMENT m:currentView (m:permalink,m:rssTile,m:osmlink,m:osblink,m:geofabrik)>
 <!ELEMENT m:permalink (#PCDATA)>
 <!ELEMENT m:rssTile (#PCDATA)>
 <!ELEMENT m:osmlink (#PCDATA)>
-<!ELEMENT m:potlatch (#PCDATA)>
-<!ELEMENT m:josm (#PCDATA)>
 <!ELEMENT m:osblink (#PCDATA)>
 <!ELEMENT m:geofabrik (#PCDATA)>
 
+<!ATTLIST m:help
+    title CDATA #REQUIRED>
+<!ELEMENT m:help (m:toc,m:blog,m:wiki)>
+<!ATTLIST m:toc
+page_id CDATA #REQUIRED>
+<!ELEMENT m:toc (#PCDATA)>
+<!ELEMENT m:blog (#PCDATA)>
+<!ATTLIST m:wiki
+name CDATA #REQUIRED>
+<!ELEMENT m:wiki (#PCDATA)>
+
 <!--- This is for javascript messages. -->
-<!ELEMENT m:javascript (m:id,m:lat,m:lon,m:alt,m:av,m:here_is,m:try_to_tag,m:thumbnail,m:no_thumb,m:action_link,m:title_link,m:action_original,m:title_original,m:action_large,m:title_large,m:action_rss,m:title_rss,m:action_edit,m:title_edit,m:action_embed,m:title_embed,m:url,m:html1,m:html2,m:image,m:imageText)>
+<!ELEMENT m:javascript (m:id,m:lat,m:lon,m:alt,m:av,m:here_is,m:try_to_tag,m:thumbnail,m:no_thumb,m:action_link,m:title_link,m:action_original,m:title_original,m:action_large,m:title_large,m:action_rss,m:title_rss,m:action_embed,m:title_embed,m:title_reload,m:zoom_to,m:title_potlatch,m:title_josm,m:url,m:html1,m:html2,m:image,m:imageText)>
 <!ELEMENT m:thumbnail (#PCDATA)>
 <!ELEMENT m:no_thumb (#PCDATA)>
 <!ELEMENT m:id (#PCDATA)>
@@ -87,11 +104,15 @@
 <!ELEMENT m:title_large (#PCDATA)>
 <!ELEMENT m:action_rss (#PCDATA)>
 <!ELEMENT m:title_rss (#PCDATA)>
-<!ELEMENT m:action_edit (#PCDATA)>
-<!ELEMENT m:title_edit (#PCDATA)>
 <!ELEMENT m:try_to_tag (#PCDATA|br)*>
 <!ELEMENT m:action_embed (#PCDATA)>
 <!ELEMENT m:title_embed (#PCDATA)>
+<!ELEMENT m:title_reload (#PCDATA)>
+
+<!ELEMENT m:zoom_to (#PCDATA)>
+<!ELEMENT m:title_potlatch (#PCDATA)>
+<!ELEMENT m:title_josm (#PCDATA)>
+<!ELEMENT m:title_josm_w (#PCDATA)>
 
 <!ELEMENT m:url (#PCDATA)>
 <!ELEMENT m:html1 (#PCDATA)>

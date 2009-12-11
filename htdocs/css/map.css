@@ -31,31 +31,73 @@ div.text{
 	font-size: 0.9em;
         text-align:justify;
 }
+
+div.top{
+    position: absolute;
+    top: 0; right: 0; height: 26px; left: 220px;
+    z-index:2;
+}
+div.menuItem{
+    position:static;
+    height:24px;
+    margin: 0px;
+    padding: 0px;
+    padding-left: 2px;
+    padding-right: 2px;
+    border:none;
+    border-left: 1px solid #aaaaaa;
+    border-collapse: collapse;
+    vertical-align:bottom;
+    display:inline-block;
+
+    background-color: #aaffaa;
+}
+ul.submenu{
+    position:absolute;
+    top:24px;
+    margin: 0px;
+    padding: 0px;
+    background-color: #f0fff0;
+    border:none;
+    display:none;
+}
+/*div.menuItem .NavToggle{
+    display:none;
+}*/
+div.menuItem ul.submenu{
+    display:none;
+}
+div.menuItem:hover ul.submenu{
+    display:block;
+}
+
+
 #map {
-	position: absolute;
-	top: 0; right: 0; bottom: 20px; left: 220px;
-	border: 1px solid black;
-	background-color: #cbced5;
+    position: absolute;
+    top: 26px; right: 0; bottom: 20px; left: 220px;
+    border: 1px solid black;
+    background-color: #cbced5;
+    z-index:0;
 }
 .message{
     right:0px;
     bottom:20px;
     background:white;
-    display:none;
     position:absolute;
     height:220px;
     width:300px;
+    z-index:1;
 }
 /* CSS placed here will be applied to all skins */ 
 div.NavFrame {
-    margin: 00px;
+    margin: 0px;
     padding: 0px;
     border: 1px solid #aaaaaa;
     border-collapse: collapse;
     clear:both;
 }
 
-div.NavFrame div.NavHead {
+div.NavHead {
     margin: 0px;
     padding: 3px;
     text-align: left;
@@ -64,25 +106,25 @@ div.NavFrame div.NavHead {
     background-color: #aaffaa;
     position:relative;
 }
-div.NavFrame div.NavHead:hover {
+div.NavHead:hover {
     background-color: #a0ff80;
 }
-div.NavFrame .NavToggle {
+.NavToggle {
     font-size: x-small;
     position:absolute;
     top:1px;
     right:2px;
 }
 
-div.NavFrame div.NavHead .NavToggle{
+div.NavHead .NavToggle{
     display:none;
 }
-div.NavFrame div.NavHead:hover .NavToggle{
+div.NavHead:hover .NavToggle{
     display:block;
     color:orange;
 }
 
-div.NavFrame .NavContent {
+.NavContent {
     margin: 0px;
     padding: 0px;
     background-color: #f0fff0;

@@ -11,9 +11,16 @@
     <zh-hans>简体</zh-hans>
     <zh-hant>繁體</zh-hant>-->
     </languages>
+    <edit>
+        <potlatch latlon="yes">http://www.openstreetmap.org/edit</potlatch>
+        <josm bbox="yes">http://localhost:8111/load_and_zoom?</josm>
+        <josm_w>http://josm.openstreetmap.de/download/josm.jnlp</josm_w>
+    </edit>
     <current_view>
-        <osmlink>http://www.openstreetmap.org/</osmlink>
-        <osblink layers="yes">http://openstreetbugs.schokokeks.org/</osblink>
-        <geofabrik>http://tools.geofabrik.de/map/</geofabrik>
+        <permalink latlon="yes" layers="yes"></permalink>
+        <rssTile xy="yes">rss.php</rssTile>
+        <osmlink latlon="yes">http://www.openstreetmap.org/</osmlink>
+        <osblink latlon="yes" layers="yes">http://openstreetbugs.schokokeks.org/</osblink>
+        <geofabrik latlon="yes">http://tools.geofabrik.de/map/</geofabrik>
     </current_view>
 </common>
