@@ -60,7 +60,10 @@ import javax.imageio.ImageIO;
  * @author Shun "Nazotoko" Watanabe
  */
 public class Photo {
-    static private DecimalFormat df = new DecimalFormat("###.######");
+    /**
+     * used for javascript
+     */
+    final static public DecimalFormat df = new DecimalFormat("###.######");
     static private String base64 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_.";
     static private String base36str = "0123456789abcdefghijklmnopqrstuvwxyz";
 
@@ -258,6 +261,9 @@ public class Photo {
 
     /** new flag for statistics */
     private boolean deleted = false;
+
+    /** comment back option. this is not saved */
+    private String commentType = null;
 
     /** Standard constractor */
     public Photo() {
@@ -813,6 +819,12 @@ public class Photo {
         state = STATE_BLUE;
     }
 
+    /** setting commentType
+     * @param s the string indicates the comment type
+     */
+    public void setMappinComent(String s) {
+        commentType = s;
+    }
     /** Output JavaScript code. It will be called from Tile.
      * @param pw PrintWriter given by tile. It is used for the output.
      */
@@ -865,7 +877,7 @@ public class Photo {
         xml.addCount();
         return true;
     }
-    
+
     /** only called from PhotoTable
      * @param pw PrintWriter given from PhotoTable
      */
@@ -1169,7 +1181,35 @@ public class Photo {
     public void setReread(boolean reread) {
         this.reread = reread;
     }
-    /** Today's new photos. It is also 
+
+    public String getShortCode(){
+        String code = "";
+        int i;
+        int digit = ((int)((longitude + 180) * 1000000));
+        int mod;
+        for(i = 0; i < 4; i++){
+            mod = digit % 64;
+            code += base64.charAt(mod);
+            digit /= 64;
+        }
+        mod = digit;
+        digit = (int)((latitude + 90.0) * 1000000.0);
+        code += base64.charAt((digit % 2) * 32 + mod);
+        digit /= 2;
+        for(i = 0; i < 4; i++){
+            mod = (int)(digit & 0x3f);
+            code += base64.charAt(mod);
+            digit /= 64;
+        }
+        digit = (id * 16) + digit;
+        while(digit > 0){
+            mod = (int)(digit % 64);
+            code += base64.charAt(mod);
+            digit /= 64;
+        }
+        return code;
+    }
+    /** Today's new photos. It is also
      *
      * @param pw PrintWriter for writing Today's new photos
      * @param root URL of the base of site
@@ -1183,35 +1223,12 @@ public class Photo {
             pw.print("<pubDate>" + new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.UK).format(readDate) + "</pubDate>");
             pw.print("<description><![CDATA[");
             pw.print("<img src=\"" + thumbnale + "\" /><br/>");
-            String code = "";
-            int i;
-            int digit=((int)((longitude+180)*1000000));
-            int mod;
-            for(i=0;i<4;i++){
-                mod=digit % 64;
-                code +=base64.charAt(mod);
-                digit /= 64;
-            }
-            mod=digit;
-            digit=(int)((latitude+90.0)*1000000.0);
-            code += base64.charAt((digit % 2) * 32 + mod);
-            digit /= 2;
-            for(i=0;i<4;i++){
-                mod = (int)(digit & 0x3f);
-                code += base64.charAt(mod);
-                digit /= 64;
-            }
-            digit = (id * 16) + digit;
-            while(digit > 0){
-                mod = (int)(digit % 64);
-                code += base64.charAt(mod);
-                digit /= 64;
-            }
-            pw.print("<a href=\"http://mappin.hp2.jp/s?" + code+ "\">lat=" + df.format(latitude) + ", lon=" + df.format(longitude) +"</a><br/>");
+            String shortURL = root.toString() + "s?" + getShortCode();
+            pw.print("<a href=\"" + shortURL + "\">lat=" + df.format(latitude) + ", lon=" + df.format(longitude) + "</a><br/>");
             pw.print("<a href=\"" + link + "\">link</a><br/>");
             pw.print("]]></description>");
-            pw.print("<link>http://mappin.hp2.jp/s?" + code+ "</link>");
-            pw.print("<georss:point>"+latitude+" "+longitude+"</georss:point>");
+            pw.print("<link>" + shortURL + "</link>");
+            pw.print("<georss:point>" + latitude + " " + longitude + "</georss:point>");
             pw.println("</item>");
             return true;
         } else {
@@ -1241,5 +1258,13 @@ public class Photo {
                 System.out.println("IO expection at photo.reread: " + ex.getMessage());
             }
         }
+    }
+
+    /**
+     * commentType text if you needs
+     * @return commnentType
+     */
+    public String getCommentType() {
+        return commentType;
     }
 }

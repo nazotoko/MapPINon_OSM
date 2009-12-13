@@ -15,11 +15,11 @@ embedBox.embed2=function() {
             s=obj.item(i).value;
         }
     }
-    if(s=="a") this.box.value=this.ref;
+    if(s=="u") this.box.value=this.ref;
     if(s=="h") this.box.value='<a href="'+this.ref+'">See it on OpenStreetMap.</a>';
-    if(s=="H") this.box.value='<a href="'+this.ref+'">lat='+this.lat+', lon='+this.lon+'</a>';
-    if(s=="O") this.box.value='<a href="'+this.ref+'"><img src="http://tah.openstreetmap.org/MapOf/?lat='+this.lat+'&long='+this.lon+'&z='+this.zoom+'&w=96&h=96&format=png" width="96" height="96"/></a>';
-    if(s=="OA") this.box.value='<a href="'+this.ref+'"><img src="http://tah.openstreetmap.org/MapOf/?lat='+this.lat+'&long='+this.lon+'&z='+this.zoom+'&w=96&h=96&format=png" width="96" height="96"/>See it on OpenStreetMap</a>';
+    if(s=="h2") this.box.value='<a href="'+this.ref+'">lat='+this.lat+', lon='+this.lon+'</a>';
+    if(s=="i") this.box.value='<a href="'+this.ref+'"><img src="http://tah.openstreetmap.org/MapOf/?lat='+this.lat+'&long='+this.lon+'&z='+this.zoom+'&w=96&h=96&format=png" width="96" height="96"/></a>';
+    if(s=="it") this.box.value='<a href="'+this.ref+'"><img src="http://tah.openstreetmap.org/MapOf/?lat='+this.lat+'&long='+this.lon+'&z='+this.zoom+'&w=96&h=96&format=png" width="96" height="96"/>See it on OpenStreetMap</a>';
     this.test.innerHTML=this.box.value;
 };
 embedBox.init=function (){
@@ -35,7 +35,7 @@ embedBox.init=function (){
     var kind=document.createElement("input");
     kind.name='kind';
     kind.type='radio';
-    kind.value="a";
+    kind.value="u";
     kind.checked=true;
     kind.onclick=function(){
         embedBox.embed2();
@@ -58,7 +58,7 @@ embedBox.init=function (){
     kind=document.createElement("input");
     kind.name='kind';
     kind.type='radio';
-    kind.value="H";
+    kind.value="h2";
     kind.onclick=function(){
         embedBox.embed2();
     };
@@ -69,7 +69,7 @@ embedBox.init=function (){
     kind=document.createElement("input");
     kind.name='kind';
     kind.type='radio';
-    kind.value="O";
+    kind.value="i";
     kind.onclick=function(){
         embedBox.embed2();
     };
@@ -80,7 +80,7 @@ embedBox.init=function (){
     kind=document.createElement("input");
     kind.name='kind';
     kind.type='radio';
-    kind.value="OA";
+    kind.value="it";
     kind.onclick=function(){
         embedBox.embed2();
     };

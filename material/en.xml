@@ -33,7 +33,7 @@ xmlns="http://www.w3.org/1999/xhtml">
         <m:history>History of statistics</m:history>
         <m:newPhoto>Today's new Photo (RSS from MapPIN'on OSM)</m:newPhoto>
     </m:menu>
-    <m:edit title="edit">
+    <m:edit title="map edit">
         <m:potlatch>Potlatch</m:potlatch>
         <m:josm>JOSM (using remote plugin)</m:josm>
         <m:josm_w>JOSM (Web Start)</m:josm_w>
@@ -45,6 +45,10 @@ xmlns="http://www.w3.org/1999/xhtml">
         <m:osblink>OpenStreetBugs</m:osblink>
         <m:geofabrik>Geofabrik Map</m:geofabrik>
     </m:currentView>
+    <m:tool title="tool">
+        <m:potlatch_kml>Potlatch Photo KML</m:potlatch_kml>
+        <m:josm_plugin>JOSM plugin</m:josm_plugin>
+    </m:tool>
     <m:help title="help">
         <m:toc page_id="41">Table of Contents</m:toc>
         <m:blog>Blog</m:blog>
@@ -81,15 +85,15 @@ xmlns="http://www.w3.org/1999/xhtml">
         <m:title_embed>Do you want to embed a link to this marker?</m:title_embed>
         <m:title_reload>If you are sure that the information is old, request to reload it.</m:title_reload>
 
-        <m:zoom_to>Zoom to level 11 or higher</m:zoom_to>
+        <m:zoom_to>Zoom to level 13 or higher</m:zoom_to>
         <m:title_potlatch>Open Potlatch around this location.</m:title_potlatch>
         <m:title_josm>Load OSM data to JOSM by using remote control plugin.</m:title_josm>
 
-        <m:url>URL</m:url>
-        <m:html1>HTML link</m:html1>
-        <m:html2>HTML link 2</m:html2>
-        <m:image>Image</m:image>
-        <m:imageText>Image and ASCII</m:imageText>
+        <m:url>URL (u)</m:url>
+        <m:html1>HTML link (h)</m:html1>
+        <m:html2>HTML link 2 (h2)</m:html2>
+        <m:image>Image (i)</m:image>
+        <m:imageText>Image and Text (it)</m:imageText>
     </m:javascript>
     <m:php>
         <m:registration>Registration form of RSS</m:registration>

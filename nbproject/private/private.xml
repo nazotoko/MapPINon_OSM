@@ -2,11 +2,12 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/1"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/1">
-        <file>file:/home/nazo/JAVA/MapPIN/src/org/openstreetmap/mappinonosm/MapPINonOSM.java</file>
-        <file>file:/home/nazo/JAVA/MapPIN/src/org/openstreetmap/mappinonosm/database/XMLTable.java</file>
-        <file>file:/home/nazo/JAVA/MapPIN/src/org/openstreetmap/mappinonosm/database/XML.java</file>
-        <file>file:/home/nazo/JAVA/MapPIN/src/org/openstreetmap/mappinonosm/database/RSS.java</file>
-        <file>file:/home/nazo/JAVA/MapPIN/src/org/openstreetmap/mappinonosm/database/FlickrProtocal.java</file>
-        <file>file:/home/nazo/JAVA/MapPIN/src/org/openstreetmap/mappinonosm/database/Photo.java</file>
+        <file>file:/home/nazo/JAVA/MapPIN/htdocs/js/mappin.js</file>
+        <file>file:/home/nazo/JAVA/MapPIN/material/ja.xml</file>
+        <file>file:/home/nazo/JAVA/MapPIN/material/en.xml</file>
+        <file>file:/home/nazo/JAVA/MapPIN/material/index.xsl</file>
+        <file>file:/home/nazo/JAVA/MapPIN/material/MapPINonOSM.dtd</file>
+        <file>file:/home/nazo/JAVA/MapPIN/material/common.xml</file>
+        <file>file:/home/nazo/JAVA/MapPIN/htdocs/css/map.css</file>
     </open-files>
 </project-private>

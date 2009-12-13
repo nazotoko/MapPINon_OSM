@@ -163,6 +163,7 @@ return ret;
 function popup_open_photo(photo){
     var i=0;
     var text='<h1>'+photo.title+'</h1>';
+    text+='<div style="position:absolute;right:2px;top:6px" ><a target="_blank" title="'+message.title_reload+'" href="registration.php?reload='+photo.id+'"><img alt="reload" src="icons/reload.png" width="16" height="16" /></a></div>';
     text+='<table><tr><td class="thumb">'
     if(photo.thumb){
     if(photo.link){text+='<a target="_blank" title="'+message.title_link+'" href="'+photo.link+'">';}
@@ -200,7 +201,6 @@ function popup_open_photo(photo){
         text+='<li><a target="_blank" title="'+message.title_large+'" href="'+photo.l+'">'+message.action_large+'</a></li>';
     }
     if(photo.rss) text+= '<li><a target="_blank" title="'+message.title_rss+'" href="'+photo.rss+'">'+message.action_rss+'</a></li>';
-//    if(photo.state!=2)text+= '<li><a target="_blank" title="'+message.title_edit+'" href="http://www.openstreetmap.org/edit?lat='+photo.lat+'&amp;lon='+photo.lon+'&amp;zoom=17">'+message.action_edit+'</a></li>';
     text+='<li><a href="javascript:embedBox.embed('+photo.id+')" title="'+message.title_embed+'" >'+message.action_embed+'</a></li>';
     return text+'</ul>';
 }
@@ -393,7 +393,7 @@ function refresh(){
   var layers = '&layers='+params.layers;
   var bbox ='left='+(lon-0.025)+'&right='+(lon+0.025)+'&top='+(lat+0.025)+'&bottom='+(lat-0.025);
   
-  if (params.zoom > 10) {
+  if (params.zoom > 12) {
     url=make_url(x,y);
     menu.edits.potlatch.href = 'http://www.openstreetmap.org/edit'+lonlat;
     menu.edits.josm.href = 'http://localhost:8111/load_and_zoom?'+bbox;

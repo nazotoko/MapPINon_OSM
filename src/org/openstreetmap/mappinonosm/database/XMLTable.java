@@ -39,6 +39,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import com.aetrion.flickr.Flickr;
+import com.aetrion.flickr.auth.Auth;
+import com.aetrion.flickr.auth.AuthInterface;
+import com.aetrion.flickr.auth.Permission;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 /**

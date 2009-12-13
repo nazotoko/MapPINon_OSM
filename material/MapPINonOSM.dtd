@@ -26,7 +26,7 @@
 <!ELEMENT br EMPTY>
 
 <!-- MapPINonOSM messages m: -->
-<!ELEMENT m:index (m:text,m:menu,m:edit,m:currentView,m:help,m:ie6,m:noscript,m:javascript,m:php)>
+<!ELEMENT m:index (m:text,m:menu,m:edit,m:currentView,m:tool,m:help,m:ie6,m:noscript,m:javascript,m:php)>
 <!ATTLIST m:index
     lang CDATA #REQUIRED
     in_native CDATA #REQUIRED
@@ -69,6 +69,16 @@ url CDATA #IMPLIED>
 <!ELEMENT m:osmlink (#PCDATA)>
 <!ELEMENT m:osblink (#PCDATA)>
 <!ELEMENT m:geofabrik (#PCDATA)>
+
+<!ATTLIST m:tool
+    title CDATA #REQUIRED>
+<!ELEMENT m:tool (m:potlatch_kml,m:josm_plugin)>
+<!ATTLIST m:potlatch_kml
+    url CDATA #IMPLIED>
+<!ELEMENT m:potlatch_kml (#PCDATA)>
+<!ATTLIST m:josm_plugin
+    url CDATA #IMPLIED>
+<!ELEMENT m:josm_plugin (#PCDATA)>
 
 <!ATTLIST m:help
     title CDATA #REQUIRED>

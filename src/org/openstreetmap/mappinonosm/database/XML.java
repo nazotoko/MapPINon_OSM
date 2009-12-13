@@ -179,6 +179,10 @@ abstract public class XML  implements Comparable<XML>{
                     in += 3;
                     photo.getMappinAt(s.substring(in));
                 }
+                if(s.startsWith("comment=", in)){
+                    in += 8;
+                    photo.setMappinComent(s.substring(in));
+                }
             }
         }
     }

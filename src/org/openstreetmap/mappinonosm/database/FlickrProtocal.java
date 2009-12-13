@@ -17,6 +17,7 @@ import com.aetrion.flickr.photos.Photo;
 import com.aetrion.flickr.photosets.Photoset;
 import com.aetrion.flickr.photos.PhotosInterface;
 import com.aetrion.flickr.photos.SearchParameters;
+import com.aetrion.flickr.photos.comments.CommentsInterface;
 import com.aetrion.flickr.photosets.PhotosetsInterface;
 import com.aetrion.flickr.tags.Tag;
 import java.io.IOException;
@@ -150,7 +151,7 @@ public class FlickrProtocal extends XML {
             setPhotoInfo(p);
             if(photoTable.add(photo) == false){
                 org.openstreetmap.mappinonosm.database.Photo oldPhoto = photoTable.get(photo);
-                if(oldPhoto.getReadDate().compareTo(photo.getPublishedDate()) < 0){
+                if(oldPhoto.getReadDate().before(photo.getPublishedDate())){
                     photo.setId(oldPhoto.getId());
                     photoTable.remove(oldPhoto);
                     photoTable.add(photo);
@@ -165,6 +166,9 @@ public class FlickrProtocal extends XML {
                 // This means new photo.
                 photo.setNewPhoto(true);
                 setExifParameters(p.getId());
+                if(photo.getCommentType()!=null){
+                    comment(p.getId());
+                }
                 System.out.println("\tnew photo ID: " + photo.getId());
             }
         }// end of one photo
@@ -362,6 +366,42 @@ public class FlickrProtocal extends XML {
             if(ex.getErrorCode().equals("1")){
                 photo.setDeleted(true);
             }
+        }
+    }
+    /**
+     * Comennt to the flickr page of the photo. It doesn't work without
+     * autherntification.
+     * @param id flickr id
+     */
+    private void comment(String id) {
+        CommentsInterface ci = f.getCommentsInterface();
+        String url = "http://mappin.hp2.jp/s?" + photo.getShortCode();
+        String comment = "";
+        String type=photo.getCommentType();
+        String lat = org.openstreetmap.mappinonosm.database.Photo.df.format(photo.getLat());
+        String lon = org.openstreetmap.mappinonosm.database.Photo.df.format(photo.getLon());
+        System.out.println("Comment to ID:" + id);
+        if(type.equals("u")){
+            comment = url;
+        } else if(type.equals("h")){
+            comment = "<a href=\"" + url + "\">Veiw it on MapPIN'on OSM</a>";
+        } else if(type.equals("h2")){
+            comment = "<a href=\"" + url + "\">lat=" + lat + ", lon=" + lon + "</a>";
+        } else if(type.equals("i")){
+            comment = "<a href=\"" + url + "\"><img src=\"http://tah.openstreetmap.org/MapOf/?lat=" + lat + "'&long=" + lon + "&z=17&w=96&h=96&format=png\" width=\"96\" height=\"96\"/></a>";
+        } else if(type.equals("it")){
+            comment = "<a href=\"" + url + "\"><img src=\"http://tah.openstreetmap.org/MapOf/?lat=" + lat + "'&long=" + lon + "&z=17&w=96&h=96&format=png\" width=\"96\" height=\"96\"/>Veiw it on MapPIN'on OSM</a>";
+        } else {
+            comment = "Hi, it got placed on MapPIN'on OSM.";
+        }
+        try {
+            ci.addComment(id, comment);
+        } catch(IOException ex) {
+            System.out.println("Cannot comment:" + ex.getMessage());
+        } catch(SAXException ex) {
+            System.out.println("Cannot comment:" + ex.getMessage());
+        } catch(FlickrException ex) {
+            System.out.println("Cannot comment:" + ex.getErrorMessage());
         }
     }
 }

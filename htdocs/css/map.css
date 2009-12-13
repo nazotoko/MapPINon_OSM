@@ -42,8 +42,8 @@ div.menuItem{
     height:24px;
     margin: 0px;
     padding: 0px;
-    padding-left: 2px;
-    padding-right: 2px;
+    padding-left: 3px;
+    padding-right: 3px;
     border:none;
     border-left: 1px solid #aaaaaa;
     border-collapse: collapse;
@@ -52,19 +52,16 @@ div.menuItem{
 
     background-color: #aaffaa;
 }
-ul.submenu{
+div.menuItem:hover {
+    background-color: #a0ff80;
+}
+div.menuItem ul.submenu{
     position:absolute;
     top:24px;
     margin: 0px;
     padding: 0px;
     background-color: #f0fff0;
     border:none;
-    display:none;
-}
-/*div.menuItem .NavToggle{
-    display:none;
-}*/
-div.menuItem ul.submenu{
     display:none;
 }
 div.menuItem:hover ul.submenu{

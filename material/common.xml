@@ -14,7 +14,9 @@
     <edit>
         <potlatch latlon="yes">http://www.openstreetmap.org/edit</potlatch>
         <josm bbox="yes">http://localhost:8111/load_and_zoom?</josm>
-        <josm_w>http://josm.openstreetmap.de/download/josm.jnlp</josm_w>
+        <josm_w>other/josm.jnlp</josm_w>
+        <potlatch_kml>http://wiki.openstreetmap.org/wiki/Potlatch/Photo-mapping</potlatch_kml>
+        <josm_plugin>other/josm.html</josm_plugin>
     </edit>
     <current_view>
         <permalink latlon="yes" layers="yes"></permalink>

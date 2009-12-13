@@ -68,6 +68,7 @@ standalone="yes" indent="no" version="4.0"/>
         <xsl:apply-templates select="m:menu"/>
         <xsl:apply-templates select="m:edit"/>
         <xsl:apply-templates select="m:currentView"/>
+        <xsl:apply-templates select="m:tool"/>
         <xsl:call-template name="languages"/>
         <xsl:apply-templates select="m:help"/>
     </div>
@@ -160,6 +161,31 @@ standalone="yes" indent="no" version="4.0"/>
         </div>
     </xsl:template>
 
+    <xsl:template match="m:tool">
+        <div class="menuItem">
+            <xsl:value-of select="@title"/>
+            <ul class="submenu">
+                <xsl:for-each select="*">
+                    <li>
+                        <a target="_blank">
+                            <xsl:attribute name="href">
+                                <xsl:choose>
+                                    <xsl:when test="@url">
+                                        <xsl:value-of select="./@url"/>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:variable name="path" select="local-name()"/>
+                                        <xsl:value-of select="document('common.xml')/common/edit/node()[name()=$path]"/>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </xsl:attribute>
+                            <xsl:value-of select="."/>
+                        </a>
+                    </li>
+                </xsl:for-each>
+            </ul>
+        </div>
+    </xsl:template>
     <xsl:template name="languages">
         <div class="menuItem">Other Languages
             <ul class="submenu">

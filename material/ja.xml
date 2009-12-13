@@ -26,7 +26,7 @@
         <m:history>統計の遍歴</m:history>
         <m:newPhoto>今日の新しい写真 (MapPIN'on OSM 発のRSS)</m:newPhoto>
     </m:menu>
-    <m:edit title="編集">
+    <m:edit title="地図編集">
         <m:potlatch>Potlatch</m:potlatch>
         <m:josm>JOSM (remote プラグインによる)</m:josm>
         <m:josm_w>JOSM (Web Start)</m:josm_w>
@@ -38,6 +38,10 @@
         <m:osblink>OpenStreetBugs</m:osblink>
         <m:geofabrik>Geofabrik Map</m:geofabrik>
    </m:currentView>
+   <m:tool title="ツール">
+       <m:potlatch_kml url="http://wiki.openstreetmap.org/wiki/Ja:Potlatch/Photo-mapping">Potlatch 写真KML</m:potlatch_kml>
+       <m:josm_plugin>JOSM プラグイン</m:josm_plugin>
+   </m:tool>
    <m:help title="ヘルプ">
         <m:toc page_id="51">目次</m:toc>
         <m:blog>ブログ</m:blog>
@@ -77,7 +81,7 @@
         <m:title_embed>あなたのブログにこのマーカーへのリンクを作りたくないですか。</m:title_embed>
         <m:title_reload>情報が古いことを確かめたらなら、再読み込みを要求してみてください。</m:title_reload>
 
-        <m:zoom_to>レベル11までズームしてください。</m:zoom_to>
+        <m:zoom_to>レベル13までズームしてください。</m:zoom_to>
         <m:title_potlatch>この写真の位置を中心にPotlatchを開きます</m:title_potlatch>
         <m:title_josm>リモートコントロールプラグインを使って、 JOSM に OSM データーを読み込みます。</m:title_josm>
 

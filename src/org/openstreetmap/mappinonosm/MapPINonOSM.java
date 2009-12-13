@@ -110,97 +110,118 @@ public class MapPINonOSM {
     /** file path relative to htdocs */
     private String historyRSS=null;
 
-    final static private String [] configKeys=new String []{
-        "photoTable",
-        "RSSTable", 
-        "historyTable",
-        "RSSList",
-        "domain",
-        "registrationFile",
-        "flickrKey",
-        "flickrSecret",
-        "backupDir",
-        "dataDir",
-        "historyList",
-        "historyRSS",
-        "localHtdocsDir",
-        "ftpHtdocsDir",
-        "httpHtdocsDir",
-        "requestFile",
-        "ftpUser",
-        "ftpPassword"
-    };
+    static private enum ConfigKey {
+        PHOTO_TABLE("photoTable"),
+        RSS_TABLE("RSSTable"),
+        HISTORY_TABLE("historyTable"),
+        RSS_LIST("RSSList"),
+        DOMAIN("domain"),
+        REGISTRATION("registrationFile"),
+        FLICKR_KEY("flickrKey"),
+        FLICKR_SECRET("flickrSecret"),
+        BACKUP_DIR("backupDir"),
+        DATA_DIR("dataDir"),
+        HISTORY_LIST("historyList"),
+        HISTORY_RSS("historyRSS"),
+        LOCAL_HTDOCS_DIR("localHtdocsDir"),
+        FTP_HTDOCS_DIR("ftpHtdocsDir"),
+        HTTP_HTDOCS_DIR("httpHtdocsDir"),
+        REQUEST_FILE("requestFile"),
+        FTP_USER("ftpUser"),
+        FTP_PASSWORD("ftpPassword");
+        /**
+         * key word
+         */
+        final public String key;
+        ConfigKey(String key){
+            this.key=key;
+        }
+        static ConfigKey get(String key){
+            if(key==null){
+                return null;
+            }
+            int hash=key.hashCode();
+            for(ConfigKey ck:values()){
+                if(hash==ck.key.hashCode()){
+                    return ck;
+                }
+            }
+            return null;
+        }
+    }
 
     /** initiallizing */
     public MapPINonOSM() {
         InputStream is;
-        String line;
-        String value;
         String flickrKey = null;
         String flickrSecret = null;
         int i;
         try {
             BufferedReader br=new BufferedReader(new InputStreamReader(new FileInputStream("./config.txt"),"UTF-8"));
+            String line;
+            String key;
+            String value;
+            ConfigKey ck;
             while((line=br.readLine())!=null){
-                for(i = 0; i < configKeys.length; i++){
-                    if(line.startsWith(configKeys[i])){
-                        value = line.substring(configKeys[i].length() + 1);
-                        switch(i){
-                            case 0:
-                                photo_table = new File(value);
-                                break;
-                            case 1:
-                                rss_table = new File(value);
-                                break;
-                            case 2:
-                                history_table=new File(value);
-                                break;
-                            case 3:
-                                rssList = value;
-                                break;
-                            case 4:
-                                domain = value;
-                                break;
-                            case 5:
-                                registration = value;
-                                break;
-                            case 6:
-                                flickrKey =value;
-                                break;
-                            case 7:
-                                flickrSecret =value;
-                                break;
-                            case 8:
-                                backupdir=value;
-                                break;
-                            case 9:
-                                dataDir=value;
-                                break;
-                            case 10:
-                                historyList=value;
-                                break;
-                            case 11:
-                                historyRSS=value;
-                                break;
-                            case 12:
-                                localHtdocsDir = new File(value);
-                                break;
-                            case 13:
-                                ftpHtdocsDir=value;
-                                break;
-                            case 14:
-                                httpHtdocsDir=value;
-                                break;
-                            case 15:
-                                request = value;
-                                break;
-                            case 16:
-                                ftpUser = value;
-                                break;
-                            case 17:
-                                ftpPassword = value;
-                                break;
-                        }
+                if((i=line.indexOf('='))>0){
+                    key=line.substring(0, i);
+                    value = line.substring(i + 1);
+                    ck = ConfigKey.get(key);
+                    switch(ck){
+                        case PHOTO_TABLE:
+                            photo_table = new File(value);
+                            break;
+                        case RSS_TABLE:
+                            rss_table = new File(value);
+                            break;
+                        case HISTORY_TABLE:
+                            history_table = new File(value);
+                            break;
+                        case RSS_LIST:
+                            rssList = value;
+                            break;
+                        case DOMAIN:
+                            domain = value;
+                            break;
+                        case REGISTRATION:
+                            registration = value;
+                            break;
+                        case FLICKR_KEY:
+                            flickrKey = value;
+                            break;
+                        case FLICKR_SECRET:
+                            flickrSecret = value;
+                            break;
+                        case BACKUP_DIR:
+                            backupdir = value;
+                            break;
+                        case DATA_DIR:
+                            dataDir = value;
+                            break;
+                        case HISTORY_LIST:
+                            historyList = value;
+                            break;
+                        case HISTORY_RSS:
+                            historyRSS = value;
+                            break;
+                        case LOCAL_HTDOCS_DIR:
+                            localHtdocsDir = new File(value);
+                            break;
+                        case FTP_HTDOCS_DIR:
+                            ftpHtdocsDir = value;
+                            break;
+                        case HTTP_HTDOCS_DIR:
+                            httpHtdocsDir = value;
+                            break;
+                        case REQUEST_FILE:
+                            request = value;
+                            break;
+                        case FTP_USER:
+                            ftpUser = value;
+                            break;
+                        case FTP_PASSWORD:
+                            ftpPassword = value;
+                            break;
                     }
                 }
             }
@@ -317,7 +338,7 @@ public class MapPINonOSM {
         }
         BufferedReader br = null;
         URL url = null;
-        String s;
+        String s=null;
         try {
             url = new URL("http", domain, httpHtdocsDir + registration);
             br = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
@@ -331,7 +352,7 @@ public class MapPINonOSM {
         } catch(MalformedURLException ex){
             System.err.println("Strange URL: "+url); 
         } catch(URISyntaxException ex) {
-            System.err.println("URL is strange. Check the config.txt file on the line domain. domain: "+domain+", registration: "+registration);
+            System.err.println("URI is strange. Check a URI on a line of rss.list file. : " +s+" Error: "+ ex.getMessage());
         } catch(IOException ex) {
             System.err.println("The file cannot to be accessed. URL: "+url);
         }
@@ -526,6 +547,9 @@ public class MapPINonOSM {
             System.out.println("Uploading: " + f);
             ftc.uploadFile(new File(fileDataDir, f).toString(), f);
         }
+        ftc.changeToParentDirectory();
+        ftc.deleteFile(request);
+        ftc.deleteFile(registration);
         ftc.disconnect();
         return;
     }
@@ -543,8 +567,8 @@ public class MapPINonOSM {
         System.err.println("\tget: add RSSes from the registration text file on foreground server.");
         System.err.println("\tread: read the RSSes from the URLs and update databases");
         System.err.println("\ttile: create tiles and rss lists.");
-//        System.err.println("\tupload: upload tiles and rss list. arg1:hostname arg2:username arg3:password");
-        System.err.println("\tloop: get, read and tile.");
+        System.err.println("\tupload: upload tiles and rss list.");
+        System.err.println("\tloop: get, read, tile and upload.");
         System.err.println("\tremove: the same as \"loop\" with removing RSS. The args are ID to be removed.");
         System.exit(1);
     }
