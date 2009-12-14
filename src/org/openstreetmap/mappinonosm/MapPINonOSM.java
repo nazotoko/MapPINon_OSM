@@ -548,8 +548,12 @@ public class MapPINonOSM {
             ftc.uploadFile(new File(fileDataDir, f).toString(), f);
         }
         ftc.changeToParentDirectory();
-        ftc.deleteFile(request);
-        ftc.deleteFile(registration);
+        if(ftc.exists(request)){
+            ftc.deleteFile(request);
+        }
+        if(ftc.exists(registration)){
+            ftc.deleteFile(registration);
+        }
         ftc.disconnect();
         return;
     }

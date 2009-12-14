@@ -114,7 +114,7 @@ public class HistoryTable extends TreeSet <History>{
             History h;
             int i=0;
             Iterator <History> it=iterator();
-            while(it.hasNext() && i < 7){
+            while(it.hasNext() && i < 14){
                 h = it.next();
                 h.toRSS(pw, getRoot() + backupDir);
                 i++;
@@ -152,7 +152,7 @@ public class HistoryTable extends TreeSet <History>{
             History h;
             int i=0;
             Iterator <History> it=iterator();
-            while(it.hasNext() && i < 7){
+            while(it.hasNext() && i < 14){
                 h = it.next();
                 pw.print("<tr");
                 if(odd){

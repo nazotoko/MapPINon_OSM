@@ -87,7 +87,8 @@ xmlns="http://www.w3.org/1999/xhtml">
 
         <m:zoom_to>Zoom to level 13 or higher</m:zoom_to>
         <m:title_potlatch>Open Potlatch around this location.</m:title_potlatch>
-        <m:title_josm>Load OSM data to JOSM by using remote control plugin.</m:title_josm>
+        <m:title_josm>Download OSM data around here to JOSM by using remote control plugin.</m:title_josm>
+        <m:title_josm_w>Run JOSM with Java Web Start and download OSM data around here.</m:title_josm_w>
 
         <m:url>URL (u)</m:url>
         <m:html1>HTML link (h)</m:html1>
@@ -120,6 +121,7 @@ xmlns="http://www.w3.org/1999/xhtml">
             </dl>
             <p>Input URL of a RSS of your photo blog site that you want to show
             on MapPIN&apos;on OSM if you agree the above.</p>
+            <p>If you are flickr user, registering <a href="http://mappin.hp2.jp/blog/?p=253">"flickr:" URI</a> is better.
         ]]></m:agreement>
         <m:agree>agree and submit</m:agree>
         <m:success>It have been listed. Wait the next updating.</m:success>
@@ -164,6 +166,6 @@ xmlns="http://www.w3.org/1999/xhtml">
                 for any damage by those photos, because "MapPIN&apos;on OSM" is not
                 the author, the publisher nor the photographer.</dd>
             </dl>
-        ]]></m:declaimer>
+        ]]></m:declaimer>df
     </m:php>
 </m:index>

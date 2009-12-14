@@ -12,17 +12,17 @@
     <zh-hant>繁體</zh-hant>-->
     </languages>
     <edit>
-        <potlatch latlon="yes">http://www.openstreetmap.org/edit</potlatch>
-        <josm bbox="yes">http://localhost:8111/load_and_zoom?</josm>
-        <josm_w>other/josm.jnlp</josm_w>
+        <potlatch corrdinate="latlon">http://www.openstreetmap.org/edit</potlatch>
+        <josm corrdinate="lefttop">http://localhost:8111/load_and_zoom</josm>
+        <josm_w corrdinate="lefttop">josm/josm.jnlp.php</josm_w>
         <potlatch_kml>http://wiki.openstreetmap.org/wiki/Potlatch/Photo-mapping</potlatch_kml>
         <josm_plugin>other/josm.html</josm_plugin>
     </edit>
     <current_view>
-        <permalink latlon="yes" layers="yes"></permalink>
-        <rssTile xy="yes">rss.php</rssTile>
-        <osmlink latlon="yes">http://www.openstreetmap.org/</osmlink>
-        <osblink latlon="yes" layers="yes">http://openstreetbugs.schokokeks.org/</osblink>
-        <geofabrik latlon="yes">http://tools.geofabrik.de/map/</geofabrik>
+        <permalink corrdinate="latlon" layers="yes"></permalink>
+        <rssTile corrdinate="xy">rss.php</rssTile>
+        <osmlink corrdinate="latlon">http://www.openstreetmap.org/</osmlink>
+        <osblink corrdinate="latlon" layers="yes">http://openstreetbugs.schokokeks.org/</osblink>
+        <geofabrik corrdinate="latlon">http://tools.geofabrik.de/map/</geofabrik>
     </current_view>
 </common>

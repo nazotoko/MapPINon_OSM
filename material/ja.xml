@@ -83,8 +83,8 @@
 
         <m:zoom_to>レベル13までズームしてください。</m:zoom_to>
         <m:title_potlatch>この写真の位置を中心にPotlatchを開きます</m:title_potlatch>
-        <m:title_josm>リモートコントロールプラグインを使って、 JOSM に OSM データーを読み込みます。</m:title_josm>
-
+        <m:title_josm>リモートコントロールプラグインを使って、 JOSM に OSM データを読み込みます。</m:title_josm>
+        <m:title_josm_w>Java Web Start でJOSM を立ち上げ、この辺のOSM データを読み込みます。</m:title_josm_w>
         <m:url>URL</m:url>
         <m:html1>HTML リンク</m:html1>
         <m:html2>HTML リンク 2</m:html2>

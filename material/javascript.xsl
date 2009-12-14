@@ -16,7 +16,8 @@
 </xsl:template>
 
     <xsl:template name="langs">
-llang=[<xsl:for-each select="document('common.xml')/common/languages/*"><xsl:if test="/m:index/@lang!=local-name()">'<xsl:value-of select="local-name()"/>'<xsl:if test="position()!=last()-1">,</xsl:if></xsl:if></xsl:for-each>];
+<xsl:variable name="lang" select="/m:index/@lang"/>
+llang=[<xsl:for-each select="document('common.xml')/common/languages/*[local-name()!=$lang]">'<xsl:value-of select="local-name()"/>'<xsl:if test="position()!=last()">,</xsl:if></xsl:for-each>];
 </xsl:template>
 
 </xsl:stylesheet>

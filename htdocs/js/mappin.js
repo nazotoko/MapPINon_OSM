@@ -17,8 +17,8 @@
  */
 /* configures (directory must end with '/' ) */
 /** base path */
-var domain=document.domain;/*"http://mappin.hp2.jp/";*/
-var server_path = "";//"" means current directory.
+var domain=document.domain; /* "http://mappin.hp2.jp/"; */
+var server_path = "";/* "" means current directory. */
 
 /** relative path */
 var img_path = "icons/";
@@ -57,12 +57,13 @@ function init_map(){
             new OpenLayers.Control.ScaleLine(),
             new OpenLayers.Control.MousePosition({numDigits:6}),
             new OpenLayers.Control.LayerSwitcher(),
-            click=new OpenLayers.Control.Click()
+            click=new OpenLayers.Control.Click(),
+            new OpenLayers.Control.Attribution()
         ],
         maxResolution: 156543.0339,
         numZoomLevels: 20,
         units: 'm',
-  //      projection: new OpenLayers.Projection("EPSG:900913"),
+        //      projection: new OpenLayers.Projection("EPSG:900913"),
         displayProjection: new OpenLayers.Projection("EPSG:4326")
     });
     layer = new OpenLayers.Layer.Markers("Photos",{wrapDateLine: true});
@@ -75,17 +76,22 @@ function init_map(){
             fillOpacity: 0.4
         })
     });
-    map.addLayers([new OpenLayers.Layer.OSM.Mapnik("Mapnik",{wrapDateLine: true}),
-        new OpenLayers.Layer.OSM.CycleMap("CycleMap",{wrapDateLine: true}),
-        new OpenLayers.Layer.OSM.Osmarender("Osmarender",{wrapDateLine: true}),
+    map.addLayers([new OpenLayers.Layer.OSM.Mapnik("Mapnik",{wrapDateLine: true,
+            attribution:'Mapnik under <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA 2.0</a> by (C) <a href="http://www.openstreetmap.org">OpenStreetMap</a> contributors'}),
+        new OpenLayers.Layer.OSM.CycleMap("CycleMap",{wrapDateLine: true,
+            attribution:'CycleMap under <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA 2.0</a> by (C) <a href="http://www.openstreetmap.org">OpenStreetMap</a> contributors'}),
+        new OpenLayers.Layer.OSM.Osmarender("Osmarender",{wrapDateLine: true,
+            attribution:'Osmarender under <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-By-SA 2.0</a> by (C) <a href="http://www.openstreetmap.org">OpenStreetMap</a> contributors'}),
         new OpenLayers.Layer.OSM( "Relief",
             "http://maps-for-free.com/layer/relief/z${z}/row${y}/${z}_${x}-${y}.jpg",
-            {numZoomLevels:12,wrapDateLine: true}),
+            {numZoomLevels:12,wrapDateLine: true,
+             attribution:'<a href="http://maps-for-free.com/">Relief map</a> under <a href="http://en.wikipedia.org/wiki/GNU_Free_Documentation_License">GFDL ver. 1.2</a> by (C) Hans Braxmeier'}),
         new OpenLayers.Layer.OSM( "Contour",
         "http://www.heywhatsthat.com/bin/contour_tiles.cgi?x=${x}&y=${y}&zoom=${z}&interval=25&color=ff0000",{
             isBaseLayer:false,
             visibility: false,
-            wrapDateLine: true
+            wrapDateLine: true,
+            attribution:'<a href="http://www.heywhatsthat.com/">The contour layer</a> by (C) 2007 Michael Kosowsky'
         }),
         vectorLayer,
         layer
@@ -389,14 +395,20 @@ function refresh(){
   var lat=params.lat;
   var x=Math.round(lon*20);
   var y=Math.round(lat*20);
+  var bounds=map.getExtent();
+  var left=x2lon(bounds.left);
+  var right=x2lon(bounds.right);
+  var bottom=y2lat(bounds.bottom);
+  var top=y2lat(bounds.top);
   var lonlat = '?lon='+params.lon+'&lat='+params.lat+'&zoom='+params.zoom;
   var layers = '&layers='+params.layers;
-  var bbox ='left='+(lon-0.025)+'&right='+(lon+0.025)+'&top='+(lat+0.025)+'&bottom='+(lat-0.025);
+  var lefttop='?left='+left+'&right='+right+'&top='+top+'&bottom='+bottom;
   
   if (params.zoom > 12) {
     url=make_url(x,y);
     menu.edits.potlatch.href = 'http://www.openstreetmap.org/edit'+lonlat;
-    menu.edits.josm.href = 'http://localhost:8111/load_and_zoom?'+bbox;
+    menu.edits.josm.href = 'http://localhost:8111/load_and_zoom'+lefttop;
+    menu.edits.josm_w.href = 'josm/josm.jnlp.php'+lefttop;
     for(key in menu.edits){
       menu.edits[key].title=message['title_'+key];
     }
@@ -425,7 +437,7 @@ function marker_click(ev){/* "this" means feature */
         if(!this.popup.map){map.addPopup(this.popup);}
         this.popuped=true;
     }
-    document.getElementById("photoID").innerHTML = '<a href="registration.php?reload='+this.photo.id+'">reload:'+this.photo.id+'</a>';
+    document.getElementById("photoID").innerHTML = this.photo.id;
     document.getElementById("numberOfPopuping").innerHTML = map.popups.length;
     OpenLayers.Event.stop(ev);
 }

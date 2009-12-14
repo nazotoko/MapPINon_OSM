@@ -21,7 +21,8 @@ function init()
   }
   menu.edits={
     potlatch:document.getElementById("potlatch"),
-    josm:document.getElementById("josm")
+    josm:document.getElementById("josm"),
+    josm_w:document.getElementById("josm_w")
   };
   menu.views={
     permalink:document.getElementById("permalink"),
