@@ -39,8 +39,11 @@
         <m:geofabrik>Geofabrik Map</m:geofabrik>
    </m:currentView>
    <m:tool title="ツール">
-       <m:potlatch_kml url="http://wiki.openstreetmap.org/wiki/Ja:Potlatch/Photo-mapping">Potlatch 写真KML</m:potlatch_kml>
-       <m:josm_plugin>JOSM プラグイン</m:josm_plugin>
+    <m:prune>Prune</m:prune>
+    <m:potlatch url="http://wiki.openstreetmap.org/wiki/Ja:Potlatch">Potlatch</m:potlatch>
+    <m:josm url="http://wiki.openstreetmap.org/wiki/Ja:JOSM">JOSM</m:josm>
+    <m:potlatch_kml url="http://wiki.openstreetmap.org/wiki/Ja:Potlatch/Photo-mapping">Potlatch 写真KML</m:potlatch_kml>
+    <m:josm_plugin>JOSM 用 MapPIN'on OSM プラグイン</m:josm_plugin>
    </m:tool>
    <m:help title="ヘルプ">
         <m:toc page_id="51">目次</m:toc>
@@ -109,7 +112,9 @@
                 <dd>要するに、「許可なしに他人の写真を登録しないでください。」</dd>
             </dl>
             <p>同意できるなら、MapPIN&apos;on OSM に、表示したいと思う写真ブログサイトの
-            RSSのURLを入力してください。</p>
+            RSSのURLを入力してください。同意する必要はありませんが、
+            <a href="/blog/?page_id=416">MapPIN&apos;on OSMのポリシー</a>があります。</p>
+            <p>あなたが flickr ユーザーなら、RSS より<a href="http://mappin.hp2.jp/blog/?p=253">"flickr:" URI</a>を登録した方がいいでしょう。</p>
         ]]></m:agreement>
         <m:agree>同意して登録</m:agree>
         <m:success>リストされました。つぎの更新まで待ってください。</m:success>

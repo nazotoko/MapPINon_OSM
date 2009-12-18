@@ -175,7 +175,7 @@ standalone="yes" indent="no" version="4.0"/>
                                     </xsl:when>
                                     <xsl:otherwise>
                                         <xsl:variable name="path" select="local-name()"/>
-                                        <xsl:value-of select="document('common.xml')/common/edit/node()[name()=$path]"/>
+                                        <xsl:value-of select="document('common.xml')/common/tool/node()[name()=$path]"/>
                                     </xsl:otherwise>
                                 </xsl:choose>
                             </xsl:attribute>

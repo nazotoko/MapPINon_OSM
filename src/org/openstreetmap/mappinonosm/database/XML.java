@@ -44,7 +44,7 @@ import java.util.TimeZone;
  *
  * @author nazo
  */
-abstract public class XML  implements Comparable<XML>{
+abstract public class XML implements Comparable<XML> {
     static private SimpleDateFormat htmlDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     static{
         htmlDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));

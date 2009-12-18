@@ -1,7 +1,7 @@
 <?php
 header('Content-type: application/x-java-jnlp-file');
 echo '<?xml version="1.0" encoding="UTF-8"?>'."\n";
-$version=2591;
+$version=2631;
 ?>
 <!DOCTYPE jnlp PUBLIC "-//Sun Microsystems, Inc.//DTD JNLP 1.5//EN" "http://www.netbeans.org/jnlp/DTD/jnlp.dtd">
 <?php

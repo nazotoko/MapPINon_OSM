@@ -46,8 +46,11 @@ xmlns="http://www.w3.org/1999/xhtml">
         <m:geofabrik>Geofabrik Map</m:geofabrik>
     </m:currentView>
     <m:tool title="tool">
+        <m:prune>Prune</m:prune>
+        <m:potlatch>Potlatch</m:potlatch>
+        <m:josm>JOSML</m:josm>
         <m:potlatch_kml>Potlatch Photo KML</m:potlatch_kml>
-        <m:josm_plugin>JOSM plugin</m:josm_plugin>
+        <m:josm_plugin>MapPIN'on OSM plugin for JOSM</m:josm_plugin>
     </m:tool>
     <m:help title="help">
         <m:toc page_id="41">Table of Contents</m:toc>
@@ -120,52 +123,15 @@ xmlns="http://www.w3.org/1999/xhtml">
                 license".</dd>
             </dl>
             <p>Input URL of a RSS of your photo blog site that you want to show
-            on MapPIN&apos;on OSM if you agree the above.</p>
-            <p>If you are flickr user, registering <a href="http://mappin.hp2.jp/blog/?p=253">"flickr:" URI</a> is better.
+            on MapPIN&apos;on OSM if you agree the above. Here is
+            <a href="/blog/?page_id=416">policy of MapPIN&apos;on OSM</a> which is
+            not required to be agreed.</p>
+            <p>If you are flickr user, registering
+            <a href="http://mappin.hp2.jp/blog/?p=253">"flickr:" URI</a> is
+            better than RSS.</p>
         ]]></m:agreement>
         <m:agree>agree and submit</m:agree>
-        <m:success>It have been listed. Wait the next updating.</m:success>
-        <m:fail>It doesnt look a URL.</m:fail>
-        <m:duty title="Duty"><![CDATA[
-            "MapPIN&apos;on OSM" respects all rights of photographers.
-            "MapPIN&apos;on OSM" promises following items.
-            Anyone can claim if those are not kept.
-            <dl>
-                <dt>"MapPIN&apos;on OSM" keeps to link back to authors&apos; photos.</dt>
-                <dd>"MapPIN&apos;on OSM" itself does not copy, republish files except EXIF tag part.
-                It just hold links to authors&apos; photos.
-                It also assists OpenStreetMap contributors to add a source tag.</dd>
-                <dt>"MapPIN&apos;on OSM" itself does not restrict license and copyright of authors&apos; photo files at all.</dt>
-                <dd>Because "MapPIN&apos;on OSM" itself does not make any creative work.
-                If you want to stop publishing your photos, "MapPIN&apos;on OSM" also will
-                remove links to your photo files.
-                </dd>
-            </dl>
-        ]]></m:duty>
-        <m:declaimer title="Desclaimer"><![CDATA[
-            "MapPIN&apos;on OSM" does not take any responsibility about the following items.
-            <dl>
-                <dt>Privacy issue of photos introduced by "MapPIN&apos;on OSM".</dt>
-                <dd>"MapPIN&apos;on OSM" does not take any resposibility for privacy
-                information shown in your photos. "MapPIN&apos;on OSM" is just a
-                introducing site not a publishing site. All the legal
-                responsibility on a photo should be taken by an author of the photo.
-                but the author of photo can clime "MapPIN&apos;on OSM" to stop to
-                introducing the photo. Take contact to the author first.</dd>
-
-                <dt>Copyright violations of photos introduced by "MapPIN&apos;on OSM".</dt>
-                <dd>Because of the same reason with privacy issue. By this case,
-                true copyright holder can clime to MapPIN&apos;on OSM to stop to
-                introduce it, too.</dd>
-
-                <dt>Any other unlawful photos to be publish.</dt>
-                <dd>MapPIN&apos;on OSM does not check all photos introduced.
-                Sometimes you may find unlawful photos. Anyone can report them to
-                MapPIN&apos;on OSM to be removed from "MapPIN&apos;on OSM".
-                However, "MapPIN&apos;on OSM" does not take responsibility
-                for any damage by those photos, because "MapPIN&apos;on OSM" is not
-                the author, the publisher nor the photographer.</dd>
-            </dl>
-        ]]></m:declaimer>df
+        <m:success>It has been listed. Wait the next updating.</m:success>
+        <m:fail>It does not look a effective URI.</m:fail>
     </m:php>
 </m:index>

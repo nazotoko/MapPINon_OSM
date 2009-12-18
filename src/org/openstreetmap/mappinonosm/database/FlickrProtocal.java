@@ -82,7 +82,7 @@ public class FlickrProtocal extends XML {
         System.out.println("Flickr's API: "+s);
         try {
             if(s.startsWith("tags")){
-                link = new URL("http://flic.kr/tags/" + s);
+                link = new URL("http://flic.kr/photos/" + s);
             } else {
                 link = new URL("http://flic.kr/" + s);
             }
@@ -193,7 +193,7 @@ public class FlickrProtocal extends XML {
         System.out.println("\ttaken:" + p.getDateTaken());
         Date photoPosted = p.getDatePosted();
         photo.setPublishedDate(photoPosted);
-        if(photoPosted.after(readDate)){
+        if(readDate==null || photoPosted.after(readDate)){
             readDate = photoPosted;
         }
         System.out.println("\tposted:" + p.getDatePosted());

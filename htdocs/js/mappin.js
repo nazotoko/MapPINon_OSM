@@ -17,8 +17,8 @@
  */
 /* configures (directory must end with '/' ) */
 /** base path */
-var domain=document.domain; /* "http://mappin.hp2.jp/"; */
-var server_path = "";/* "" means current directory. */
+var domain="http://"+document.domain; /* "http://mappin.hp2.jp"; */
+var server_path = "/";/* you shoud add absorute path . */
 
 /** relative path */
 var img_path = "icons/";
@@ -81,7 +81,7 @@ function init_map(){
         new OpenLayers.Layer.OSM.CycleMap("CycleMap",{wrapDateLine: true,
             attribution:'CycleMap under <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA 2.0</a> by (C) <a href="http://www.openstreetmap.org">OpenStreetMap</a> contributors'}),
         new OpenLayers.Layer.OSM.Osmarender("Osmarender",{wrapDateLine: true,
-            attribution:'Osmarender under <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-By-SA 2.0</a> by (C) <a href="http://www.openstreetmap.org">OpenStreetMap</a> contributors'}),
+            attribution:'Osmarender under <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA 2.0</a> by (C) <a href="http://www.openstreetmap.org">OpenStreetMap</a> contributors'}),
         new OpenLayers.Layer.OSM( "Relief",
             "http://maps-for-free.com/layer/relief/z${z}/row${y}/${z}_${x}-${y}.jpg",
             {numZoomLevels:12,wrapDateLine: true,

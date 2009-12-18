@@ -543,9 +543,18 @@ public class MapPINonOSM {
         ftc.changeToParentDirectory();
         ftc.changeDirectory("data");
         File fileDataDir=new File(localHtdocsDir,dataDir);
-        for(String f: fileDataDir.list()){
-            System.out.println("Uploading: " + f);
-            ftc.uploadFile(new File(fileDataDir, f).toString(), f);
+        long local_size, remote_size;
+        for(File f: fileDataDir.listFiles()){
+            local_size = f.length();
+            if(ftc.exists(f.getName())){
+                remote_size = ftc.getSize(f.getName());
+            } else {
+                remote_size = 0;
+            }
+            if(local_size != remote_size){
+                System.out.println("Uploading: " + f);
+                ftc.uploadFile(f.toString(), f.getName());
+            }
         }
         ftc.changeToParentDirectory();
         if(ftc.exists(request)){

@@ -72,7 +72,16 @@ url CDATA #IMPLIED>
 
 <!ATTLIST m:tool
     title CDATA #REQUIRED>
-<!ELEMENT m:tool (m:potlatch_kml,m:josm_plugin)>
+<!ELEMENT m:tool (m:prune,m:potlatch,m:josm,m:potlatch_kml,m:josm_plugin)>
+<!ATTLIST m:prune
+    url CDATA #IMPLIED>
+<!ELEMENT m:prune (#PCDATA)>
+<!--<!ATTLIST m:potlatch
+    url CDATA #IMPLIED>
+<!ELEMENT m:potlatch (#PCDATA)>
+<!ATTLIST m:josm
+    url CDATA #IMPLIED>
+<!ELEMENT m:josm (#PCDATA)>-->
 <!ATTLIST m:potlatch_kml
     url CDATA #IMPLIED>
 <!ELEMENT m:potlatch_kml (#PCDATA)>
@@ -92,7 +101,7 @@ name CDATA #REQUIRED>
 <!ELEMENT m:wiki (#PCDATA)>
 
 <!--- This is for javascript messages. -->
-<!ELEMENT m:javascript (m:id,m:lat,m:lon,m:alt,m:av,m:here_is,m:try_to_tag,m:thumbnail,m:no_thumb,m:action_link,m:title_link,m:action_original,m:title_original,m:action_large,m:title_large,m:action_rss,m:title_rss,m:action_embed,m:title_embed,m:title_reload,m:zoom_to,m:title_potlatch,m:title_josm,m:url,m:html1,m:html2,m:image,m:imageText)>
+<!ELEMENT m:javascript (m:id,m:lat,m:lon,m:alt,m:av,m:here_is,m:try_to_tag,m:thumbnail,m:no_thumb,m:action_link,m:title_link,m:action_original,m:title_original,m:action_large,m:title_large,m:action_rss,m:title_rss,m:action_embed,m:title_embed,m:title_reload,m:zoom_to,m:title_potlatch,m:title_josm,m:title_josm_w,m:url,m:html1,m:html2,m:image,m:imageText)>
 <!ELEMENT m:thumbnail (#PCDATA)>
 <!ELEMENT m:no_thumb (#PCDATA)>
 <!ELEMENT m:id (#PCDATA)>
