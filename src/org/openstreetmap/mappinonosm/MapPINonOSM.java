@@ -392,7 +392,7 @@ public class MapPINonOSM {
             try {
                 tb = new TileTable(new File(localHtdocsDir, dataDir));
                 for(Photo p: photoTable){
-                    if(p.getReadDate().before(new Date(System.currentTimeMillis()-365L*24L*3600000L))){
+                    if(p.getReadDate().before(new Date(System.currentTimeMillis() - 90L * 24L * 3600000L))){
                         p.reread();
                     }
                     tb.addPhoto(p);

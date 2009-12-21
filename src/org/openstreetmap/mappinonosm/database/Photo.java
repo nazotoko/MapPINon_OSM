@@ -1247,7 +1247,8 @@ public class Photo {
 
                 if(urlc instanceof HttpURLConnection){
                     HttpURLConnection httpU = (HttpURLConnection)urlc;
-                    if(httpU.getResponseCode() == 404){
+                    int code=httpU.getResponseCode() ;
+                    if(code >= 400 && code < 417 && code != 408){
                         this.deleted = true;
                         return;
                     }

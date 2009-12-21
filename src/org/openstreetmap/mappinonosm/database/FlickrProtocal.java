@@ -349,8 +349,8 @@ public class FlickrProtocal extends XML {
         return ret;
     }
     void reload(org.openstreetmap.mappinonosm.database.Photo pho) {
-        this.photo=pho;
-        String code=photo.getLink().getPath();
+        this.photo = pho;
+        String code = photo.getLink().getPath();
 
         String flickrID = Long.toString(decodeBase58(code.substring(3)));
         PhotosInterface pi=f.getPhotosInterface();
