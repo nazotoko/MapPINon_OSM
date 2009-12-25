@@ -238,7 +238,7 @@ public class RSS extends XML implements LexicalHandler, ContentHandler {
                 try {
                     Date photoPublishedDate = rssDateFormat.parse(textBuffer);
                     photo.setPublishedDate(photoPublishedDate);
-                    if(photoPublishedDate.after(readDate)){
+                    if(readDate == null || photoPublishedDate.after(readDate)){
                         readDate = photoPublishedDate;
                     }
                     System.out.println("\tdate:" + photo.getPublishedDate());
